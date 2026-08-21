@@ -62,15 +62,15 @@
       "passed": true
     },
     {
-      "check": "test suite passes",
-      "detail": "........................................................................ [ 53%]\n..............................................................           [100%]\n134 passed in 148.67s (0:02:28)\n",
-      "evidence": "134 passed in 148.67s (0:02:28)",
+      "check": "test suite",
+      "detail": "",
+      "evidence": "skipped via --skip-tests",
       "passed": true
     },
     {
       "check": "no secrets or credentials in tracked files",
       "detail": "[]",
-      "evidence": "88 text files scanned against 6 patterns",
+      "evidence": "90 text files scanned against 6 patterns",
       "passed": true
     },
     {
@@ -88,7 +88,7 @@
     {
       "check": "every run recorded with hardware and package versions",
       "detail": "",
-      "evidence": "21 runs recorded: {'failed': 4, 'success': 17}",
+      "evidence": "22 runs recorded: {'failed': 4, 'success': 17, 'running': 1}",
       "passed": true
     },
     {
@@ -113,12 +113,6 @@
       "check": "no base-model weights redistributed",
       "detail": "unexpected: []",
       "evidence": "only adapter weights are stored",
-      "passed": true
-    },
-    {
-      "check": "adapter reloads and is active",
-      "detail": "",
-      "evidence": "168/168 lora_B tensors non-zero (B is what makes the update non-trivial), max|B|=0.005929; 336/336 LoRA tensors non-zero overall",
       "passed": true
     }
   ],

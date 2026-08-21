@@ -895,10 +895,44 @@ if IN_COLAB:
 md("""
 ## 20. What this did and did not show
 
-**Shown, if the criteria above passed:** on this synthetic 86-example test set,
-with this base model at this revision, LoRA on 171 examples produced a
-measurable improvement over both zero-shot and few-shot prompting of the same
-unchanged model, with the paired confidence interval excluding zero.
+### What the reference run actually produced
+
+Your numbers will differ slightly (different GPU, different library versions),
+but this is what the committed run measured on the frozen 86-example test set:
+
+| System | Strict JSON | Schema valid | Exact match |
+|---|---|---|---|
+| base, zero-shot | 5.8% | 27.9% | 0.0% |
+| base, few-shot k=8 | 100.0% | 61.6% | 1.2% |
+| base + LoRA | 100.0% | 79.1% | 11.6% |
+
+Against the stronger (few-shot) baseline: **+10.5 pp exact match, 95% CI
+[+3.5, +18.6], McNemar p = 0.012.** All four pre-declared criteria met.
+
+**Three things are true at once, and reporting only the first would mislead.**
+
+**1. The gain is real and it beat a strong baseline.** Not the 0.0% zero-shot
+strawman -- few-shot prompting had already reached 100% strict JSON on its own.
+
+**2. The gain is concentrated in two fields, and the apparent loss on a third
+is noise.** `affected_service` +20.9 pp (p=0.0009) and `is_security_incident`
++10.5 pp (p=0.023) are real. `category` *looks* worse under LoRA
+(53.5% vs 59.3%) but the interval spans zero (p=0.46) -- that is **not** a
+regression, and calling it one would be exactly as wrong as calling the
++4.7 pp on `priority` an improvement. Be disciplined in both directions.
+
+**3. It did not learn to generalise.** **11 of the 16 held-out scenario
+families produced zero fully correct outputs.** The 11.6% is concentrated in a
+couple of families, not spread evenly. Where the model still breaks the schema
+it mostly copies a noun out of the ticket -- `affected_service: "dns"` for a DNS
+outage -- instead of mapping it onto the closed enum.
+
+**One-line summary:** on 171 examples, LoRA reliably taught a 0.5B model *the
+shape of the answer*, and only partially taught it *the answer*.
+
+Notice also that early stopping fired: validation loss bottomed at epoch 2 and
+rose while training loss kept falling to 0.004. That is 8.8M trainable
+parameters memorising 171 examples, caught by the validation split.
 
 **Not shown, and not claimed:**
 
@@ -907,8 +941,9 @@ unchanged model, with the paired confidence interval excluding zero.
   observation on one consumer GPU, not as a performance claim.
 - Anything about safety, alignment, fairness or robustness. Those were not
   measured, so nothing can be said about them.
-- Generalisation beyond the 16 held-out scenario families in the test set.
-- That r=16 is optimal. Only one configuration was trained; the ablation is a
+- Generalisation beyond the 16 held-out scenario families in the test set --
+  and, as measured, largely not even to those.
+- That r=16 is optimal. Only one configuration was trained; any ablation is a
   separate, clearly-labelled experiment.
 
 **The most interesting honest finding** is the few-shot baseline. Prompting alone
