@@ -388,6 +388,46 @@ closed enum: `affected_service: "dns"` (6, for DNS-outage tickets), `"internet"`
 (3), `category: "display"` (2), `"audio"` (2). Constrained decoding with a
 grammar would make this class of failure impossible.
 
+## Optional ablation -- training-data size (secondary, not pre-registered)
+
+Run **after** the primary experiment was complete and reproducible. One variable
+changed: 171 -> 86 training examples, category-stratified and deterministic.
+Everything else identical -- rank, alpha, dropout, learning rate, schedule,
+batch, sequence length, precision, seeds, prompt, decoding, evaluation split.
+
+Run `20260821T215300Z_train_lora_d3e8b0`: 27.2 min, early stopping fired,
+best checkpoint epoch 3, best validation loss 0.0824.
+
+| Training examples | Schema valid | Exact match | category | priority |
+|---|---|---|---|---|
+| 86 (50%) | 82.6% | 17.4% | 67.4% | 57.0% |
+| **171 (100%)** | 79.1% | 11.6% | 53.5% | 46.5% |
+
+| Comparison | Difference | 95% CI | p | Verdict |
+|---|---|---|---|---|
+| exact match | -5.8 pp | [-12.8, +1.2] | 0.180 | not distinguishable from zero |
+| schema valid | -3.5 pp | [-11.6, +4.7] | 0.581 | not distinguishable from zero |
+| `category` | **-14.0 pp** | [-22.1, -7.0] | **0.0005** | difference detected, favouring *less* data |
+
+**What was actually removed.** 31 of 32 scenario families retained;
+`email_dl_update` lost entirely as a side effect of stratifying by category
+rather than by family. Examples per family 5.34 -> 2.77. So this is a ~52%
+depth cut at 97% coverage, not a pure depth cut. The confound is small but real
+and is not rounded away.
+
+**Interpretation.** Doubling the data produced no detectable change in the
+headline metric. Combined with 11 of 16 held-out families scoring zero, this
+points at **scenario coverage rather than example volume** as the binding
+constraint. The significant `category` result in favour of *less* data admits
+two explanations this experiment cannot separate: overfitting to the 32
+training scenarios (5.3 repetitions vs 2.8), or single-seed run-to-run variance.
+It is recorded as a hypothesis requiring 3-5 seeds per arm to settle.
+
+**The headline result is unchanged.** The ablation arm scored higher, and it is
+deliberately not promoted. It was not pre-registered; substituting a post-hoc
+arm because it scored better would convert the frozen test split into a
+model-selection set and void the primary number.
+
 ## Conclusion
 
 **The research question is answered: yes, within this narrow setting.** LoRA
@@ -405,6 +445,12 @@ difference, and one was already saturated.
 **Generalisation to unseen scenarios largely did not happen**, exactly as
 hypothesised. That is the honest headline, and it points at the next experiment:
 broader scenario coverage rather than more examples per scenario.
+
+**The ablation supports that reading.** Halving the training data produced no
+detectable change in exact match (p = 0.18), so at this scale the binding
+constraint is not how many examples the model sees but how many distinct
+situations they cover. The next experiment should add scenario families, not
+examples per family.
 
 Nothing here supports any claim about real helpdesk tickets, deployment, safety,
 or behaviour outside this 86-example synthetic test set.

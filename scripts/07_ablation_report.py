@@ -268,6 +268,69 @@ def main() -> int:
                 f"| {stats['mcnemar']['p_value']:.4f} | {verdict} |")
         add("")
 
+        # Surface any field where LESS data was significantly BETTER. That is
+        # the opposite of the expected direction, so it must be stated
+        # prominently rather than left for a reader to spot in a table.
+        less_data_better = [
+            (field, stats) for field, stats in per_field.items()
+            if stats["paired_diff"]["excludes_zero"]
+            and stats["paired_diff"]["diff"] < 0
+        ]
+        more_data_better = [
+            (field, stats) for field, stats in per_field.items()
+            if stats["paired_diff"]["excludes_zero"]
+            and stats["paired_diff"]["diff"] > 0
+        ]
+
+        if less_data_better:
+            add("### Surprising: on some fields, half the data was *better*")
+            add("")
+            for field, stats in less_data_better:
+                d = stats["paired_diff"]
+                add(f"- **`{field}`**: {fmt_pct(stats['ablation_rate'])} at 50% "
+                    f"vs {fmt_pct(stats['full_rate'])} at 100% "
+                    f"({-d['diff'] * 100:+.1f} pp in favour of the smaller "
+                    f"training set, 95% CI "
+                    f"[{-d['hi'] * 100:+.1f}, {-d['lo'] * 100:+.1f}] pp, "
+                    f"p = {stats['mcnemar']['p_value']:.4f})")
+            add("")
+            add("Two explanations fit, and this experiment cannot separate "
+                "them:")
+            add("")
+            add("1. **Overfitting to training scenarios.** At 171 examples the "
+                "model sees each scenario ~5.3 times; at 86 it sees each ~2.8 "
+                "times. More repetitions of the same 32 situations may push it "
+                "to memorise scenario-specific surface cues that do not "
+                "transfer to the 16 held-out situations. `category` is the "
+                "field most dependent on recognising the *kind* of situation, "
+                "so it is the one you would expect to suffer first. That is "
+                "consistent with the primary run's training curve, where "
+                "validation loss bottomed at epoch 2 and rose thereafter.")
+            add("")
+            add("2. **Run-to-run variance.** Each arm is a single training run "
+                "with a single seed. Nothing here separates a real effect from "
+                "seed noise, and a 14-point swing on one field from one run per "
+                "arm is well within what seed variance can produce for a 0.5B "
+                "model on 86 test examples.")
+            add("")
+            add("**The honest position is that this is a hypothesis, not a "
+                "result.** Settling it needs 3-5 seeds per arm, which was not "
+                "run. It is reported because deleting a surprising number "
+                "because it is inconvenient is worse than reporting it with "
+                "its caveat.")
+            add("")
+
+        if more_data_better:
+            add("### Fields where more data did help")
+            add("")
+            for field, stats in more_data_better:
+                d = stats["paired_diff"]
+                add(f"- **`{field}`**: {fmt_pct(stats['full_rate'])} at 100% "
+                    f"vs {fmt_pct(stats['ablation_rate'])} at 50% "
+                    f"({d['diff'] * 100:+.1f} pp, p = "
+                    f"{stats['mcnemar']['p_value']:.4f})")
+            add("")
+
         add("## Reading this honestly")
         add("")
         if diff["excludes_zero"]:
@@ -295,6 +358,31 @@ def main() -> int:
         add("Caveats that apply with full force here: n = 86, a single seed per "
             "arm, and two arms. This is one comparison, not a scaling curve. "
             "It is suggestive, not conclusive.")
+        add("")
+        add("### The headline result does not change")
+        add("")
+        if comparison["a_rate"] > comparison["b_rate"]:
+            add(f"The ablation arm scored higher on exact match "
+                f"({fmt_pct(comparison['a_rate'])} vs "
+                f"{fmt_pct(comparison['b_rate'])}). It would be trivially easy, "
+                f"and wrong, to now present the ablation as \"the result\".")
+            add("")
+            add("The primary experiment was pre-registered against the **full** "
+                "training split, its success criteria were fixed before any "
+                "training run, and the frozen test split was evaluated once for "
+                "it. This ablation was run afterwards, as a secondary question, "
+                "and its arm was not pre-registered. Promoting a post-hoc arm "
+                "because it scored better is exactly the selection this project "
+                "exists to avoid -- it turns the test split into a model-"
+                "selection set and destroys the meaning of the number.")
+            add("")
+            add("**The reported result therefore remains the 171-example run.** "
+                "The ablation's contribution is the *direction* it points, not "
+                "a better score to substitute in.")
+        else:
+            add("The ablation arm did not outperform the primary run, so no "
+                "question of substituting it arises. The reported result "
+                "remains the pre-registered full-data run.")
         if family_coverage.get("families_dropped"):
             add("")
             add(f"Additionally, the subsample lost "

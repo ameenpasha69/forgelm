@@ -50,7 +50,8 @@ files to contain them. The repository was initialised at `D:\projects\forgelm`.
 | Reproducibility ledger | **verified** | every run writes `runs/<run_id>/run.json` incl. failed runs | wall-clock timings are machine-specific | none |
 | Colab notebook | **partially verified** | 50 cells; JSON-valid; every code cell parses; CPU-only cells (seeds, generation, validation, splitting, leakage) executed locally and passed | GPU cells not executed on Colab hardware | run it on a T4 |
 | Published repository | **verified** | pushed to GitHub, then cloned back into a clean directory and all three dataset checksums re-verified | -- | none |
-| Optional ablation | **not started** | -- | compute was spent on the primary experiment; no ablation result is claimed | `--train-fraction 0.5` or `configs/ablation_r8.json` are wired up and ready |
+| Optional ablation (data size) | **verified** | run `20260821T215300Z_train_lora_d3e8b0` (86 examples) + eval `20260821T222028Z_eval_lora_5d4f95`; `reports/ABLATION.md` | one seed per arm; subsample dropped 1 of 32 families as a side effect | 3-5 seeds per arm |
+| Optional ablation (rank, dropout) | **not started** | -- | no claim is made about LoRA rank or dropout | `configs/ablation_r8.json`, `configs/ablation_nodropout.json` are wired up |
 | Optional demo app | **partially verified** | `--cli` executed against the trained adapter: loaded 336/336 LoRA tensors and returned a schema-valid, correct triage for the VPN example; missing-adapter error path also executed | Gradio UI itself not launched (gradio is an optional dependency and is not installed) | `pip install gradio` and run without `--cli` |
 | Test suite | **verified** | 142 tests; count and runtime recorded in `reports/EVIDENCE.md` by the audit itself | no test asserts a *result value*, by design | none |
 | Final evidence audit | **verified** | `20/20 checks passed`, `reports/EVIDENCE.md` | -- | none |
@@ -95,7 +96,18 @@ about what happened.
    and it is listed here because the ledger caught it: the failed run is
    preserved at `runs/20260821T205221Z_eval_lora_*` with its traceback. On a
    4 GiB card, run one model process at a time.
-10. **The adapter-liveness check was itself wrong, and a test caught it.**
+10. **Doubling the training data bought nothing measurable, and on one field
+   *less* data was significantly better.** 86 vs 171 examples: exact match
+   -5.8 pp, 95% CI [-12.8, +1.2], p = 0.18 -- not distinguishable from zero.
+   But `category` accuracy was 67.4% at 50% vs 53.5% at 100% (p = 0.0005), in
+   favour of *less* data. Either the full run overfits the 32 training
+   scenarios, or it is single-seed variance; one run per arm cannot separate
+   them. Reported as a hypothesis with its caveat rather than deleted for being
+   inconvenient. Crucially, the ablation arm is **not** promoted to the headline
+   result: it was not pre-registered, and substituting a post-hoc arm that
+   happened to score better would turn the frozen test split into a
+   model-selection set.
+11. **The adapter-liveness check was itself wrong, and a test caught it.**
    `load_adapted_model` verified that "some LoRA tensor is non-zero". That is
    insufficient: the LoRA update is `delta_W = B @ A`, and PEFT
    *zero-initialises B* so an untrained adapter is a deliberate no-op. A fresh
@@ -106,14 +118,14 @@ about what happened.
    non-zero `lora_B`. The trained adapter passes either way (168/168 B tensors
    non-zero), so no reported result changes -- but the guard would not have
    caught the failure it was written to catch.
-11. **The placeholder scan had a blind spot, and it hid real boilerplate.**
+12. **The placeholder scan had a blind spot, and it hid real boilerplate.**
    `scripts/06_audit.py` skipped `artifacts/`, so it never saw the `README.md`
    that PEFT auto-generates next to the adapter weights -- which shipped with
    **39 `[More Information Needed]` placeholders**. The directory is no longer
    skipped, `[More Information Needed]` and `TBD` were added as patterns, and
    the adapter README was rewritten with real content. A scan with an
    exclusion big enough to hide the problem is not a scan.
-12. **Git would have silently broken every dataset checksum.** On Windows, git
+13. **Git would have silently broken every dataset checksum.** On Windows, git
    converts LF to CRLF on checkout by default. The dataset files and split
    manifest are written with explicit LF newlines and verified by sha256, so a
    fresh clone would have failed the evidence audit for reasons that had nothing

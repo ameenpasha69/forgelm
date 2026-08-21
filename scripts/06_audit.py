@@ -141,10 +141,41 @@ class Audit:
         return all(r["passed"] for r in self.rows)
 
 
-def iter_text_files():
-    for path in REPO_ROOT.rglob("*"):
-        if not path.is_file():
+def _tracked_paths() -> list[Path] | None:
+    """Files git would include: tracked, plus untracked-but-not-ignored.
+
+    The scans below claim to cover "tracked files", so they must actually ask
+    git rather than walking the whole working tree. Walking picked up
+    `artifacts/lora_adapter_frac50/README.md` -- PEFT boilerplate inside a
+    gitignored ablation adapter that is not part of the repository at all --
+    and failed the audit for something no reader could ever see.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+            capture_output=True, text=True, timeout=30, cwd=REPO_ROOT)
+    except Exception:
+        return None
+    if proc.returncode != 0:
+        return None
+
+    paths = []
+    for line in proc.stdout.splitlines():
+        line = line.strip()
+        if not line:
             continue
+        candidate = REPO_ROOT / line
+        if candidate.is_file():
+            paths.append(candidate)
+    return paths
+
+
+def iter_text_files():
+    tracked = _tracked_paths()
+    candidates = tracked if tracked is not None else [
+        p for p in REPO_ROOT.rglob("*") if p.is_file()]
+
+    for path in candidates:
         if any(part in SKIP_DIRS for part in path.parts):
             continue
         if path.name in SKIP_FILENAMES:

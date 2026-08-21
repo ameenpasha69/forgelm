@@ -101,6 +101,38 @@ of the ticket instead of mapping it to the closed enum -- emitting
 **Honest one-line summary:** on 171 examples, LoRA reliably taught a 0.5B model
 *the shape of the answer*, and only partially taught it *the answer*.
 
+### Optional ablation: doubling the training data did not help
+
+Run afterwards as a secondary question, not pre-registered. Full report:
+**[reports/ABLATION.md](reports/ABLATION.md)**. One variable changed —
+86 vs 171 training examples, category-stratified, everything else identical.
+
+| Training examples | Schema valid | Exact match |
+|---|---|---|
+| 86 (50%) | 82.6% | 17.4% |
+| **171 (100%)** | 79.1% | 11.6% |
+
+**Exact match: −5.8 pp, 95% CI [−12.8, +1.2], p = 0.18 — not distinguishable
+from zero.** Doubling the data bought nothing measurable. Combined with the
+11-of-16 zero-scoring families, that points at **scenario coverage, not example
+volume**, as the binding constraint: more examples of situations the model
+already sees does not help it handle situations it has never seen.
+
+More surprising: on `category` the *smaller* training set was significantly
+**better** (67.4% vs 53.5%, +14.0 pp in favour of less data, p = 0.0005). Two
+explanations fit and this experiment cannot separate them — overfitting to the
+32 training scenarios (5.3 repetitions each vs 2.8), or single-seed run-to-run
+variance. It is reported as a hypothesis, not a result, because deleting a
+surprising number for being inconvenient is worse than reporting it with its
+caveat.
+
+**The headline result does not change.** The ablation arm scored higher, and
+promoting it would be exactly the post-hoc selection this project exists to
+avoid: the primary experiment was pre-registered against the full training
+split and the test set was evaluated once for it. The reported result remains
+the 171-example run; the ablation contributes a *direction*, not a better score
+to substitute in.
+
 ### Training behaved exactly as the guardrails predicted
 
 ![training curve](reports/figures/training_curve.png)
@@ -379,10 +411,16 @@ one that names them:
 - **Not measured, therefore not claimed:** safety, alignment, fairness,
   robustness, adversarial resistance, latency under load, cost, or any
   behaviour outside this dataset.
-- **The ablation was not run.** Compute was spent on the primary experiment.
-  `configs/ablation_r8.json`, `configs/ablation_nodropout.json` and
-  `--train-fraction` exist and are wired up, but no ablation result is reported
-  because none was executed.
+- **The ablation is one run per arm.** A 14-point per-field swing from a single
+  seed each is not separable from seed variance. Settling it needs 3–5 seeds per
+  arm, which was not run.
+- **The ablation's manipulation is not perfectly clean.** Stratifying the
+  subsample by category rather than by family dropped one scenario family
+  (`email_dl_update`) as a side effect, so it is a ~52% depth cut at 97%
+  coverage rather than a pure depth cut.
+- **Only one ablation axis was tested.** `configs/ablation_r8.json` and
+  `configs/ablation_nodropout.json` are wired up but were not executed, so no
+  claim is made about LoRA rank or dropout.
 
 ---
 
