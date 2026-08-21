@@ -42,14 +42,18 @@ files to contain them. The repository was initialised at `D:\projects\forgelm`.
 | Zero-shot baseline | **verified** | `reports/predictions/zeroshot_test.jsonl`, run `20260821T200256Z_eval_zeroshot_812934` | greedy decoding only | none |
 | Few-shot baseline | **verified** | `reports/predictions/fewshot_test.jsonl`, run `20260821T200656Z_eval_fewshot_3f8d1e` | k=8 only; no k sweep | none |
 | Pre-flight training gates | **verified** | `reports/smoke_train.json`, all 6 gates pass, peak 2.14/4.00 GiB | -- | none |
-| LoRA training | see *Execution log* below | | | |
-| Adapter save / reload | see *Execution log* below | | | |
-| Frozen test evaluation | see *Execution log* below | | | |
+| LoRA training | **verified** | run `20260821T203003Z_train_lora_b61876`; 110 steps, 2202 s; early stopping fired at epoch 5; best val loss 0.0743 @ epoch 2 | one seed, one configuration | multi-seed run |
+| Adapter save / reload | **verified** | 336/336 LoRA tensors non-zero, max abs 0.03833; reloaded through a clean path and re-verified in `06_audit.py --with-model` | 46.7 MB incl. tokenizer | none |
+| Frozen test evaluation | **verified** | run `20260821T211024Z_eval_lora_73a19c`; `reports/predictions/lora_test.jsonl`; evaluated once | n=86, wide intervals | none |
+| Success criteria | **verified met** | all 4 pre-declared criteria pass; exact match +10.5 pp vs few-shot, 95% CI [+3.5, +18.6], McNemar p=0.0117 | criteria are narrow by design | none |
+| Generalisation | **verified negative** | 11 of 16 held-out scenario families produced zero fully correct outputs | this is the main limitation | broader scenario coverage |
 | Reproducibility ledger | **verified** | every run writes `runs/<run_id>/run.json` incl. failed runs | wall-clock timings are machine-specific | none |
-| Test suite | **verified** | 121 tests pass in 27s | no test asserts a *result value*, by design | none |
-| Colab notebook | **implemented but unverified** | 50 cells, JSON-valid, all code cells parse | not executed on Colab hardware | run it on a T4 |
-| Optional ablation | see *Execution log* | | | |
-| Optional demo app | see *Execution log* | | | |
+| Colab notebook | **partially verified** | 50 cells; JSON-valid; every code cell parses; CPU-only cells (seeds, generation, validation, splitting, leakage) executed locally and passed | GPU cells not executed on Colab hardware | run it on a T4 |
+| Published repository | **verified** | pushed to GitHub, then cloned back into a clean directory and all three dataset checksums re-verified | -- | none |
+| Optional ablation | **not started** | -- | compute was spent on the primary experiment; no ablation result is claimed | `--train-fraction 0.5` or `configs/ablation_r8.json` are wired up and ready |
+| Optional demo app | **partially verified** | `--cli` executed against the trained adapter: loaded 336/336 LoRA tensors and returned a schema-valid, correct triage for the VPN example; missing-adapter error path also executed | Gradio UI itself not launched (gradio is an optional dependency and is not installed) | `pip install gradio` and run without `--cli` |
+| Test suite | **verified** | `134 passed in 144.30s`, recorded in `reports/EVIDENCE.md` | no test asserts a *result value*, by design | none |
+| Final evidence audit | **verified** | `20/20 checks passed`, `reports/EVIDENCE.md` | -- | none |
 
 ---
 
@@ -91,6 +95,25 @@ about what happened.
    and it is listed here because the ledger caught it: the failed run is
    preserved at `runs/20260821T205221Z_eval_lora_*` with its traceback. On a
    4 GiB card, run one model process at a time.
+10. **The adapter-liveness check was itself wrong, and a test caught it.**
+   `load_adapted_model` verified that "some LoRA tensor is non-zero". That is
+   insufficient: the LoRA update is `delta_W = B @ A`, and PEFT
+   *zero-initialises B* so an untrained adapter is a deliberate no-op. A fresh
+   adapter therefore has ~half its tensors non-zero (all the A matrices) while
+   being mathematically identical to the base model -- and the old check passed
+   it. `test_inert_adapter_is_rejected` saves an untrained adapter and asserts
+   the loader refuses it; it failed, exposing the bug. The check now requires a
+   non-zero `lora_B`. The trained adapter passes either way (168/168 B tensors
+   non-zero), so no reported result changes -- but the guard would not have
+   caught the failure it was written to catch.
+11. **Git would have silently broken every dataset checksum.** On Windows, git
+   converts LF to CRLF on checkout by default. The dataset files and split
+   manifest are written with explicit LF newlines and verified by sha256, so a
+   fresh clone would have failed the evidence audit for reasons that had nothing
+   to do with the experiment. Fixed by `.gitattributes` marking every
+   checksum-verified format `-text`. **Verified by cloning the published
+   repository into a clean directory and re-checking all three checksums --
+   all matched.**
 
 ---
 

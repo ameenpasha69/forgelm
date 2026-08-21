@@ -206,17 +206,38 @@ def load_adapted_model(adapter_dir: str,
     model = PeftModel.from_pretrained(base, adapter_dir)
     model.eval()
 
+    # The LoRA update is  delta_W = (alpha/r) * B @ A.
+    #
+    # At initialisation PEFT fills A with random values and B with ZEROS, so
+    # that an untrained adapter is exactly a no-op. That means counting
+    # "non-zero LoRA tensors" is NOT a sufficient liveness check: a freshly
+    # initialised adapter has ~half its tensors non-zero (all the A matrices)
+    # while being mathematically identical to the base model.
+    #
+    # Only B decides whether the adapter does anything, so B is what we check.
+    # (This was caught by tests/test_model_integration.py::
+    # test_inert_adapter_is_rejected, which saves an untrained adapter and
+    # asserts this function refuses it.)
     lora_tensors = 0
     nonzero_tensors = 0
+    b_tensors = 0
+    nonzero_b_tensors = 0
     max_abs = 0.0
+    max_abs_b = 0.0
+
     for name, param in model.named_parameters():
         if "lora_" not in name:
             continue
+        magnitude = float(param.detach().abs().max().item())
         lora_tensors += 1
-        m = float(param.detach().abs().max().item())
-        max_abs = max(max_abs, m)
-        if m > 0:
+        max_abs = max(max_abs, magnitude)
+        if magnitude > 0:
             nonzero_tensors += 1
+        if "lora_B" in name:
+            b_tensors += 1
+            max_abs_b = max(max_abs_b, magnitude)
+            if magnitude > 0:
+                nonzero_b_tensors += 1
 
     verification = {
         "adapter_dir": str(adapter_dir),
@@ -224,13 +245,24 @@ def load_adapted_model(adapter_dir: str,
         "active_adapters": list(getattr(model, "peft_config", {}).keys()),
         "n_lora_tensors": lora_tensors,
         "n_nonzero_lora_tensors": nonzero_tensors,
+        "n_lora_B_tensors": b_tensors,
+        "n_nonzero_lora_B_tensors": nonzero_b_tensors,
         "max_abs_lora_weight": max_abs,
-        "adapter_is_active": lora_tensors > 0 and nonzero_tensors > 0,
+        "max_abs_lora_B_weight": max_abs_b,
+        "adapter_is_active": b_tensors > 0 and nonzero_b_tensors > 0,
+        "liveness_criterion": (
+            "at least one lora_B tensor is non-zero; B is zero-initialised, so "
+            "an all-zero B means the adapter is a mathematical no-op regardless "
+            "of A"
+        ),
     }
     if not verification["adapter_is_active"]:
         raise RuntimeError(
-            f"adapter at {adapter_dir} loaded but appears inert "
-            f"({lora_tensors} LoRA tensors, {nonzero_tensors} non-zero). "
-            f"Evaluating this would silently reproduce base-model results."
+            f"adapter at {adapter_dir} loaded but is inert: "
+            f"{nonzero_b_tensors}/{b_tensors} lora_B tensors are non-zero "
+            f"(max |B| = {max_abs_b}). Because delta_W = B @ A, an all-zero B "
+            f"makes this adapter mathematically identical to the base model. "
+            f"Evaluating it would silently reproduce base-model results and "
+            f"look like 'fine-tuning did not help'."
         )
     return model, verification

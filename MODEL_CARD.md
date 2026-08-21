@@ -118,6 +118,27 @@ appear in no training example, against two unchanged-model baselines
 (zero-shot and few-shot k=8) using an identical prompt, identical greedy decoding
 and an identical parser.
 
+| System | Strict JSON | Schema valid | Exact match | Constraint violations |
+|---|---|---|---|---|
+| base, zero-shot | 5.8% | 27.9% | 0.0% | 95.3% |
+| base, few-shot k=8 | 100.0% | 61.6% | 1.2% | 38.4% |
+| **base + this adapter** | 100.0% | **79.1%** | **11.6%** | **20.9%** |
+
+Against the stronger (few-shot) baseline: exact match +10.5 pp, 95% CI
+[+3.5, +18.6], McNemar p = 0.012.
+
+**What the adapter actually learned.** Per-field paired tests against few-shot
+show significant gains on `affected_service` (+20.9 pp, p = 0.0009) and
+`is_security_incident` (+10.5 pp, p = 0.023). `category`, `priority` and
+`users_affected` show **no detectable difference** -- including `category`,
+whose lower point estimate (53.5% vs 59.3%) has an interval spanning zero
+(p = 0.46) and must not be read as a regression.
+
+**What it did not learn.** **11 of the 16 held-out scenario families produced
+zero fully correct outputs.** The 11.6% exact match is concentrated in a few
+families. The adapter learned the *output contract* well and the *task* only
+partially.
+
 Metrics, confidence intervals, paired significance tests and the failure
 taxonomy: `reports/RESULTS.md`. Raw per-example predictions:
 `reports/predictions/*.jsonl`.
@@ -139,6 +160,12 @@ dataset with 86 test examples.
 - **English only**, British corporate register, one organisational culture.
 - **The priority rule is invented** for this experiment. It is not how any real
   service desk prioritises work.
+- **It does not generalise to most unseen scenarios.** 11 of 16 held-out
+  scenario families scored zero exact matches. Treat the headline number as
+  evidence of format learning, not task competence.
+- **It still invents enum values.** 18 of 86 outputs contained a value outside
+  the schema, mostly a noun copied from the ticket (`"dns"`, `"internet"`,
+  `"display"`). Constrained decoding would eliminate this class.
 - **One configuration, one seed.** No hyperparameter search, no multi-seed
   variance estimate. A single training run is a sample of size one.
 - **Not evaluated for** safety, alignment, fairness, robustness, adversarial

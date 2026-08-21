@@ -1,0 +1,127 @@
+{
+  "run_id": "20260821T211753Z_report_daf5fe",
+  "kind": "report",
+  "status": "success",
+  "started_utc": "2026-08-21T21:17:53.068963+00:00",
+  "ended_utc": "2026-08-21T21:18:38.835139+00:00",
+  "elapsed_seconds": 45.766,
+  "git": {
+    "commit": "1c50770e24c9ad3fc0047dca51bb633df7431265",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "M STATUS.md",
+      " M reports/EVIDENCE.md",
+      " M reports/RESULTS.md",
+      " M reports/RESULTS_test.md",
+      " M reports/evidence.json",
+      " M reports/figures/error_taxonomy_test.png",
+      " M reports/figures/field_accuracy_test.png",
+      " M reports/figures/headline_metrics_test.png",
+      " M reports/results_test.json",
+      " M runs/20260821T203003Z_train_lora_b61876/run.json",
+      " M scripts/04_report.py",
+      "?? artifacts/",
+      "?? reports/figures/training_curve.png",
+      "?? reports/metrics/lora_test.json",
+      "?? reports/metrics/lora_validation.json",
+      "?? reports/predictions/lora_test.jsonl",
+      "?? reports/predictions/lora_validation.jsonl",
+      "?? reports/training_history.json",
+      "?? runs/20260821T211024Z_eval_lora_73a19c/",
+      "?? runs/20260821T211409Z_report_3413d6/",
+      "?? runs/20260821T211612Z_report_0a5b3c/",
+      "?? runs/20260821T211753Z_report_daf5fe/"
+    ]
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+    "cpu_count": 8,
+    "python_version": "3.13.14",
+    "python_executable": "D:\\projects\\forgelm\\.venv\\Scripts\\python.exe",
+    "torch_version": "2.13.0+cu126",
+    "cuda_available": true,
+    "cuda_version_torch": "12.6",
+    "cudnn_version": 91002,
+    "gpu_name": "NVIDIA GeForce GTX 1650",
+    "gpu_total_memory_bytes": 4294639616,
+    "gpu_total_memory_gib": 4.0,
+    "gpu_capability": "sm_75",
+    "gpu_multi_processor_count": 16,
+    "bf16_supported": true,
+    "nvidia_smi": "NVIDIA GeForce GTX 1650, 592.82, 4096 MiB"
+  },
+  "packages": {
+    "torch": "2.13.0+cu126",
+    "transformers": "5.15.1",
+    "peft": "0.20.0",
+    "accelerate": "1.14.0",
+    "datasets": "5.0.1",
+    "tokenizers": "0.22.2",
+    "numpy": "2.5.2",
+    "safetensors": "0.8.0",
+    "scipy": "1.18.0"
+  },
+  "seeds": {},
+  "inputs": {},
+  "config": {},
+  "metrics": {
+    "verdict": {
+      "headline": "All pre-declared success criteria were met.",
+      "all_met": true,
+      "checks": [
+        {
+          "criterion": "LoRA exact match exceeds BOTH unchanged-model baselines",
+          "met": true,
+          "evidence": "zeroshot=0.0%; fewshot=1.2%; lora=11.6%"
+        },
+        {
+          "criterion": "paired bootstrap 95% CI vs the stronger baseline (fewshot) excludes zero",
+          "met": true,
+          "evidence": "difference +10.5 pp, 95% CI [+3.5, +18.6] pp, McNemar p=1.172e-02"
+        },
+        {
+          "criterion": "schema_valid_rate does not regress against the stronger baseline",
+          "met": true,
+          "evidence": "fewshot=61.6%, lora=79.1%"
+        },
+        {
+          "criterion": "constraint_violation_rate does not increase against the stronger baseline",
+          "met": true,
+          "evidence": "fewshot=38.4%, lora=20.9%"
+        }
+      ]
+    },
+    "audit": {
+      "zeroshot": {
+        "checked": true,
+        "agrees": true,
+        "mismatches": {}
+      },
+      "fewshot": {
+        "checked": true,
+        "agrees": true,
+        "mismatches": {}
+      },
+      "lora": {
+        "checked": true,
+        "agrees": true,
+        "mismatches": {}
+      }
+    }
+  },
+  "peak_memory": {
+    "peak_allocated_bytes": 512,
+    "peak_reserved_bytes": 2097152,
+    "peak_allocated_gib": 0.0,
+    "peak_reserved_gib": 0.002
+  },
+  "artifacts": {
+    "results_json": "reports\\results_test.json",
+    "results_md": "reports\\RESULTS_test.md"
+  },
+  "warnings": [],
+  "notes": []
+}

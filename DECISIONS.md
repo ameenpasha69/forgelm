@@ -331,3 +331,42 @@ every dropped key** into the run ledger.
 say -- would disable evaluation and checkpoint selection while the run still
 appeared to succeed. Making the drop list an explicit artefact turns a silent
 failure into a visible one.
+
+**What it actually caught.** `warmup_ratio` (removed in transformers 5.x, only
+`warmup_steps` survives) and `save_safetensors`. Warm-up is now converted to a
+step count against the real total, instead of training starting at the full
+learning rate on step 1 with nobody noticing.
+
+---
+
+## D-015 -- Adapter liveness must be checked on B, not on "any LoRA tensor"
+
+**Context.** `load_adapted_model` refuses to return an inert adapter, because an
+adapter that is mathematically identical to the base model would load cleanly,
+reproduce base-model results exactly, and be misread as "fine-tuning did not
+help". The original check was: *at least one tensor whose name contains `lora_`
+is non-zero.*
+
+**The defect.** That is not sufficient. The LoRA update is
+
+```
+delta_W = (alpha / r) * B @ A
+```
+
+PEFT initialises `A` randomly and `B` to **zeros**, precisely so an untrained
+adapter is a no-op. A freshly initialised adapter therefore has roughly half its
+LoRA tensors non-zero -- every `A` matrix -- while contributing exactly nothing.
+The old check passed it.
+
+**How it was found.** `tests/test_model_integration.py::
+test_inert_adapter_is_rejected` builds a LoRA model, saves it *without training*,
+and asserts the loader raises. It did not raise. The test was written to prove
+the guard worked and instead proved it did not.
+
+**Decision.** Liveness is now determined by `lora_B` alone: at least one `lora_B`
+tensor must be non-zero. Both counts are still reported.
+
+**Impact on results: none.** The trained adapter has 168/168 `lora_B` tensors
+non-zero and passed under either rule. The bug was in the guard, not in the
+experiment. It is recorded because a safety check that cannot catch the failure
+it exists for is worse than no check -- it produces false confidence.

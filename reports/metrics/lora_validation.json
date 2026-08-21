@@ -1,0 +1,285 @@
+{
+  "condition": "lora",
+  "metrics": {
+    "category": {
+      "macro_f1": 0.6415,
+      "per_label": {
+        "access_management": {
+          "f1": 0.4444,
+          "precision": 0.3333,
+          "predicted": 12,
+          "recall": 0.6667,
+          "support": 6
+        },
+        "account_billing": {
+          "f1": 0.8889,
+          "precision": 1.0,
+          "predicted": 4,
+          "recall": 0.8,
+          "support": 5
+        },
+        "email": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 5,
+          "recall": 1.0,
+          "support": 5
+        },
+        "hardware": {
+          "f1": 0.5,
+          "precision": 1.0,
+          "predicted": 2,
+          "recall": 0.3333,
+          "support": 6
+        },
+        "network": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "predicted": 6,
+          "recall": 1.0,
+          "support": 6
+        },
+        "other": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 3,
+          "recall": 0.0,
+          "support": 5
+        },
+        "security": {
+          "f1": 0.5714,
+          "precision": 1.0,
+          "predicted": 2,
+          "recall": 0.4,
+          "support": 5
+        },
+        "software": {
+          "f1": 0.7273,
+          "precision": 0.6667,
+          "predicted": 6,
+          "recall": 0.8,
+          "support": 5
+        }
+      }
+    },
+    "category_accuracy": 0.6279,
+    "confusion_category": {
+      "access_management": {
+        "<invalid>": 2,
+        "access_management": 4,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "account_billing": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 4,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 1
+      },
+      "email": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 5,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "hardware": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 2,
+        "network": 0,
+        "other": 3,
+        "security": 0,
+        "software": 1
+      },
+      "network": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 6,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "other": {
+        "<invalid>": 0,
+        "access_management": 5,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "security": {
+        "<invalid>": 1,
+        "access_management": 2,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 2,
+        "software": 0
+      },
+      "software": {
+        "<invalid>": 0,
+        "access_management": 1,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 4
+      }
+    },
+    "confusion_priority": {
+      "critical": {
+        "<invalid>": 0,
+        "critical": 2,
+        "high": 1,
+        "low": 2,
+        "medium": 0
+      },
+      "high": {
+        "<invalid>": 0,
+        "critical": 6,
+        "high": 5,
+        "low": 2,
+        "medium": 0
+      },
+      "low": {
+        "<invalid>": 0,
+        "critical": 0,
+        "high": 0,
+        "low": 11,
+        "medium": 0
+      },
+      "medium": {
+        "<invalid>": 0,
+        "critical": 3,
+        "high": 4,
+        "low": 7,
+        "medium": 0
+      }
+    },
+    "constraint_violation_rate": 0.093,
+    "error_categories": {
+      "correct": 9,
+      "invalid_enum": 4,
+      "wrong_values_only": 30
+    },
+    "exact_match": 0.2093,
+    "exact_match_by_category": {
+      "access_management": {
+        "exact_match": 0.6667,
+        "n": 6
+      },
+      "account_billing": {
+        "exact_match": 0.0,
+        "n": 5
+      },
+      "email": {
+        "exact_match": 0.2,
+        "n": 5
+      },
+      "hardware": {
+        "exact_match": 0.0,
+        "n": 6
+      },
+      "network": {
+        "exact_match": 0.3333,
+        "n": 6
+      },
+      "other": {
+        "exact_match": 0.0,
+        "n": 5
+      },
+      "security": {
+        "exact_match": 0.4,
+        "n": 5
+      },
+      "software": {
+        "exact_match": 0.0,
+        "n": 5
+      }
+    },
+    "field_accuracy": {
+      "affected_service": 0.7907,
+      "category": 0.6279,
+      "is_security_incident": 0.9302,
+      "priority": 0.4186,
+      "users_affected": 1.0
+    },
+    "json_parse_rate_lenient": 1.0,
+    "json_parse_rate_strict": 1.0,
+    "latency_seconds": {
+      "max": 3.9572,
+      "mean": 2.4956,
+      "min": 1.5341,
+      "note": "Observation only. Measured on one consumer GPU with batched generation; not a serving-performance claim."
+    },
+    "markdown_fence_rate": 0.0,
+    "mean_field_accuracy": 0.7535,
+    "n": 43,
+    "priority": {
+      "macro_f1": 0.3379,
+      "per_label": {
+        "critical": {
+          "f1": 0.25,
+          "precision": 0.1818,
+          "predicted": 11,
+          "recall": 0.4,
+          "support": 5
+        },
+        "high": {
+          "f1": 0.4348,
+          "precision": 0.5,
+          "predicted": 10,
+          "recall": 0.3846,
+          "support": 13
+        },
+        "low": {
+          "f1": 0.6667,
+          "precision": 0.5,
+          "predicted": 22,
+          "recall": 1.0,
+          "support": 11
+        },
+        "medium": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 14
+        }
+      }
+    },
+    "priority_accuracy": 0.4186,
+    "prose_outside_json_rate": 0.0,
+    "schema_valid_rate": 0.907,
+    "truncation_rate": 0.0
+  },
+  "run_id": "20260821T203003Z_train_lora_b61876",
+  "split": "validation"
+}

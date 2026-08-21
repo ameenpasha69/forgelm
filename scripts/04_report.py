@@ -289,6 +289,33 @@ def build_markdown(results: dict, split: str) -> str:
         "versus producing the *right* object. A system can gain a lot of the "
         "first while gaining almost none of the second.")
 
+    per_field = results.get("per_field_vs_stronger_baseline")
+    if per_field:
+        stronger = per_field["stronger_baseline"]
+        add(f"## Per-field paired tests: {stronger} -> lora")
+        add("")
+        add("An aggregate win can hide a per-field loss, and an apparent "
+            "per-field loss can turn out to be noise. Each field gets its own "
+            "paired test rather than an eyeball comparison of two percentages.")
+        add("")
+        add(f"| Field | {stronger} | LoRA | Difference | 95% CI | McNemar p "
+            "| Verdict |")
+        add("|---|---|---|---|---|---|---|")
+        for field, stats in per_field["fields"].items():
+            diff = stats["paired_diff"]
+            p = stats["mcnemar"]["p_value"]
+            if diff["excludes_zero"]:
+                verdict = ("improvement" if diff["diff"] > 0
+                           else "**regression**")
+            else:
+                verdict = "no detectable difference"
+            add(f"| `{field}` | {fmt_pct(stats['baseline_rate'])} "
+                f"| {fmt_pct(stats['lora_rate'])} "
+                f"| {diff['diff'] * 100:+.1f} pp "
+                f"| [{diff['lo'] * 100:+.1f}, {diff['hi'] * 100:+.1f}] pp "
+                f"| {p:.4f} | {verdict} |")
+        add("")
+
     add("## Failure taxonomy")
     add("")
     all_cats = sorted({c for cond, _ in present
@@ -302,6 +329,38 @@ def build_markdown(results: dict, split: str) -> str:
                 .get(cat, 0)) for cond, _ in present)
         add(f"| `{cat}` | {cells} |")
     add("")
+
+    families = results.get("lora_by_scenario_family")
+    if families:
+        add("## Generalisation: LoRA exact match by held-out scenario family")
+        add("")
+        add(f"The headline rate averages over {families['n_families']} unseen "
+            f"situations. **{families['n_families_with_zero_correct']} of "
+            f"{families['n_families']} held-out families produced zero fully "
+            f"correct outputs.** The aggregate gain is concentrated in a few "
+            f"families rather than spread evenly, which is a materially "
+            f"different claim from \"the model learned the task\".")
+        add("")
+        add("| Scenario family (unseen in training) | correct / n |")
+        add("|---|---|")
+        for fam, stats in sorted(families["families"].items(),
+                                 key=lambda kv: -kv[1]["exact_match"]):
+            add(f"| `{fam}` | {stats['n_correct']} / {stats['n']} |")
+        add("")
+
+    invented = results.get("lora_invented_enum_values")
+    if invented:
+        add("### Invented enum values")
+        add("")
+        add("Where the adapted model still breaks the schema, it is mostly "
+            "copying a salient noun out of the ticket instead of mapping it "
+            "onto the closed enum:")
+        add("")
+        add("| Field | Value emitted (not in the enum) | Count |")
+        add("|---|---|---|")
+        for row in invented:
+            add(f"| `{row['field']}` | `{row['value']}` | {row['count']} |")
+        add("")
 
     verdict = results["success_criteria_verdict"]
     add("## Against the pre-declared success criteria")
@@ -386,6 +445,74 @@ def main() -> int:
                     results.get("comparisons_schema_valid", {})
                 results["comparisons_schema_valid"][f"{a}_vs_{b}"] = M.compare(
                     loaded[a], loaded[b], a, b, metric="schema_valid")
+
+        # Per-field paired tests against the stronger baseline. An aggregate
+        # win can hide a per-field loss, and a per-field difference that looks
+        # like a loss can turn out to be noise. Both cases need a test, not an
+        # eyeball comparison of two percentages.
+        if "lora" in loaded:
+            baseline_rates = {c: M.compute_metrics(loaded[c])["exact_match"]
+                              for c in ("zeroshot", "fewshot") if c in loaded}
+            if baseline_rates:
+                stronger = max(baseline_rates, key=baseline_rates.get)
+                index_a = {r["example_id"]: r for r in loaded[stronger]}
+                index_b = {r["example_id"]: r for r in loaded["lora"]}
+                shared = sorted(set(index_a) & set(index_b))
+                per_field = {}
+                for field in FIELD_ORDER:
+                    a_vals = [1.0 if index_a[e]["field_correct"].get(field)
+                              else 0.0 for e in shared]
+                    b_vals = [1.0 if index_b[e]["field_correct"].get(field)
+                              else 0.0 for e in shared]
+                    per_field[field] = {
+                        "baseline_rate": round(sum(a_vals) / len(a_vals), 4),
+                        "lora_rate": round(sum(b_vals) / len(b_vals), 4),
+                        "paired_diff": M.paired_bootstrap_diff(a_vals, b_vals),
+                        "mcnemar": M.mcnemar([bool(v) for v in a_vals],
+                                             [bool(v) for v in b_vals]),
+                    }
+                results["per_field_vs_stronger_baseline"] = {
+                    "stronger_baseline": stronger,
+                    "fields": per_field,
+                }
+
+        # ---- generalisation breakdown by held-out scenario family ---------
+        # The headline rate averages over 16 unseen situations. Averages hide
+        # concentration: a model that solves two families perfectly and fails
+        # the other fourteen scores the same as one that is uniformly mediocre,
+        # and those are very different claims about generalisation.
+        if "lora" in loaded:
+            from collections import Counter, defaultdict
+
+            families: dict[str, list] = defaultdict(list)
+            for record in loaded["lora"]:
+                families[record["scenario_family"]].append(record)
+            by_family = {
+                fam: {"n": len(rows),
+                      "exact_match": round(
+                          sum(1 for r in rows if r["exact_match"]) / len(rows), 4),
+                      "n_correct": sum(1 for r in rows if r["exact_match"])}
+                for fam, rows in sorted(families.items())
+            }
+            zero = [f for f, s in by_family.items() if s["n_correct"] == 0]
+            results["lora_by_scenario_family"] = {
+                "families": by_family,
+                "n_families": len(by_family),
+                "n_families_with_zero_correct": len(zero),
+                "families_with_zero_correct": zero,
+            }
+
+            invalid = Counter()
+            for record in loaded["lora"]:
+                for violation in record.get("schema_violations", []):
+                    if violation.startswith("invalid_enum"):
+                        field = violation.split(":", 1)[1]
+                        invalid[(field,
+                                 str(record["predicted_fields"].get(field)))] += 1
+            results["lora_invented_enum_values"] = [
+                {"field": f, "value": v, "count": c}
+                for (f, v), c in invalid.most_common(15)
+            ]
 
         # ---- success criteria --------------------------------------------
         checks = []

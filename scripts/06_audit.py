@@ -291,13 +291,18 @@ def main() -> int:
     if args.skip_tests:
         audit.check("test suite", True, "skipped via --skip-tests")
     else:
+        # NOTE: do not add -q here. pyproject's addopts already sets it, and a
+        # second -q means -qq, which suppresses the "N passed" summary line --
+        # leaving the audit unable to report its own evidence.
         proc = subprocess.run(
-            [sys.executable, "-m", "pytest", "tests/", "-q", "--no-header"],
+            [sys.executable, "-m", "pytest", "tests/", "-p", "no:cacheprovider"],
             capture_output=True, text=True, cwd=REPO_ROOT)
         summary = [l for l in proc.stdout.splitlines()
-                   if "passed" in l or "failed" in l or "error" in l]
+                   if ("passed" in l or "failed" in l or "error" in l)
+                   and " in " in l]
         audit.check("test suite passes", proc.returncode == 0,
-                    summary[-1].strip() if summary else "no summary line",
+                    summary[-1].strip() if summary
+                    else f"exit code {proc.returncode}, no summary line parsed",
                     proc.stdout[-1500:])
 
     # -- 6. secrets ----------------------------------------------------------
@@ -377,9 +382,13 @@ def main() -> int:
             _, verification = load_adapted_model(str(adapter_dir))
             audit.check("adapter reloads and is active",
                         verification["adapter_is_active"],
+                        f"{verification['n_nonzero_lora_B_tensors']}/"
+                        f"{verification['n_lora_B_tensors']} lora_B tensors "
+                        f"non-zero (B is what makes the update non-trivial), "
+                        f"max|B|={verification['max_abs_lora_B_weight']:.6f}; "
                         f"{verification['n_nonzero_lora_tensors']}/"
-                        f"{verification['n_lora_tensors']} LoRA tensors non-zero, "
-                        f"max|W|={verification['max_abs_lora_weight']:.5f}")
+                        f"{verification['n_lora_tensors']} LoRA tensors non-zero "
+                        f"overall")
         except Exception as exc:  # noqa: BLE001
             audit.check("adapter reloads and is active", False,
                         f"{type(exc).__name__}: {exc}")

@@ -1,5 +1,5 @@
 {
-  "all_passed": false,
+  "all_passed": true,
   "checks": [
     {
       "check": "dataset checksums match DATASET_VERSION.json",
@@ -50,27 +50,27 @@
       "passed": true
     },
     {
-      "check": "lora: predictions present",
-      "detail": "",
-      "evidence": "reports\\predictions\\lora_test.jsonl not found",
-      "passed": false
+      "check": "lora: metrics recompute to recorded values",
+      "detail": "mismatches: {}",
+      "evidence": "n=86 exact_match=0.1163 schema_valid=0.7907",
+      "passed": true
     },
     {
       "check": "all conditions evaluated on the same number of examples",
       "detail": "",
-      "evidence": "{'zeroshot': 86, 'fewshot': 86}",
+      "evidence": "{'zeroshot': 86, 'fewshot': 86, 'lora': 86}",
       "passed": true
     },
     {
-      "check": "test suite",
-      "detail": "",
-      "evidence": "skipped via --skip-tests",
+      "check": "test suite passes",
+      "detail": "........................................................................ [ 53%]\n..............................................................           [100%]\n134 passed in 144.30s (0:02:24)\n",
+      "evidence": "134 passed in 144.30s (0:02:24)",
       "passed": true
     },
     {
       "check": "no secrets or credentials in tracked files",
       "detail": "[]",
-      "evidence": "78 text files scanned against 6 patterns",
+      "evidence": "85 text files scanned against 6 patterns",
       "passed": true
     },
     {
@@ -88,7 +88,7 @@
     {
       "check": "every run recorded with hardware and package versions",
       "detail": "",
-      "evidence": "17 runs recorded: {'failed': 4, 'success': 12, 'running': 1}",
+      "evidence": "21 runs recorded: {'failed': 4, 'success': 17}",
       "passed": true
     },
     {
@@ -100,8 +100,26 @@
     {
       "check": "adapter artefacts present",
       "detail": "",
-      "evidence": "adapter not found",
-      "passed": false
+      "evidence": "lora_adapter/: ['README.md', 'adapter_config.json', 'adapter_model.safetensors', 'chat_template.jinja', 'forgelm_provenance.json', 'tokenizer.json', 'tokenizer_config.json']",
+      "passed": true
+    },
+    {
+      "check": "adapter carries provenance",
+      "detail": "",
+      "evidence": "forgelm_provenance.json records base model id, revision, dataset checksum and seeds",
+      "passed": true
+    },
+    {
+      "check": "no base-model weights redistributed",
+      "detail": "unexpected: []",
+      "evidence": "only adapter weights are stored",
+      "passed": true
+    },
+    {
+      "check": "adapter reloads and is active",
+      "detail": "",
+      "evidence": "168/168 lora_B tensors non-zero (B is what makes the update non-trivial), max|B|=0.005929; 336/336 LoRA tensors non-zero overall",
+      "passed": true
     }
   ],
   "recomputed_metrics": {
@@ -383,6 +401,286 @@
       "priority_accuracy": 0.4186,
       "prose_outside_json_rate": 0.0,
       "schema_valid_rate": 0.6163,
+      "truncation_rate": 0.0
+    },
+    "lora": {
+      "category": {
+        "macro_f1": 0.5065,
+        "per_label": {
+          "access_management": {
+            "f1": 0.4,
+            "precision": 0.3043,
+            "predicted": 23,
+            "recall": 0.5833,
+            "support": 12
+          },
+          "account_billing": {
+            "f1": 0.9524,
+            "precision": 0.9091,
+            "predicted": 11,
+            "recall": 1.0,
+            "support": 10
+          },
+          "email": {
+            "f1": 0.1667,
+            "precision": 0.5,
+            "predicted": 2,
+            "recall": 0.1,
+            "support": 10
+          },
+          "hardware": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "predicted": 0,
+            "recall": 0.0,
+            "support": 12
+          },
+          "network": {
+            "f1": 0.75,
+            "precision": 0.6,
+            "predicted": 20,
+            "recall": 1.0,
+            "support": 12
+          },
+          "other": {
+            "f1": 0.3333,
+            "precision": 0.375,
+            "predicted": 8,
+            "recall": 0.3,
+            "support": 10
+          },
+          "security": {
+            "f1": 0.7,
+            "precision": 0.7,
+            "predicted": 10,
+            "recall": 0.7,
+            "support": 10
+          },
+          "software": {
+            "f1": 0.75,
+            "precision": 1.0,
+            "predicted": 6,
+            "recall": 0.6,
+            "support": 10
+          }
+        }
+      },
+      "category_accuracy": 0.5349,
+      "confusion_category": {
+        "access_management": {
+          "<invalid>": 0,
+          "access_management": 7,
+          "account_billing": 0,
+          "email": 0,
+          "hardware": 0,
+          "network": 5,
+          "other": 0,
+          "security": 0,
+          "software": 0
+        },
+        "account_billing": {
+          "<invalid>": 0,
+          "access_management": 0,
+          "account_billing": 10,
+          "email": 0,
+          "hardware": 0,
+          "network": 0,
+          "other": 0,
+          "security": 0,
+          "software": 0
+        },
+        "email": {
+          "<invalid>": 1,
+          "access_management": 2,
+          "account_billing": 0,
+          "email": 1,
+          "hardware": 0,
+          "network": 1,
+          "other": 2,
+          "security": 3,
+          "software": 0
+        },
+        "hardware": {
+          "<invalid>": 2,
+          "access_management": 6,
+          "account_billing": 0,
+          "email": 0,
+          "hardware": 0,
+          "network": 2,
+          "other": 2,
+          "security": 0,
+          "software": 0
+        },
+        "network": {
+          "<invalid>": 0,
+          "access_management": 0,
+          "account_billing": 0,
+          "email": 0,
+          "hardware": 0,
+          "network": 12,
+          "other": 0,
+          "security": 0,
+          "software": 0
+        },
+        "other": {
+          "<invalid>": 2,
+          "access_management": 4,
+          "account_billing": 1,
+          "email": 0,
+          "hardware": 0,
+          "network": 0,
+          "other": 3,
+          "security": 0,
+          "software": 0
+        },
+        "security": {
+          "<invalid>": 0,
+          "access_management": 3,
+          "account_billing": 0,
+          "email": 0,
+          "hardware": 0,
+          "network": 0,
+          "other": 0,
+          "security": 7,
+          "software": 0
+        },
+        "software": {
+          "<invalid>": 1,
+          "access_management": 1,
+          "account_billing": 0,
+          "email": 1,
+          "hardware": 0,
+          "network": 0,
+          "other": 1,
+          "security": 0,
+          "software": 6
+        }
+      },
+      "confusion_priority": {
+        "critical": {
+          "<invalid>": 0,
+          "critical": 2,
+          "high": 6,
+          "low": 0,
+          "medium": 0
+        },
+        "high": {
+          "<invalid>": 0,
+          "critical": 16,
+          "high": 7,
+          "low": 12,
+          "medium": 0
+        },
+        "low": {
+          "<invalid>": 0,
+          "critical": 1,
+          "high": 3,
+          "low": 31,
+          "medium": 5
+        },
+        "medium": {
+          "<invalid>": 0,
+          "critical": 0,
+          "high": 0,
+          "low": 3,
+          "medium": 0
+        }
+      },
+      "constraint_violation_rate": 0.2093,
+      "error_categories": {
+        "correct": 10,
+        "invalid_enum": 18,
+        "wrong_values_only": 58
+      },
+      "exact_match": 0.1163,
+      "exact_match_by_category": {
+        "access_management": {
+          "exact_match": 0.0833,
+          "n": 12
+        },
+        "account_billing": {
+          "exact_match": 0.7,
+          "n": 10
+        },
+        "email": {
+          "exact_match": 0.0,
+          "n": 10
+        },
+        "hardware": {
+          "exact_match": 0.0,
+          "n": 12
+        },
+        "network": {
+          "exact_match": 0.0,
+          "n": 12
+        },
+        "other": {
+          "exact_match": 0.1,
+          "n": 10
+        },
+        "security": {
+          "exact_match": 0.0,
+          "n": 10
+        },
+        "software": {
+          "exact_match": 0.1,
+          "n": 10
+        }
+      },
+      "field_accuracy": {
+        "affected_service": 0.5814,
+        "category": 0.5349,
+        "is_security_incident": 0.9186,
+        "priority": 0.4651,
+        "users_affected": 1.0
+      },
+      "json_parse_rate_lenient": 1.0,
+      "json_parse_rate_strict": 1.0,
+      "latency_seconds": {
+        "max": 2.1246,
+        "mean": 1.5736,
+        "min": 1.3469,
+        "note": "Observation only. Measured on one consumer GPU with batched generation; not a serving-performance claim."
+      },
+      "markdown_fence_rate": 0.0,
+      "mean_field_accuracy": 0.7,
+      "n": 86,
+      "priority": {
+        "macro_f1": 0.2859,
+        "per_label": {
+          "critical": {
+            "f1": 0.1481,
+            "precision": 0.1053,
+            "predicted": 19,
+            "recall": 0.25,
+            "support": 8
+          },
+          "high": {
+            "f1": 0.2745,
+            "precision": 0.4375,
+            "predicted": 16,
+            "recall": 0.2,
+            "support": 35
+          },
+          "low": {
+            "f1": 0.7209,
+            "precision": 0.6739,
+            "predicted": 46,
+            "recall": 0.775,
+            "support": 40
+          },
+          "medium": {
+            "f1": 0.0,
+            "precision": 0.0,
+            "predicted": 5,
+            "recall": 0.0,
+            "support": 3
+          }
+        }
+      },
+      "priority_accuracy": 0.4651,
+      "prose_outside_json_rate": 0.0,
+      "schema_valid_rate": 0.7907,
       "truncation_rate": 0.0
     },
     "zeroshot": {

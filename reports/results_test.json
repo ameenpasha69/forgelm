@@ -5,6 +5,11 @@
       "checked": true,
       "mismatches": {}
     },
+    "lora": {
+      "agrees": true,
+      "checked": true,
+      "mismatches": {}
+    },
     "zeroshot": {
       "agrees": true,
       "checked": true,
@@ -12,6 +17,49 @@
     }
   },
   "comparisons": {
+    "fewshot_vs_lora": {
+      "a_ci": {
+        "alpha": 0.05,
+        "hi": 0.0349,
+        "lo": 0.0,
+        "mean": 0.0116,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "a_rate": 0.0116,
+      "b_ci": {
+        "alpha": 0.05,
+        "hi": 0.186,
+        "lo": 0.0465,
+        "mean": 0.1163,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "b_rate": 0.1163,
+      "mcnemar": {
+        "backend": "scipy.stats.binomtest",
+        "both_correct": 0,
+        "n_discordant": 11,
+        "neither_correct": 75,
+        "only_a_correct": 1,
+        "only_b_correct": 10,
+        "p_value": 0.01171875,
+        "test": "exact binomial (McNemar)"
+      },
+      "metric": "exact_match",
+      "n_examples": 86,
+      "paired_diff": {
+        "alpha": 0.05,
+        "diff": 0.1047,
+        "excludes_zero": true,
+        "hi": 0.186,
+        "lo": 0.0349,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "system_a": "fewshot",
+      "system_b": "lora"
+    },
     "zeroshot_vs_fewshot": {
       "a_ci": {
         "alpha": 0.05,
@@ -54,9 +102,95 @@
       },
       "system_a": "zeroshot",
       "system_b": "fewshot"
+    },
+    "zeroshot_vs_lora": {
+      "a_ci": {
+        "alpha": 0.05,
+        "hi": 0.0,
+        "lo": 0.0,
+        "mean": 0.0,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "a_rate": 0.0,
+      "b_ci": {
+        "alpha": 0.05,
+        "hi": 0.186,
+        "lo": 0.0465,
+        "mean": 0.1163,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "b_rate": 0.1163,
+      "mcnemar": {
+        "backend": "scipy.stats.binomtest",
+        "both_correct": 0,
+        "n_discordant": 10,
+        "neither_correct": 76,
+        "only_a_correct": 0,
+        "only_b_correct": 10,
+        "p_value": 0.001953125,
+        "test": "exact binomial (McNemar)"
+      },
+      "metric": "exact_match",
+      "n_examples": 86,
+      "paired_diff": {
+        "alpha": 0.05,
+        "diff": 0.1163,
+        "excludes_zero": true,
+        "hi": 0.186,
+        "lo": 0.0465,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "system_a": "zeroshot",
+      "system_b": "lora"
     }
   },
   "comparisons_schema_valid": {
+    "fewshot_vs_lora": {
+      "a_ci": {
+        "alpha": 0.05,
+        "hi": 0.7209,
+        "lo": 0.5116,
+        "mean": 0.6163,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "a_rate": 0.6163,
+      "b_ci": {
+        "alpha": 0.05,
+        "hi": 0.8721,
+        "lo": 0.7093,
+        "mean": 0.7907,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "b_rate": 0.7907,
+      "mcnemar": {
+        "backend": "scipy.stats.binomtest",
+        "both_correct": 48,
+        "n_discordant": 25,
+        "neither_correct": 13,
+        "only_a_correct": 5,
+        "only_b_correct": 20,
+        "p_value": 0.004077315330505371,
+        "test": "exact binomial (McNemar)"
+      },
+      "metric": "schema_valid",
+      "n_examples": 86,
+      "paired_diff": {
+        "alpha": 0.05,
+        "diff": 0.1744,
+        "excludes_zero": true,
+        "hi": 0.2791,
+        "lo": 0.0698,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "system_a": "fewshot",
+      "system_b": "lora"
+    },
     "zeroshot_vs_fewshot": {
       "a_ci": {
         "alpha": 0.05,
@@ -99,6 +233,49 @@
       },
       "system_a": "zeroshot",
       "system_b": "fewshot"
+    },
+    "zeroshot_vs_lora": {
+      "a_ci": {
+        "alpha": 0.05,
+        "hi": 0.3721,
+        "lo": 0.186,
+        "mean": 0.2791,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "a_rate": 0.2791,
+      "b_ci": {
+        "alpha": 0.05,
+        "hi": 0.8721,
+        "lo": 0.7093,
+        "mean": 0.7907,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "b_rate": 0.7907,
+      "mcnemar": {
+        "backend": "scipy.stats.binomtest",
+        "both_correct": 24,
+        "n_discordant": 44,
+        "neither_correct": 18,
+        "only_a_correct": 0,
+        "only_b_correct": 44,
+        "p_value": 1.1368683772161603e-13,
+        "test": "exact binomial (McNemar)"
+      },
+      "metric": "schema_valid",
+      "n_examples": 86,
+      "paired_diff": {
+        "alpha": 0.05,
+        "diff": 0.5116,
+        "excludes_zero": true,
+        "hi": 0.6163,
+        "lo": 0.407,
+        "n": 86,
+        "n_resamples": 10000
+      },
+      "system_a": "zeroshot",
+      "system_b": "lora"
     }
   },
   "conditions": {
@@ -456,6 +633,364 @@
         "priority_accuracy": 0.4186,
         "prose_outside_json_rate": 0.0,
         "schema_valid_rate": 0.6163,
+        "truncation_rate": 0.0
+      },
+      "n": 86
+    },
+    "lora": {
+      "intervals": {
+        "constraint_violation_rate": {
+          "alpha": 0.05,
+          "hi": 0.3023,
+          "lo": 0.1279,
+          "mean": 0.2093,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "exact_match": {
+          "alpha": 0.05,
+          "hi": 0.186,
+          "lo": 0.0581,
+          "mean": 0.1163,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "field_accuracy.affected_service": {
+          "alpha": 0.05,
+          "hi": 0.686,
+          "lo": 0.4767,
+          "mean": 0.5814,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "field_accuracy.category": {
+          "alpha": 0.05,
+          "hi": 0.6395,
+          "lo": 0.4302,
+          "mean": 0.5349,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "field_accuracy.is_security_incident": {
+          "alpha": 0.05,
+          "hi": 0.9767,
+          "lo": 0.8605,
+          "mean": 0.9186,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "field_accuracy.priority": {
+          "alpha": 0.05,
+          "hi": 0.5698,
+          "lo": 0.3605,
+          "mean": 0.4651,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "field_accuracy.users_affected": {
+          "alpha": 0.05,
+          "hi": 1.0,
+          "lo": 1.0,
+          "mean": 1.0,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "json_parse_rate_lenient": {
+          "alpha": 0.05,
+          "hi": 1.0,
+          "lo": 1.0,
+          "mean": 1.0,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "schema_valid_rate": {
+          "alpha": 0.05,
+          "hi": 0.8721,
+          "lo": 0.6977,
+          "mean": 0.7907,
+          "n": 86,
+          "n_resamples": 10000
+        }
+      },
+      "label": "Base model + LoRA adapter",
+      "metrics": {
+        "category": {
+          "macro_f1": 0.5065,
+          "per_label": {
+            "access_management": {
+              "f1": 0.4,
+              "precision": 0.3043,
+              "predicted": 23,
+              "recall": 0.5833,
+              "support": 12
+            },
+            "account_billing": {
+              "f1": 0.9524,
+              "precision": 0.9091,
+              "predicted": 11,
+              "recall": 1.0,
+              "support": 10
+            },
+            "email": {
+              "f1": 0.1667,
+              "precision": 0.5,
+              "predicted": 2,
+              "recall": 0.1,
+              "support": 10
+            },
+            "hardware": {
+              "f1": 0.0,
+              "precision": 0.0,
+              "predicted": 0,
+              "recall": 0.0,
+              "support": 12
+            },
+            "network": {
+              "f1": 0.75,
+              "precision": 0.6,
+              "predicted": 20,
+              "recall": 1.0,
+              "support": 12
+            },
+            "other": {
+              "f1": 0.3333,
+              "precision": 0.375,
+              "predicted": 8,
+              "recall": 0.3,
+              "support": 10
+            },
+            "security": {
+              "f1": 0.7,
+              "precision": 0.7,
+              "predicted": 10,
+              "recall": 0.7,
+              "support": 10
+            },
+            "software": {
+              "f1": 0.75,
+              "precision": 1.0,
+              "predicted": 6,
+              "recall": 0.6,
+              "support": 10
+            }
+          }
+        },
+        "category_accuracy": 0.5349,
+        "confusion_category": {
+          "access_management": {
+            "<invalid>": 0,
+            "access_management": 7,
+            "account_billing": 0,
+            "email": 0,
+            "hardware": 0,
+            "network": 5,
+            "other": 0,
+            "security": 0,
+            "software": 0
+          },
+          "account_billing": {
+            "<invalid>": 0,
+            "access_management": 0,
+            "account_billing": 10,
+            "email": 0,
+            "hardware": 0,
+            "network": 0,
+            "other": 0,
+            "security": 0,
+            "software": 0
+          },
+          "email": {
+            "<invalid>": 1,
+            "access_management": 2,
+            "account_billing": 0,
+            "email": 1,
+            "hardware": 0,
+            "network": 1,
+            "other": 2,
+            "security": 3,
+            "software": 0
+          },
+          "hardware": {
+            "<invalid>": 2,
+            "access_management": 6,
+            "account_billing": 0,
+            "email": 0,
+            "hardware": 0,
+            "network": 2,
+            "other": 2,
+            "security": 0,
+            "software": 0
+          },
+          "network": {
+            "<invalid>": 0,
+            "access_management": 0,
+            "account_billing": 0,
+            "email": 0,
+            "hardware": 0,
+            "network": 12,
+            "other": 0,
+            "security": 0,
+            "software": 0
+          },
+          "other": {
+            "<invalid>": 2,
+            "access_management": 4,
+            "account_billing": 1,
+            "email": 0,
+            "hardware": 0,
+            "network": 0,
+            "other": 3,
+            "security": 0,
+            "software": 0
+          },
+          "security": {
+            "<invalid>": 0,
+            "access_management": 3,
+            "account_billing": 0,
+            "email": 0,
+            "hardware": 0,
+            "network": 0,
+            "other": 0,
+            "security": 7,
+            "software": 0
+          },
+          "software": {
+            "<invalid>": 1,
+            "access_management": 1,
+            "account_billing": 0,
+            "email": 1,
+            "hardware": 0,
+            "network": 0,
+            "other": 1,
+            "security": 0,
+            "software": 6
+          }
+        },
+        "confusion_priority": {
+          "critical": {
+            "<invalid>": 0,
+            "critical": 2,
+            "high": 6,
+            "low": 0,
+            "medium": 0
+          },
+          "high": {
+            "<invalid>": 0,
+            "critical": 16,
+            "high": 7,
+            "low": 12,
+            "medium": 0
+          },
+          "low": {
+            "<invalid>": 0,
+            "critical": 1,
+            "high": 3,
+            "low": 31,
+            "medium": 5
+          },
+          "medium": {
+            "<invalid>": 0,
+            "critical": 0,
+            "high": 0,
+            "low": 3,
+            "medium": 0
+          }
+        },
+        "constraint_violation_rate": 0.2093,
+        "error_categories": {
+          "correct": 10,
+          "invalid_enum": 18,
+          "wrong_values_only": 58
+        },
+        "exact_match": 0.1163,
+        "exact_match_by_category": {
+          "access_management": {
+            "exact_match": 0.0833,
+            "n": 12
+          },
+          "account_billing": {
+            "exact_match": 0.7,
+            "n": 10
+          },
+          "email": {
+            "exact_match": 0.0,
+            "n": 10
+          },
+          "hardware": {
+            "exact_match": 0.0,
+            "n": 12
+          },
+          "network": {
+            "exact_match": 0.0,
+            "n": 12
+          },
+          "other": {
+            "exact_match": 0.1,
+            "n": 10
+          },
+          "security": {
+            "exact_match": 0.0,
+            "n": 10
+          },
+          "software": {
+            "exact_match": 0.1,
+            "n": 10
+          }
+        },
+        "field_accuracy": {
+          "affected_service": 0.5814,
+          "category": 0.5349,
+          "is_security_incident": 0.9186,
+          "priority": 0.4651,
+          "users_affected": 1.0
+        },
+        "json_parse_rate_lenient": 1.0,
+        "json_parse_rate_strict": 1.0,
+        "latency_seconds": {
+          "max": 2.1246,
+          "mean": 1.5736,
+          "min": 1.3469,
+          "note": "Observation only. Measured on one consumer GPU with batched generation; not a serving-performance claim."
+        },
+        "markdown_fence_rate": 0.0,
+        "mean_field_accuracy": 0.7,
+        "n": 86,
+        "priority": {
+          "macro_f1": 0.2859,
+          "per_label": {
+            "critical": {
+              "f1": 0.1481,
+              "precision": 0.1053,
+              "predicted": 19,
+              "recall": 0.25,
+              "support": 8
+            },
+            "high": {
+              "f1": 0.2745,
+              "precision": 0.4375,
+              "predicted": 16,
+              "recall": 0.2,
+              "support": 35
+            },
+            "low": {
+              "f1": 0.7209,
+              "precision": 0.6739,
+              "predicted": 46,
+              "recall": 0.775,
+              "support": 40
+            },
+            "medium": {
+              "f1": 0.0,
+              "precision": 0.0,
+              "predicted": 5,
+              "recall": 0.0,
+              "support": 3
+            }
+          }
+        },
+        "priority_accuracy": 0.4651,
+        "prose_outside_json_rate": 0.0,
+        "schema_valid_rate": 0.7907,
         "truncation_rate": 0.0
       },
       "n": 86
@@ -823,7 +1358,8 @@
   "figures": [
     "reports\\figures\\headline_metrics_test.png",
     "reports\\figures\\field_accuracy_test.png",
-    "reports\\figures\\error_taxonomy_test.png"
+    "reports\\figures\\error_taxonomy_test.png",
+    "reports\\figures\\training_curve.png"
   ],
   "ledger_runs": [
     {
@@ -905,10 +1441,10 @@
       "status": "success"
     },
     {
-      "elapsed_seconds": 0.0,
+      "elapsed_seconds": 2383.859,
       "kind": "train_lora",
       "run_id": "20260821T203003Z_train_lora_b61876",
-      "status": "running"
+      "status": "success"
     },
     {
       "elapsed_seconds": 58.139,
@@ -923,13 +1459,298 @@
       "status": "failed"
     },
     {
-      "elapsed_seconds": 0.0,
+      "elapsed_seconds": 47.958,
       "kind": "report",
       "run_id": "20260821T205800Z_report_f8a3c4",
+      "status": "success"
+    },
+    {
+      "elapsed_seconds": 199.241,
+      "kind": "eval_lora",
+      "run_id": "20260821T211024Z_eval_lora_73a19c",
+      "status": "success"
+    },
+    {
+      "elapsed_seconds": 51.783,
+      "kind": "report",
+      "run_id": "20260821T211409Z_report_3413d6",
+      "status": "success"
+    },
+    {
+      "elapsed_seconds": 46.928,
+      "kind": "report",
+      "run_id": "20260821T211612Z_report_0a5b3c",
+      "status": "success"
+    },
+    {
+      "elapsed_seconds": 0.0,
+      "kind": "report",
+      "run_id": "20260821T211753Z_report_daf5fe",
       "status": "running"
     }
   ],
+  "lora_by_scenario_family": {
+    "families": {
+      "ab_expense_reimbursement": {
+        "exact_match": 1.0,
+        "n": 5,
+        "n_correct": 5
+      },
+      "ab_invoice_dispute": {
+        "exact_match": 0.4,
+        "n": 5,
+        "n_correct": 2
+      },
+      "am_account_lockout": {
+        "exact_match": 0.1667,
+        "n": 6,
+        "n_correct": 1
+      },
+      "am_sso_failure": {
+        "exact_match": 0.0,
+        "n": 6,
+        "n_correct": 0
+      },
+      "email_calendar_sync": {
+        "exact_match": 0.0,
+        "n": 5,
+        "n_correct": 0
+      },
+      "email_spoofed_sender": {
+        "exact_match": 0.0,
+        "n": 5,
+        "n_correct": 0
+      },
+      "hw_monitor_dead": {
+        "exact_match": 0.0,
+        "n": 6,
+        "n_correct": 0
+      },
+      "hw_stolen_laptop": {
+        "exact_match": 0.0,
+        "n": 6,
+        "n_correct": 0
+      },
+      "net_dns_failure": {
+        "exact_match": 0.0,
+        "n": 6,
+        "n_correct": 0
+      },
+      "net_slow_internet": {
+        "exact_match": 0.0,
+        "n": 6,
+        "n_correct": 0
+      },
+      "oth_asset_inventory": {
+        "exact_match": 0.0,
+        "n": 5,
+        "n_correct": 0
+      },
+      "oth_meeting_room_av": {
+        "exact_match": 0.2,
+        "n": 5,
+        "n_correct": 1
+      },
+      "sec_malware_detected": {
+        "exact_match": 0.0,
+        "n": 5,
+        "n_correct": 0
+      },
+      "sec_suspicious_login": {
+        "exact_match": 0.0,
+        "n": 5,
+        "n_correct": 0
+      },
+      "sw_file_corrupt": {
+        "exact_match": 0.2,
+        "n": 5,
+        "n_correct": 1
+      },
+      "sw_update_broke_app": {
+        "exact_match": 0.0,
+        "n": 5,
+        "n_correct": 0
+      }
+    },
+    "families_with_zero_correct": [
+      "am_sso_failure",
+      "email_calendar_sync",
+      "email_spoofed_sender",
+      "hw_monitor_dead",
+      "hw_stolen_laptop",
+      "net_dns_failure",
+      "net_slow_internet",
+      "oth_asset_inventory",
+      "sec_malware_detected",
+      "sec_suspicious_login",
+      "sw_update_broke_app"
+    ],
+    "n_families": 16,
+    "n_families_with_zero_correct": 11
+  },
+  "lora_invented_enum_values": [
+    {
+      "count": 6,
+      "field": "affected_service",
+      "value": "dns"
+    },
+    {
+      "count": 3,
+      "field": "affected_service",
+      "value": "internet"
+    },
+    {
+      "count": 2,
+      "field": "category",
+      "value": "display"
+    },
+    {
+      "count": 2,
+      "field": "affected_service",
+      "value": "invoice"
+    },
+    {
+      "count": 2,
+      "field": "category",
+      "value": "audio"
+    },
+    {
+      "count": 1,
+      "field": "affected_service",
+      "value": "download"
+    },
+    {
+      "count": 1,
+      "field": "category",
+      "value": "file_system"
+    },
+    {
+      "count": 1,
+      "field": "category",
+      "value": "phone"
+    }
+  ],
   "n_examples": 86,
+  "per_field_vs_stronger_baseline": {
+    "fields": {
+      "affected_service": {
+        "baseline_rate": 0.3721,
+        "lora_rate": 0.5814,
+        "mcnemar": {
+          "backend": "scipy.stats.binomtest",
+          "both_correct": 27,
+          "n_discordant": 28,
+          "neither_correct": 31,
+          "only_a_correct": 5,
+          "only_b_correct": 23,
+          "p_value": 0.0009122341871261597,
+          "test": "exact binomial (McNemar)"
+        },
+        "paired_diff": {
+          "alpha": 0.05,
+          "diff": 0.2093,
+          "excludes_zero": true,
+          "hi": 0.3256,
+          "lo": 0.093,
+          "n": 86,
+          "n_resamples": 10000
+        }
+      },
+      "category": {
+        "baseline_rate": 0.593,
+        "lora_rate": 0.5349,
+        "mcnemar": {
+          "backend": "scipy.stats.binomtest",
+          "both_correct": 34,
+          "n_discordant": 29,
+          "neither_correct": 23,
+          "only_a_correct": 17,
+          "only_b_correct": 12,
+          "p_value": 0.45825831964612007,
+          "test": "exact binomial (McNemar)"
+        },
+        "paired_diff": {
+          "alpha": 0.05,
+          "diff": -0.0581,
+          "excludes_zero": false,
+          "hi": 0.0698,
+          "lo": -0.1744,
+          "n": 86,
+          "n_resamples": 10000
+        }
+      },
+      "is_security_incident": {
+        "baseline_rate": 0.814,
+        "lora_rate": 0.9186,
+        "mcnemar": {
+          "backend": "scipy.stats.binomtest",
+          "both_correct": 68,
+          "n_discordant": 13,
+          "neither_correct": 5,
+          "only_a_correct": 2,
+          "only_b_correct": 11,
+          "p_value": 0.0224609375,
+          "test": "exact binomial (McNemar)"
+        },
+        "paired_diff": {
+          "alpha": 0.05,
+          "diff": 0.1047,
+          "excludes_zero": true,
+          "hi": 0.186,
+          "lo": 0.0233,
+          "n": 86,
+          "n_resamples": 10000
+        }
+      },
+      "priority": {
+        "baseline_rate": 0.4186,
+        "lora_rate": 0.4651,
+        "mcnemar": {
+          "backend": "scipy.stats.binomtest",
+          "both_correct": 12,
+          "n_discordant": 52,
+          "neither_correct": 22,
+          "only_a_correct": 24,
+          "only_b_correct": 28,
+          "p_value": 0.6778086391424605,
+          "test": "exact binomial (McNemar)"
+        },
+        "paired_diff": {
+          "alpha": 0.05,
+          "diff": 0.0465,
+          "excludes_zero": false,
+          "hi": 0.2093,
+          "lo": -0.1163,
+          "n": 86,
+          "n_resamples": 10000
+        }
+      },
+      "users_affected": {
+        "baseline_rate": 1.0,
+        "lora_rate": 1.0,
+        "mcnemar": {
+          "both_correct": 86,
+          "n_discordant": 0,
+          "neither_correct": 0,
+          "note": "no discordant pairs; the systems agree on every example",
+          "only_a_correct": 0,
+          "only_b_correct": 0,
+          "p_value": 1.0,
+          "test": "exact binomial (McNemar)"
+        },
+        "paired_diff": {
+          "alpha": 0.05,
+          "diff": 0.0,
+          "excludes_zero": false,
+          "hi": 0.0,
+          "lo": 0.0,
+          "n": 86,
+          "n_resamples": 10000
+        }
+      }
+    },
+    "stronger_baseline": "fewshot"
+  },
   "split": "test",
   "success_criteria": {
     "declared_at": "before any training run; see DECISIONS.md D-008",
@@ -950,8 +1771,29 @@
     ]
   },
   "success_criteria_verdict": {
-    "all_met": false,
-    "checks": [],
-    "headline": "Not yet evaluable: the LoRA condition has not been run."
+    "all_met": true,
+    "checks": [
+      {
+        "criterion": "LoRA exact match exceeds BOTH unchanged-model baselines",
+        "evidence": "zeroshot=0.0%; fewshot=1.2%; lora=11.6%",
+        "met": true
+      },
+      {
+        "criterion": "paired bootstrap 95% CI vs the stronger baseline (fewshot) excludes zero",
+        "evidence": "difference +10.5 pp, 95% CI [+3.5, +18.6] pp, McNemar p=1.172e-02",
+        "met": true
+      },
+      {
+        "criterion": "schema_valid_rate does not regress against the stronger baseline",
+        "evidence": "fewshot=61.6%, lora=79.1%",
+        "met": true
+      },
+      {
+        "criterion": "constraint_violation_rate does not increase against the stronger baseline",
+        "evidence": "fewshot=38.4%, lora=20.9%",
+        "met": true
+      }
+    ],
+    "headline": "All pre-declared success criteria were met."
   }
 }
