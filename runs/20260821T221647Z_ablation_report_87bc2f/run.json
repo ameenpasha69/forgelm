@@ -1,0 +1,67 @@
+{
+  "run_id": "20260821T221647Z_ablation_report_87bc2f",
+  "kind": "ablation_report",
+  "status": "failed",
+  "started_utc": "2026-08-21T22:16:47.155628+00:00",
+  "ended_utc": "2026-08-21T22:17:20.765287+00:00",
+  "elapsed_seconds": 33.61,
+  "git": {
+    "commit": "1ed4d831df637f64631515fad4601d4843ffd758",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "M .gitignore",
+      " M README.md",
+      " M STATUS.md",
+      "?? reports/ABLATION.md",
+      "?? reports/ablation.json",
+      "?? reports/predictions/lora_selftest_test.jsonl",
+      "?? runs/20260821T221647Z_ablation_report_87bc2f/"
+    ]
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+    "cpu_count": 8,
+    "python_version": "3.13.14",
+    "python_executable": "D:\\projects\\forgelm\\.venv\\Scripts\\python.exe",
+    "torch_version": "2.13.0+cu126",
+    "cuda_available": true,
+    "cuda_version_torch": "12.6",
+    "cudnn_version": 91002,
+    "gpu_name": "NVIDIA GeForce GTX 1650",
+    "gpu_total_memory_bytes": 4294639616,
+    "gpu_total_memory_gib": 4.0,
+    "gpu_capability": "sm_75",
+    "gpu_multi_processor_count": 16,
+    "bf16_supported": true,
+    "nvidia_smi": "NVIDIA GeForce GTX 1650, 592.82, 4096 MiB"
+  },
+  "packages": {
+    "torch": "2.13.0+cu126",
+    "transformers": "5.15.1",
+    "peft": "0.20.0",
+    "accelerate": "1.14.0",
+    "datasets": "5.0.1",
+    "tokenizers": "0.22.2",
+    "numpy": "2.5.2",
+    "safetensors": "0.8.0",
+    "scipy": "1.18.0"
+  },
+  "seeds": {},
+  "inputs": {},
+  "config": {},
+  "metrics": {},
+  "peak_memory": {
+    "peak_allocated_bytes": 512,
+    "peak_reserved_bytes": 2097152,
+    "peak_allocated_gib": 0.0,
+    "peak_reserved_gib": 0.002
+  },
+  "artifacts": {},
+  "warnings": [],
+  "notes": [
+    "exception: TypeError: unsupported format string passed to NoneType.__format__"
+  ]
+}

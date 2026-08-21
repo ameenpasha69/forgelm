@@ -20,6 +20,13 @@ runs/*/smoke_output/
 artifacts/**/checkpoint-*/
 *.zip
 
+# Ablation adapters. The primary adapter (artifacts/lora_adapter/) IS committed
+# because it is the deliverable. Tagged ablation adapters are ~35 MB each and
+# nobody needs the weights: what carries the finding is their per-example
+# predictions in reports/predictions/, which are committed. Regenerate with
+#   python scripts/03_train_lora.py --train-fraction 0.5 --tag frac50
+artifacts/lora_adapter_*/
+
 # Notebook noise
 .ipynb_checkpoints/
 

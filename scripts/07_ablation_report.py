@@ -33,6 +33,11 @@ def fmt_pct(x: float) -> str:
     return f"{100 * x:.1f}%"
 
 
+def fmt_n(n: int | None) -> str:
+    """Training-set sizes come from the ledger and may be absent."""
+    return "unknown" if n is None else str(n)
+
+
 def find_training_run(tag: str | None):
     """Locate the ledger record for a training run by its adapter tag."""
     suffix = f"_{tag}" if tag else ""
@@ -74,6 +79,18 @@ def main() -> int:
         subsample = (abl_run or {}).get("inputs", {}).get("train_subsample") or {}
         n_full = subsample.get("n_before")
         n_abl = subsample.get("n_after")
+
+        # If the ledger record is missing we can still do the statistics, but we
+        # cannot say what the ablation actually changed -- and an ablation whose
+        # manipulation is unknown is not interpretable. Say so plainly rather
+        # than emitting a report with blanks in it.
+        if abl_run is None:
+            run.warn(f"no successful train_lora ledger record found for tag "
+                     f"{args.ablation!r}")
+            print(f"WARNING: no training-run record found for tag "
+                  f"{args.ablation!r}. Training-set sizes and family coverage "
+                  f"cannot be reported, so the comparison below is statistics "
+                  f"without a described manipulation.", file=sys.stderr)
 
         # The decisive question for interpreting this ablation: did halving the
         # data remove *examples per scenario*, or did it remove *scenarios*?
@@ -159,7 +176,8 @@ def main() -> int:
             "success criteria and should not be read with the same weight.**")
         add("")
         add(f"One variable changed: the number of training examples "
-            f"({n_full} -> {n_abl}, category-stratified, deterministic). "
+            f"({fmt_n(n_full)} -> {fmt_n(n_abl)}, category-stratified, "
+            f"deterministic). "
             f"LoRA rank, alpha, dropout, learning rate, schedule, batch size, "
             f"sequence length, precision, seeds, prompt, decoding and the "
             f"evaluation split are all identical.")
@@ -210,11 +228,11 @@ def main() -> int:
         add("| Training examples | Strict JSON | Schema valid | Exact match | "
             "Constraint violations |")
         add("|---|---|---|---|---|")
-        add(f"| {n_abl} (50%) | {fmt_pct(abl_m['json_parse_rate_strict'])} "
+        add(f"| {fmt_n(n_abl)} | {fmt_pct(abl_m['json_parse_rate_strict'])} "
             f"| {fmt_pct(abl_m['schema_valid_rate'])} "
             f"| {fmt_pct(abl_m['exact_match'])} "
             f"| {fmt_pct(abl_m['constraint_violation_rate'])} |")
-        add(f"| **{n_full} (100%)** | {fmt_pct(base_m['json_parse_rate_strict'])} "
+        add(f"| **{fmt_n(n_full)}** | {fmt_pct(base_m['json_parse_rate_strict'])} "
             f"| {fmt_pct(base_m['schema_valid_rate'])} "
             f"| {fmt_pct(base_m['exact_match'])} "
             f"| {fmt_pct(base_m['constraint_violation_rate'])} |")
@@ -253,14 +271,16 @@ def main() -> int:
         add("## Reading this honestly")
         add("")
         if diff["excludes_zero"]:
-            add(f"Doubling the training data from {n_abl} to {n_full} produced a "
+            add(f"Doubling the training data from {fmt_n(n_abl)} to "
+                f"{fmt_n(n_full)} produced a "
                 f"detectable improvement in exact match "
                 f"({diff['diff'] * 100:+.1f} pp, 95% CI "
                 f"[{diff['lo'] * 100:+.1f}, {diff['hi'] * 100:+.1f}] pp). "
                 f"On this task the data curve had not flattened by 171 examples, "
                 f"so more data of the same kind was still buying accuracy.")
         else:
-            add(f"Doubling the training data from {n_abl} to {n_full} did **not** "
+            add(f"Doubling the training data from {fmt_n(n_abl)} to "
+                f"{fmt_n(n_full)} did **not** "
                 f"produce a detectable change in exact match "
                 f"({diff['diff'] * 100:+.1f} pp, 95% CI "
                 f"[{diff['lo'] * 100:+.1f}, {diff['hi'] * 100:+.1f}] pp, "
@@ -287,9 +307,11 @@ def main() -> int:
         dataio.write_json(payload, REPORTS / "ablation.json")
         (REPORTS / "ABLATION.md").write_text("\n".join(lines), encoding="utf-8")
 
-        print(f"50%  ({n_abl:3d} ex): exact_match={abl_m['exact_match']:.4f} "
+        print(f"ablation ({fmt_n(n_abl)} ex): "
+              f"exact_match={abl_m['exact_match']:.4f} "
               f"schema_valid={abl_m['schema_valid_rate']:.4f}")
-        print(f"100% ({n_full:3d} ex): exact_match={base_m['exact_match']:.4f} "
+        print(f"full     ({fmt_n(n_full)} ex): "
+              f"exact_match={base_m['exact_match']:.4f} "
               f"schema_valid={base_m['schema_valid_rate']:.4f}")
         print(f"difference {diff['diff'] * 100:+.1f} pp, "
               f"95% CI [{diff['lo'] * 100:+.1f}, {diff['hi'] * 100:+.1f}] pp, "

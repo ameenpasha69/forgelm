@@ -167,8 +167,9 @@ Verified means it ran and left evidence. See `STATUS.md` for the full table and
   LoRA weights are inert.
 - **Metrics recomputed** from raw predictions and audited against the values
   recorded at run time.
-- **134 tests**, including tests that deliberately poison the data to prove the
-  leakage and duplicate detectors actually fire.
+- **142 tests**, including tests that deliberately poison the data to prove the
+  leakage and duplicate detectors actually fire, and one that saves an
+  untrained adapter to prove the liveness guard rejects it.
 
 ## Repository map
 
@@ -191,6 +192,7 @@ Verified means it ran and left evidence. See `STATUS.md` for the full table and
 | `scripts/04_report.py` | Recompute metrics from predictions; build report and figures. |
 | `scripts/05_review_sample.py` | Dump a stratified sample for human reading. |
 | `scripts/06_audit.py` | Final evidence audit. Exits non-zero on any failure. |
+| `scripts/07_ablation_report.py` | Paired comparison of the primary run against a controlled ablation, kept separate so an exploratory number is not read with the same weight as the pre-registered one. |
 | `scripts/demo_app.py` | Local demonstration. Not a deployment. |
 | `notebooks/forgelm_colab.ipynb` | The teaching artefact: 50 cells, end to end. |
 | `runs/` | One JSON record per executed run, including failures. |

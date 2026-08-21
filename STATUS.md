@@ -52,7 +52,7 @@ files to contain them. The repository was initialised at `D:\projects\forgelm`.
 | Published repository | **verified** | pushed to GitHub, then cloned back into a clean directory and all three dataset checksums re-verified | -- | none |
 | Optional ablation | **not started** | -- | compute was spent on the primary experiment; no ablation result is claimed | `--train-fraction 0.5` or `configs/ablation_r8.json` are wired up and ready |
 | Optional demo app | **partially verified** | `--cli` executed against the trained adapter: loaded 336/336 LoRA tensors and returned a schema-valid, correct triage for the VPN example; missing-adapter error path also executed | Gradio UI itself not launched (gradio is an optional dependency and is not installed) | `pip install gradio` and run without `--cli` |
-| Test suite | **verified** | `134 passed in 144.30s`, recorded in `reports/EVIDENCE.md` | no test asserts a *result value*, by design | none |
+| Test suite | **verified** | 142 tests; count and runtime recorded in `reports/EVIDENCE.md` by the audit itself | no test asserts a *result value*, by design | none |
 | Final evidence audit | **verified** | `20/20 checks passed`, `reports/EVIDENCE.md` | -- | none |
 
 ---

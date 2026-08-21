@@ -1,0 +1,117 @@
+{
+  "run_id": "20260821T221809Z_ablation_report_3190e0",
+  "kind": "ablation_report",
+  "status": "success",
+  "started_utc": "2026-08-21T22:18:09.036776+00:00",
+  "ended_utc": "2026-08-21T22:18:46.483210+00:00",
+  "elapsed_seconds": 37.446,
+  "git": {
+    "commit": "1ed4d831df637f64631515fad4601d4843ffd758",
+    "branch": "main",
+    "dirty": true,
+    "dirty_files": [
+      "M .gitignore",
+      " M README.md",
+      " M STATUS.md",
+      " M scripts/07_ablation_report.py",
+      "?? reports/ABLATION.md",
+      "?? reports/ablation.json",
+      "?? reports/predictions/lora_selftest_test.jsonl",
+      "?? reports/training_history_frac50.json",
+      "?? runs/20260821T221647Z_ablation_report_87bc2f/",
+      "?? runs/20260821T221809Z_ablation_report_3190e0/"
+    ]
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+    "cpu_count": 8,
+    "python_version": "3.13.14",
+    "python_executable": "D:\\projects\\forgelm\\.venv\\Scripts\\python.exe",
+    "torch_version": "2.13.0+cu126",
+    "cuda_available": true,
+    "cuda_version_torch": "12.6",
+    "cudnn_version": 91002,
+    "gpu_name": "NVIDIA GeForce GTX 1650",
+    "gpu_total_memory_bytes": 4294639616,
+    "gpu_total_memory_gib": 4.0,
+    "gpu_capability": "sm_75",
+    "gpu_multi_processor_count": 16,
+    "bf16_supported": true,
+    "nvidia_smi": "NVIDIA GeForce GTX 1650, 592.82, 4096 MiB"
+  },
+  "packages": {
+    "torch": "2.13.0+cu126",
+    "transformers": "5.15.1",
+    "peft": "0.20.0",
+    "accelerate": "1.14.0",
+    "datasets": "5.0.1",
+    "tokenizers": "0.22.2",
+    "numpy": "2.5.2",
+    "safetensors": "0.8.0",
+    "scipy": "1.18.0"
+  },
+  "seeds": {},
+  "inputs": {},
+  "config": {},
+  "metrics": {
+    "comparison": {
+      "metric": "exact_match",
+      "system_a": "lora_selftest",
+      "system_b": "lora",
+      "a_rate": 0.1163,
+      "b_rate": 0.1163,
+      "a_ci": {
+        "mean": 0.1163,
+        "lo": 0.0465,
+        "hi": 0.186,
+        "n": 86,
+        "n_resamples": 10000,
+        "alpha": 0.05
+      },
+      "b_ci": {
+        "mean": 0.1163,
+        "lo": 0.0465,
+        "hi": 0.186,
+        "n": 86,
+        "n_resamples": 10000,
+        "alpha": 0.05
+      },
+      "paired_diff": {
+        "diff": 0.0,
+        "lo": 0.0,
+        "hi": 0.0,
+        "n": 86,
+        "n_resamples": 10000,
+        "alpha": 0.05,
+        "excludes_zero": false
+      },
+      "mcnemar": {
+        "both_correct": 10,
+        "only_a_correct": 0,
+        "only_b_correct": 0,
+        "neither_correct": 76,
+        "n_discordant": 0,
+        "test": "exact binomial (McNemar)",
+        "p_value": 1.0,
+        "note": "no discordant pairs; the systems agree on every example"
+      },
+      "n_examples": 86
+    },
+    "family_coverage": {}
+  },
+  "peak_memory": {
+    "peak_allocated_bytes": 512,
+    "peak_reserved_bytes": 2097152,
+    "peak_allocated_gib": 0.0,
+    "peak_reserved_gib": 0.002
+  },
+  "artifacts": {
+    "ablation_md": "reports\\ABLATION.md"
+  },
+  "warnings": [
+    "no successful train_lora ledger record found for tag 'selftest'"
+  ],
+  "notes": []
+}
