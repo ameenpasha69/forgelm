@@ -43,7 +43,9 @@ from forgelm.modeling import (  # noqa: E402
 )
 from forgelm.prompts import PROMPT_VERSION  # noqa: E402
 from forgelm.seeding import SEEDS, seed_everything  # noqa: E402
-from forgelm.splits import apply_split, load_manifest  # noqa: E402
+from forgelm.splits import (  # noqa: E402
+    apply_split, load_manifest, subsample_coverage, subsample_stratified,
+)
 
 REPORTS = REPO_ROOT / "reports"
 ARTIFACTS = REPO_ROOT / "artifacts"
@@ -112,33 +114,25 @@ def main() -> int:
         # one variable: how many examples it saw.
         subsample = None
         if args.train_fraction < 1.0:
-            from collections import defaultdict
-
-            from forgelm.seeding import rng
-
-            by_category: dict[str, list] = defaultdict(list)
-            for rec in sorted(train_records, key=lambda r: r["example_id"]):
-                by_category[rec["category"]].append(rec)
-
-            kept: list = []
-            for category in sorted(by_category):
-                pool = list(by_category[category])
-                rng("training", "subsample", category).shuffle(pool)
-                take = max(1, round(len(pool) * args.train_fraction))
-                kept.extend(pool[:take])
-            kept.sort(key=lambda r: r["example_id"])
-
+            kept = subsample_stratified(train_records, args.train_fraction)
+            coverage = subsample_coverage(train_records, kept)
             subsample = {
                 "fraction": args.train_fraction,
-                "n_before": len(train_records),
-                "n_after": len(kept),
                 "stratified_by": "category",
+                **coverage,
                 "example_ids": [r["example_id"] for r in kept],
             }
             train_records = kept
-            print(f"training-data-size ablation: using {len(kept)}/"
-                  f"{subsample['n_before']} training examples "
+            print(f"training-data-size ablation: using {coverage['n_after']}/"
+                  f"{coverage['n_before']} training examples "
                   f"({args.train_fraction:.0%}, category-stratified)")
+            print(f"  scenario families {coverage['families_before']} -> "
+                  f"{coverage['families_after']}"
+                  + (f" (lost {coverage['families_dropped']})"
+                     if coverage["families_dropped"] else "")
+                  + f"; examples/family "
+                    f"{coverage['examples_per_family_before']} -> "
+                    f"{coverage['examples_per_family_after']}")
 
         tokenizer = load_tokenizer()
         tokenizer.padding_side = "right"

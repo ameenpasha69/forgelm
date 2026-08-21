@@ -10,7 +10,8 @@ from forgelm import validate
 from forgelm.schema import CATEGORIES, PRIORITIES
 from forgelm.splits import (
     FAMILIES_PER_CATEGORY, SPLIT_NAMES, SPLIT_PATTERN, apply_split,
-    assign_families, build_manifest, manifest_checksum,
+    assign_families, build_manifest, manifest_checksum, subsample_coverage,
+    subsample_stratified,
 )
 
 # The frozen split. If this value changes, the test set has moved and every
@@ -114,6 +115,92 @@ def test_apply_split_rejects_an_unknown_example(records, manifest):
     extra = [*records, {**records[0], "example_id": "ghost-99"}]
     with pytest.raises(ValueError, match="absent from the split manifest"):
         apply_split(extra, manifest)
+
+
+# --------------------------------------------------------------------------
+# Training-data-size ablation subsampling
+# --------------------------------------------------------------------------
+
+def _train(records, manifest):
+    return apply_split(records, manifest)["train"]
+
+
+def test_subsample_is_deterministic(records, manifest):
+    train = _train(records, manifest)
+    first = [r["example_id"] for r in subsample_stratified(train, 0.5)]
+    second = [r["example_id"] for r in subsample_stratified(train, 0.5)]
+    assert first == second
+
+
+def test_subsample_size_is_about_the_requested_fraction(records, manifest):
+    train = _train(records, manifest)
+    kept = subsample_stratified(train, 0.5)
+    assert abs(len(kept) - len(train) * 0.5) <= len(set(
+        r["category"] for r in train))  # at most one rounding unit per stratum
+
+
+def test_subsample_preserves_category_balance(records, manifest):
+    """The ablation must change example count and nothing else it can help."""
+    train = _train(records, manifest)
+    kept = subsample_stratified(train, 0.5)
+    before = Counter(r["category"] for r in train)
+    after = Counter(r["category"] for r in kept)
+    assert set(before) == set(after), "a category vanished from the subsample"
+    for category in before:
+        expected = max(1, round(before[category] * 0.5))
+        assert after[category] == expected
+
+
+def test_subsample_is_a_subset(records, manifest):
+    train = _train(records, manifest)
+    kept = subsample_stratified(train, 0.5)
+    train_ids = {r["example_id"] for r in train}
+    kept_ids = {r["example_id"] for r in kept}
+    assert kept_ids <= train_ids
+    assert len(kept_ids) == len(kept), "subsample contains duplicates"
+
+
+def test_subsample_never_touches_held_out_splits(records, manifest):
+    train = _train(records, manifest)
+    kept = subsample_stratified(train, 0.5)
+    for record in kept:
+        assert manifest["example_split"][record["example_id"]] == "train"
+
+
+def test_subsample_full_fraction_is_identity(records, manifest):
+    train = _train(records, manifest)
+    kept = subsample_stratified(train, 1.0)
+    assert [r["example_id"] for r in kept] == \
+        sorted(r["example_id"] for r in train)
+
+
+def test_subsample_rejects_bad_fractions(records, manifest):
+    train = _train(records, manifest)
+    for bad in (0.0, -0.5, 1.5):
+        with pytest.raises(ValueError):
+            subsample_stratified(train, bad)
+
+
+def test_subsample_coverage_reports_what_was_lost(records, manifest):
+    """The ablation's interpretation depends on this being measured.
+
+    Halving the data could mean fewer examples per scenario, or fewer
+    scenarios. Those support opposite conclusions, so the report must state
+    which happened rather than assume.
+    """
+    train = _train(records, manifest)
+    kept = subsample_stratified(train, 0.5)
+    coverage = subsample_coverage(train, kept)
+
+    assert coverage["n_before"] == len(train)
+    assert coverage["n_after"] == len(kept)
+    assert coverage["families_after"] <= coverage["families_before"]
+    assert coverage["examples_per_family_after"] < \
+        coverage["examples_per_family_before"], \
+        "a depth-reducing subsample must lower examples per family"
+    # Whatever the value, it must be internally consistent.
+    assert len(coverage["families_dropped"]) == \
+        coverage["families_before"] - coverage["families_after"]
 
 
 def test_leakage_detector_catches_a_planted_family_straddle(records, manifest):

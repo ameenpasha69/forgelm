@@ -169,6 +169,59 @@ def load_manifest(path: str | Path) -> dict[str, Any]:
     return manifest
 
 
+def subsample_stratified(records: list[dict[str, Any]], fraction: float,
+                         seed_name: str = "training",
+                         seed_context: str = "subsample",
+                         stratify_by: str = "category") -> list[dict[str, Any]]:
+    """Deterministically take a stratified fraction of a split.
+
+    Used by the training-data-size ablation. Stratifying by category keeps the
+    label distribution comparable between the two arms, so the only variable
+    that changes is how many examples the model saw.
+
+    Note the limitation, which the ablation report states explicitly: because
+    stratification is by *category* rather than by *scenario_family*, a small
+    family can lose all of its examples by chance. That makes the manipulation
+    "mostly depth" rather than "purely depth". `subsample_coverage` reports
+    exactly what was lost so the effect is measured, not assumed.
+    """
+    if not 0.0 < fraction <= 1.0:
+        raise ValueError(f"fraction must be in (0, 1], got {fraction}")
+
+    buckets: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for record in sorted(records, key=lambda r: r["example_id"]):
+        buckets[record[stratify_by]].append(record)
+
+    kept: list[dict[str, Any]] = []
+    for key in sorted(buckets):
+        pool = list(buckets[key])
+        rng(seed_name, seed_context, key).shuffle(pool)
+        take = max(1, round(len(pool) * fraction))
+        kept.extend(pool[:take])
+
+    kept.sort(key=lambda r: r["example_id"])
+    return kept
+
+
+def subsample_coverage(original: list[dict[str, Any]],
+                       kept: list[dict[str, Any]]) -> dict[str, Any]:
+    """Describe what a subsample removed: depth, coverage, or both."""
+    families_before = {r["scenario_family"] for r in original}
+    families_after = {r["scenario_family"] for r in kept}
+    dropped = sorted(families_before - families_after)
+    return {
+        "n_before": len(original),
+        "n_after": len(kept),
+        "families_before": len(families_before),
+        "families_after": len(families_after),
+        "families_dropped": dropped,
+        "examples_per_family_before": round(
+            len(original) / len(families_before), 3) if families_before else None,
+        "examples_per_family_after": round(
+            len(kept) / len(families_after), 3) if families_after else None,
+    }
+
+
 def apply_split(records: list[dict[str, Any]],
                 manifest: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
     """Partition records using a frozen manifest."""
