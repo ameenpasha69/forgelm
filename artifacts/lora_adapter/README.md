@@ -1,207 +1,68 @@
 ---
 base_model: Qwen/Qwen2.5-0.5B-Instruct
+base_model_revision: 7ae557604adf67be50417f59c2c2f167def9a775
 library_name: peft
+license: mit
 pipeline_tag: text-generation
 tags:
 - base_model:adapter:Qwen/Qwen2.5-0.5B-Instruct
 - lora
 - transformers
+- structured-output
+- json
 ---
 
-# Model Card for Model ID
+# ForgeLM ticket-triage LoRA adapter
 
-<!-- Provide a quick summary of what the model is/does. -->
+**A LoRA adapter, not a model.** It must be loaded on top of
+`Qwen/Qwen2.5-0.5B-Instruct` at revision
+`7ae557604adf67be50417f59c2c2f167def9a775`. On its own it does nothing.
 
+Converts one free-text IT helpdesk ticket into a strict five-field JSON object.
 
+```json
+{"category": "network", "priority": "high", "affected_service": "vpn", "is_security_incident": false, "users_affected": 34}
+```
 
-## Model Details
+## Measured results
 
-### Model Description
+Frozen test split, 86 held-out synthetic examples, evaluated once. Same prompt,
+same greedy decoding and same parser in every condition.
 
-<!-- Provide a longer summary of what this model is. -->
+| System | Strict JSON | Schema valid | Exact match |
+|---|---|---|---|
+| base, zero-shot | 5.8% | 27.9% | 0.0% |
+| base, few-shot k=8 | 100.0% | 61.6% | 1.2% |
+| **base + this adapter** | 100.0% | **79.1%** | **11.6%** |
 
+Against the stronger (few-shot) baseline: **+10.5 pp exact match, 95% CI
+[+3.5, +18.6], McNemar p = 0.012.**
 
+## What it did not learn
 
-- **Developed by:** [More Information Needed]
-- **Funded by [optional]:** [More Information Needed]
-- **Shared by [optional]:** [More Information Needed]
-- **Model type:** [More Information Needed]
-- **Language(s) (NLP):** [More Information Needed]
-- **License:** [More Information Needed]
-- **Finetuned from model [optional]:** [More Information Needed]
+**11 of the 16 held-out scenario families produced zero fully correct outputs.**
+The adapter learned the *output contract* well and the *task* only partially.
+Per-field, the significant gains are `affected_service` (+20.9 pp) and
+`is_security_incident` (+10.5 pp); `category`, `priority` and `users_affected`
+show no detectable difference.
 
-### Model Sources [optional]
+## Training
 
-<!-- Provide the basic links for the model. -->
+171 synthetic examples, LoRA r=16 / alpha=32 / dropout=0.05 on all seven linear
+projections (8,798,208 trainable parameters, 1.75% of the base model). fp16 with
+fp32 adapter parameters, effective batch 8, lr 2e-4 cosine. Early stopping
+selected the epoch-2 checkpoint on validation loss.
 
-- **Repository:** [More Information Needed]
-- **Paper [optional]:** [More Information Needed]
-- **Demo [optional]:** [More Information Needed]
+## Do not use this on real tickets
 
-## Uses
+It was trained on invented data against an invented priority rule, and evaluated
+only on 86 synthetic examples. Nothing about safety, alignment, fairness,
+robustness or real-world reliability was measured.
 
-<!-- Address questions around how the model is intended to be used, including the foreseeable users of the model and those affected by the model. -->
+## Full documentation
 
-### Direct Use
+`forgelm_provenance.json` in this directory records the required base model,
+its revision, the dataset checksum, the split manifest checksum and every seed.
 
-<!-- This section is for the model use without fine-tuning or plugging into a larger ecosystem/app. -->
-
-[More Information Needed]
-
-### Downstream Use [optional]
-
-<!-- This section is for the model use when fine-tuned for a task, or when plugged into a larger ecosystem/app -->
-
-[More Information Needed]
-
-### Out-of-Scope Use
-
-<!-- This section addresses misuse, malicious use, and uses that the model will not work well for. -->
-
-[More Information Needed]
-
-## Bias, Risks, and Limitations
-
-<!-- This section is meant to convey both technical and sociotechnical limitations. -->
-
-[More Information Needed]
-
-### Recommendations
-
-<!-- This section is meant to convey recommendations with respect to the bias, risk, and technical limitations. -->
-
-Users (both direct and downstream) should be made aware of the risks, biases and limitations of the model. More information needed for further recommendations.
-
-## How to Get Started with the Model
-
-Use the code below to get started with the model.
-
-[More Information Needed]
-
-## Training Details
-
-### Training Data
-
-<!-- This should link to a Dataset Card, perhaps with a short stub of information on what the training data is all about as well as documentation related to data pre-processing or additional filtering. -->
-
-[More Information Needed]
-
-### Training Procedure
-
-<!-- This relates heavily to the Technical Specifications. Content here should link to that section when it is relevant to the training procedure. -->
-
-#### Preprocessing [optional]
-
-[More Information Needed]
-
-
-#### Training Hyperparameters
-
-- **Training regime:** [More Information Needed] <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
-
-#### Speeds, Sizes, Times [optional]
-
-<!-- This section provides information about throughput, start/end time, checkpoint size if relevant, etc. -->
-
-[More Information Needed]
-
-## Evaluation
-
-<!-- This section describes the evaluation protocols and provides the results. -->
-
-### Testing Data, Factors & Metrics
-
-#### Testing Data
-
-<!-- This should link to a Dataset Card if possible. -->
-
-[More Information Needed]
-
-#### Factors
-
-<!-- These are the things the evaluation is disaggregating by, e.g., subpopulations or domains. -->
-
-[More Information Needed]
-
-#### Metrics
-
-<!-- These are the evaluation metrics being used, ideally with a description of why. -->
-
-[More Information Needed]
-
-### Results
-
-[More Information Needed]
-
-#### Summary
-
-
-
-## Model Examination [optional]
-
-<!-- Relevant interpretability work for the model goes here -->
-
-[More Information Needed]
-
-## Environmental Impact
-
-<!-- Total emissions (in grams of CO2eq) and additional considerations, such as electricity usage, go here. Edit the suggested text below accordingly -->
-
-Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
-
-- **Hardware Type:** [More Information Needed]
-- **Hours used:** [More Information Needed]
-- **Cloud Provider:** [More Information Needed]
-- **Compute Region:** [More Information Needed]
-- **Carbon Emitted:** [More Information Needed]
-
-## Technical Specifications [optional]
-
-### Model Architecture and Objective
-
-[More Information Needed]
-
-### Compute Infrastructure
-
-[More Information Needed]
-
-#### Hardware
-
-[More Information Needed]
-
-#### Software
-
-[More Information Needed]
-
-## Citation [optional]
-
-<!-- If there is a paper or blog post introducing the model, the APA and Bibtex information for that should go in this section. -->
-
-**BibTeX:**
-
-[More Information Needed]
-
-**APA:**
-
-[More Information Needed]
-
-## Glossary [optional]
-
-<!-- If relevant, include terms and calculations in this section that can help readers understand the model or model card. -->
-
-[More Information Needed]
-
-## More Information [optional]
-
-[More Information Needed]
-
-## Model Card Authors [optional]
-
-[More Information Needed]
-
-## Model Card Contact
-
-[More Information Needed]
-### Framework versions
-
-- PEFT 0.20.0
+See the project repository for `MODEL_CARD.md`, `DATASET_CARD.md`,
+`EXPERIMENT_CARD.md`, the raw per-example predictions, and the evidence audit.

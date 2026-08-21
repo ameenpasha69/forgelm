@@ -106,7 +106,14 @@ about what happened.
    non-zero `lora_B`. The trained adapter passes either way (168/168 B tensors
    non-zero), so no reported result changes -- but the guard would not have
    caught the failure it was written to catch.
-11. **Git would have silently broken every dataset checksum.** On Windows, git
+11. **The placeholder scan had a blind spot, and it hid real boilerplate.**
+   `scripts/06_audit.py` skipped `artifacts/`, so it never saw the `README.md`
+   that PEFT auto-generates next to the adapter weights -- which shipped with
+   **39 `[More Information Needed]` placeholders**. The directory is no longer
+   skipped, `[More Information Needed]` and `TBD` were added as patterns, and
+   the adapter README was rewritten with real content. A scan with an
+   exclusion big enough to hide the problem is not a scan.
+12. **Git would have silently broken every dataset checksum.** On Windows, git
    converts LF to CRLF on checkout by default. The dataset files and split
    manifest are written with explicit LF newlines and verified by sha256, so a
    fresh clone would have failed the evidence audit for reasons that had nothing

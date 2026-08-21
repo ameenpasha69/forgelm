@@ -63,20 +63,20 @@
     },
     {
       "check": "test suite passes",
-      "detail": "........................................................................ [ 53%]\n..............................................................           [100%]\n134 passed in 144.30s (0:02:24)\n",
-      "evidence": "134 passed in 144.30s (0:02:24)",
+      "detail": "........................................................................ [ 53%]\n..............................................................           [100%]\n134 passed in 148.67s (0:02:28)\n",
+      "evidence": "134 passed in 148.67s (0:02:28)",
       "passed": true
     },
     {
       "check": "no secrets or credentials in tracked files",
       "detail": "[]",
-      "evidence": "85 text files scanned against 6 patterns",
+      "evidence": "88 text files scanned against 6 patterns",
       "passed": true
     },
     {
       "check": "no placeholders or fabricated values",
       "detail": "[]",
-      "evidence": "9 patterns checked",
+      "evidence": "11 patterns checked",
       "passed": true
     },
     {

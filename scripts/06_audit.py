@@ -61,6 +61,9 @@ PLACEHOLDER_PATTERNS = [
     (r"(?i)\bfake (?:metric|result|number|data)\b", "fabricated value"),
     (r"(?i)\bdummy (?:metric|result|value)\b", "dummy value"),
     (r"(?i)\bmade[- ]up\b", "made-up value"),
+    # PEFT's auto-generated adapter README ships 39 of these.
+    (r"\[More Information Needed\]", "unfilled model-card template"),
+    (r"\bTBD\b", "TBD marker"),
 ]
 
 # Claims the brief forbids unless an executed experiment supports them. Each is
@@ -91,7 +94,12 @@ NEGATION_MARKERS = (
 )
 NEGATION_WINDOW = 12   # maximum lines to walk back within one paragraph
 
-SKIP_DIRS = {".git", ".venv", "__pycache__", ".pytest_cache", "artifacts",
+# `artifacts` is deliberately NOT skipped: PEFT writes an auto-generated
+# README.md next to the adapter weights containing 39 "[More Information
+# Needed]" placeholders. Skipping the directory hid that boilerplate from the
+# placeholder scan, which is exactly the kind of blind spot the scan exists to
+# prevent.
+SKIP_DIRS = {".git", ".venv", "__pycache__", ".pytest_cache",
              "node_modules", ".ipynb_checkpoints",
              # Trainer checkpoints are gitignored build output and contain a
              # vendored copy of the tokenizer.
