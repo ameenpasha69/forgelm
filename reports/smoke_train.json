@@ -1,0 +1,181 @@
+{
+  "failures": [],
+  "gates": {
+    "adapted_projections": [
+      "down_proj",
+      "gate_proj",
+      "k_proj",
+      "o_proj",
+      "q_proj",
+      "up_proj",
+      "v_proj"
+    ],
+    "label_masking": {
+      "n_checked": 214,
+      "n_problems": 0,
+      "passed": true,
+      "problems": []
+    },
+    "n_upcast_to_fp32": 0,
+    "one_batch_forward": {
+      "batch_shape": [
+        2,
+        272
+      ],
+      "finite": true,
+      "healthy": true,
+      "loss": 0.185542,
+      "n_supervised_tokens": 76,
+      "perplexity": 1.2
+    },
+    "parameters": {
+      "n_trainable_tensors": 336,
+      "param_dtypes": {
+        "torch.float16": 494032768,
+        "torch.float32": 8798208
+      },
+      "total_params": 502830976,
+      "trainable_param_dtypes": {
+        "torch.float32": 8798208
+      },
+      "trainable_params": 8798208,
+      "trainable_percent": 1.7497
+    },
+    "peak_gpu_gib": 2.135,
+    "smoke_training": {
+      "runtime_seconds": 35.22,
+      "steps": 2,
+      "train_loss": 0.129879
+    },
+    "tiny_overfit": {
+      "all_finite": true,
+      "final_loss": 0.000665,
+      "first_loss": 0.192747,
+      "loss_history": [
+        0.19275,
+        0.16336,
+        0.1477,
+        0.04418,
+        0.24412,
+        0.24807,
+        0.22921,
+        0.23797,
+        0.08832,
+        0.04467,
+        0.08577,
+        0.06926,
+        0.0056,
+        0.00522,
+        0.00282,
+        0.03651,
+        0.00147,
+        0.00354,
+        0.00053,
+        0.00641,
+        0.00027,
+        0.00043,
+        0.00602,
+        0.02559,
+        0.00248,
+        0.00049,
+        0.00854,
+        0.00172,
+        0.00067,
+        0.00066
+      ],
+      "lr": 0.001,
+      "micro_batch": 1,
+      "min_loss": 0.000265,
+      "n_examples": 4,
+      "oom": false,
+      "passed": true,
+      "steps": 30
+    },
+    "tokenisation_sample": {
+      "example_id": "am_password_reset-00",
+      "first_unmasked_tokens": [
+        "{\"",
+        "category",
+        "\":",
+        " \"",
+        "access",
+        "_management",
+        "\",",
+        " \"",
+        "priority",
+        "\":",
+        " \"",
+        "low"
+      ],
+      "masked_text_tail": " the JSON object. No explanation, no markdown, no code fences.<|im_end|>\n<|im_start|>user\nTicket:\nThe self-service password reset tool rejects every new password I try. So far 23 people have reported it. Could someone reset it for me?\n\nTriage JSON:<|im_end|>\n<|im_start|>assistant\n",
+      "n_masked": 213,
+      "n_total_tokens": 251,
+      "n_unmasked": 38,
+      "unmasked_text": "{\"category\": \"access_management\", \"priority\": \"low\", \"affected_service\": \"none\", \"is_security_incident\": false, \"users_affected\": 23}<|im_end|>"
+    },
+    "trainable_param_dtypes": {
+      "torch.float32": 8798208
+    },
+    "training_arguments": {
+      "accepted": {
+        "bf16": false,
+        "data_seed": 1337,
+        "disable_tqdm": false,
+        "eval_strategy": "no",
+        "fp16": true,
+        "gradient_accumulation_steps": 8,
+        "greater_is_better": false,
+        "label_names": [
+          "labels"
+        ],
+        "learning_rate": 0.0002,
+        "load_best_model_at_end": false,
+        "logging_steps": 5,
+        "lr_scheduler_type": "cosine",
+        "max_grad_norm": 1.0,
+        "metric_for_best_model": "eval_loss",
+        "num_train_epochs": 1,
+        "optim": "adamw_torch",
+        "output_dir": "D:\\projects\\forgelm\\runs\\20260821T202423Z_smoke_train_e6704b\\smoke_output",
+        "per_device_eval_batch_size": 1,
+        "per_device_train_batch_size": 1,
+        "remove_unused_columns": false,
+        "report_to": [],
+        "save_strategy": "no",
+        "save_total_limit": 2,
+        "seed": 1337,
+        "warmup_steps": 1,
+        "weight_decay": 0.01
+      },
+      "dropped": []
+    },
+    "truncation_train": {
+      "completion_tokens_mean": 36.9,
+      "max_seq_len": 320,
+      "n": 171,
+      "n_truncated": 0,
+      "prompt_tokens_mean": 229.7,
+      "total_tokens": {
+        "max": 281,
+        "mean": 266.6,
+        "min": 242
+      },
+      "truncation_rate": 0.0
+    },
+    "truncation_validation": {
+      "completion_tokens_mean": 37.1,
+      "max_seq_len": 320,
+      "n": 43,
+      "n_truncated": 0,
+      "prompt_tokens_mean": 230.2,
+      "total_tokens": {
+        "max": 278,
+        "mean": 267.2,
+        "min": 246
+      },
+      "truncation_rate": 0.0
+    }
+  },
+  "passed": true,
+  "run_id": "20260821T202423Z_smoke_train_e6704b"
+}

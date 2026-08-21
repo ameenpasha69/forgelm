@@ -1,0 +1,5 @@
+{
+  "_comment": "Ablation B: remove LoRA dropout. Changes ONE variable.",
+  "lora_dropout": 0.0,
+  "num_train_epochs": 8
+}

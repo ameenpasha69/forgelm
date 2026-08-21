@@ -1,0 +1,36 @@
+# ForgeLM -- exact versions of the environment that produced the recorded results.
+#
+# These are not aspirational pins: every number in reports/ was generated with
+# this exact set on Windows 11, Python 3.13.14, CUDA 12.6, GTX 1650 (sm_75).
+# The same versions are re-recorded in every runs/<run_id>/run.json, so a
+# result can always be traced to the stack that produced it.
+#
+# PyTorch must come from the CUDA index or you will silently get a CPU-only
+# build. Install it first:
+#
+#   pip install torch==2.13.0 --index-url https://download.pytorch.org/whl/cu126
+#   pip install -r requirements.txt
+#
+# On Colab, torch is preinstalled with a matching CUDA build -- skip the first
+# line and just install the rest.
+
+torch==2.13.0+cu126
+
+transformers==5.15.1
+tokenizers==0.22.2
+peft==0.20.0
+accelerate==1.14.0
+datasets==5.0.1
+safetensors==0.8.0
+huggingface_hub==1.28.0
+
+numpy==2.5.2
+scipy==1.18.0
+
+# Development / reporting
+pytest==9.1.1
+matplotlib==3.11.1
+
+# Optional local demonstration only (scripts/demo_app.py). Not required to
+# reproduce any result.
+# gradio>=4.0

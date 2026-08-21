@@ -1,0 +1,149 @@
+{
+  "run_id": "20260821T194748Z_build_dataset_03ef06",
+  "kind": "build_dataset",
+  "status": "failed",
+  "started_utc": "2026-08-21T19:47:48.809805+00:00",
+  "ended_utc": "2026-08-21T19:49:40.093232+00:00",
+  "elapsed_seconds": 111.283,
+  "git": {
+    "commit": null,
+    "branch": null,
+    "dirty": true,
+    "dirty_files": [
+      "?? data/",
+      "?? pyproject.toml",
+      "?? runs/",
+      "?? scripts/",
+      "?? src/"
+    ]
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+    "cpu_count": 8,
+    "python_version": "3.13.14",
+    "python_executable": "D:\\projects\\forgelm\\.venv\\Scripts\\python.exe",
+    "torch_version": "2.13.0+cu126",
+    "cuda_available": true,
+    "cuda_version_torch": "12.6",
+    "cudnn_version": 91002,
+    "gpu_name": "NVIDIA GeForce GTX 1650",
+    "gpu_total_memory_bytes": 4294639616,
+    "gpu_total_memory_gib": 4.0,
+    "gpu_capability": "sm_75",
+    "gpu_multi_processor_count": 16,
+    "bf16_supported": true,
+    "nvidia_smi": "NVIDIA GeForce GTX 1650, 592.82, 4096 MiB"
+  },
+  "packages": {
+    "torch": "2.13.0+cu126",
+    "transformers": "5.15.1",
+    "peft": "0.20.0",
+    "accelerate": "1.14.0",
+    "datasets": "5.0.1",
+    "tokenizers": "0.22.2",
+    "numpy": "2.5.2",
+    "safetensors": "0.8.0",
+    "scipy": "1.18.0"
+  },
+  "seeds": {
+    "dataset_generation": 20240517,
+    "split_assignment": 913,
+    "fewshot_selection": 41,
+    "training": 1337,
+    "bootstrap": 7
+  },
+  "inputs": {},
+  "config": {
+    "dataset_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "n_scenario_families": 56,
+    "n_template_families": 8
+  },
+  "metrics": {
+    "pre_split_validation": {
+      "n_records": 300,
+      "n_findings": 5,
+      "errors": 3,
+      "warnings": 0,
+      "info": 2,
+      "passed": false,
+      "findings": [
+        {
+          "check": "priority_leak_terms",
+          "severity": "error",
+          "message": "email_spoofed_sender-00 ticket text contains priority-revealing term(s) ['priority']",
+          "detail": {
+            "example_id": "email_spoofed_sender-00",
+            "terms": [
+              "priority"
+            ]
+          }
+        },
+        {
+          "check": "priority_leak_terms",
+          "severity": "error",
+          "message": "email_spoofed_sender-01 ticket text contains priority-revealing term(s) ['priority']",
+          "detail": {
+            "example_id": "email_spoofed_sender-01",
+            "terms": [
+              "priority"
+            ]
+          }
+        },
+        {
+          "check": "priority_leak_terms",
+          "severity": "error",
+          "message": "email_spoofed_sender-03 ticket text contains priority-revealing term(s) ['priority']",
+          "detail": {
+            "example_id": "email_spoofed_sender-03",
+            "terms": [
+              "priority"
+            ]
+          }
+        },
+        {
+          "check": "balance",
+          "severity": "info",
+          "message": "category counts min=35 max=42 imbalance_ratio=1.20",
+          "detail": {
+            "counts": {
+              "access_management": 42,
+              "account_billing": 35,
+              "email": 35,
+              "hardware": 42,
+              "network": 41,
+              "other": 35,
+              "security": 35,
+              "software": 35
+            },
+            "ratio": 1.2
+          }
+        },
+        {
+          "check": "balance",
+          "severity": "info",
+          "message": "priority distribution: {'critical': 37, 'high': 76, 'low': 149, 'medium': 38}",
+          "detail": {
+            "counts": {
+              "critical": 37,
+              "high": 76,
+              "low": 149,
+              "medium": 38
+            }
+          }
+        }
+      ]
+    }
+  },
+  "peak_memory": {
+    "peak_allocated_bytes": 512,
+    "peak_reserved_bytes": 2097152,
+    "peak_allocated_gib": 0.0,
+    "peak_reserved_gib": 0.002
+  },
+  "artifacts": {},
+  "warnings": [],
+  "notes": []
+}

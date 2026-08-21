@@ -1,0 +1,60 @@
+{
+  "base_model": {
+    "chat_format": "ChatML (<|im_start|>role\\n ... <|im_end|>)",
+    "eos_token": "<|im_end|>",
+    "gated": false,
+    "hidden_layers": 24,
+    "hidden_size": 896,
+    "licence": "apache-2.0",
+    "max_position_embeddings": 32768,
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "pad_token": "<|endoftext|>",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "source": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct",
+    "tie_word_embeddings": true,
+    "total_params_reported": "0.49B (0.36B non-embedding)"
+  },
+  "decoding": {
+    "batch_size": 8,
+    "do_sample": false,
+    "max_new_tokens": 160,
+    "num_beams": 1,
+    "rationale": "Greedy decoding removes sampling variance; the task has exactly one correct answer. The token budget is identical across zero-shot, few-shot and adapted conditions.",
+    "strategy": "greedy"
+  },
+  "experiment_id": "forgelm-lora-ticket-triage-v1",
+  "lora_target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "training": {
+    "early_stopping_patience": 3,
+    "eval_strategy": "epoch",
+    "gradient_accumulation_steps": 8,
+    "greater_is_better": false,
+    "learning_rate": 0.0002,
+    "load_best_model_at_end": true,
+    "logging_steps": 5,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_r": 16,
+    "lr_scheduler_type": "cosine",
+    "max_grad_norm": 1.0,
+    "max_seq_len": 320,
+    "metric_for_best_model": "eval_loss",
+    "num_train_epochs": 8,
+    "optimizer": "adamw_torch",
+    "per_device_eval_batch_size": 1,
+    "per_device_train_batch_size": 1,
+    "save_strategy": "epoch",
+    "save_total_limit": 2,
+    "seed_name": "training",
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01
+  }
+}

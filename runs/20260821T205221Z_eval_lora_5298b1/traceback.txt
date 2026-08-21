@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "D:\projects\forgelm\scripts\01_evaluate.py", line 100, in main
+    model, adapter_verification = load_adapted_model(args.adapter)
+                                  ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "D:\projects\forgelm\src\forgelm\modeling.py", line 205, in load_adapted_model
+    base = load_base_model(model_id, revision, dtype=dtype, device=device)
+  File "D:\projects\forgelm\src\forgelm\modeling.py", line 118, in load_base_model
+    model = AutoModelForCausalLM.from_pretrained(
+        model_id, revision=revision, dtype=torch_dtype,
+    )
+  File "D:\projects\forgelm\.venv\Lib\site-packages\transformers\models\auto\auto_factory.py", line 402, in from_pretrained
+    return model_class.from_pretrained(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path, *model_args, config=config, **hub_kwargs, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\projects\forgelm\.venv\Lib\site-packages\transformers\modeling_utils.py", line 4348, in from_pretrained
+    loading_info, disk_offload_index = cls._load_pretrained_model(model, state_dict, checkpoint_files, load_config)
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\projects\forgelm\.venv\Lib\site-packages\transformers\modeling_utils.py", line 4470, in _load_pretrained_model
+    file_pointer = safe_open(file, framework="pt", device=device, backend=backend)
+OSError: The paging file is too small for this operation to complete. (os error 1455)

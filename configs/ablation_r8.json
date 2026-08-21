@@ -1,0 +1,5 @@
+{
+  "_comment": "Ablation A: halve the LoRA rank. Changes ONE variable (r, with alpha kept at 2r by convention). Everything else identical to experiment_v1.",
+  "lora_alpha": 16,
+  "lora_r": 8
+}

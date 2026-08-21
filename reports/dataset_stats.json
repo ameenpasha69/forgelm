@@ -1,0 +1,1048 @@
+{
+  "by_split": {
+    "test": {
+      "affected_services": {
+        "email": 5,
+        "laptop": 16,
+        "none": 60,
+        "phone": 5
+      },
+      "categories": {
+        "access_management": 12,
+        "account_billing": 10,
+        "email": 10,
+        "hardware": 12,
+        "network": 12,
+        "other": 10,
+        "security": 10,
+        "software": 10
+      },
+      "is_security_incident": {
+        "False": 65,
+        "True": 21
+      },
+      "n": 86,
+      "priorities": {
+        "critical": 8,
+        "high": 35,
+        "low": 40,
+        "medium": 3
+      },
+      "scenario_families": 16,
+      "template_families": {
+        "bulleted": 11,
+        "chat_style": 11,
+        "formal_ticket": 11,
+        "frustrated": 10,
+        "manager_escalation": 11,
+        "narrative": 11,
+        "polite_request": 10,
+        "terse": 11
+      },
+      "ticket_chars": {
+        "max": 289,
+        "mean": 218.9,
+        "min": 123
+      },
+      "users_affected": {
+        "max": 184,
+        "min": 1
+      }
+    },
+    "train": {
+      "affected_services": {
+        "crm": 6,
+        "database": 10,
+        "email": 15,
+        "laptop": 17,
+        "none": 84,
+        "payroll": 10,
+        "phone": 6,
+        "printer": 6,
+        "vpn": 6,
+        "wifi": 11
+      },
+      "categories": {
+        "access_management": 24,
+        "account_billing": 20,
+        "email": 20,
+        "hardware": 24,
+        "network": 23,
+        "other": 20,
+        "security": 20,
+        "software": 20
+      },
+      "is_security_incident": {
+        "False": 145,
+        "True": 26
+      },
+      "n": 171,
+      "priorities": {
+        "critical": 24,
+        "high": 28,
+        "low": 98,
+        "medium": 21
+      },
+      "scenario_families": 32,
+      "template_families": {
+        "bulleted": 21,
+        "chat_style": 20,
+        "formal_ticket": 22,
+        "frustrated": 23,
+        "manager_escalation": 21,
+        "narrative": 20,
+        "polite_request": 23,
+        "terse": 21
+      },
+      "ticket_chars": {
+        "max": 288,
+        "mean": 220.5,
+        "min": 118
+      },
+      "users_affected": {
+        "max": 179,
+        "min": 1
+      }
+    },
+    "validation": {
+      "affected_services": {
+        "crm": 5,
+        "email": 5,
+        "laptop": 6,
+        "none": 27
+      },
+      "categories": {
+        "access_management": 6,
+        "account_billing": 5,
+        "email": 5,
+        "hardware": 6,
+        "network": 6,
+        "other": 5,
+        "security": 5,
+        "software": 5
+      },
+      "is_security_incident": {
+        "False": 38,
+        "True": 5
+      },
+      "n": 43,
+      "priorities": {
+        "critical": 5,
+        "high": 13,
+        "low": 11,
+        "medium": 14
+      },
+      "scenario_families": 8,
+      "template_families": {
+        "bulleted": 6,
+        "chat_style": 6,
+        "formal_ticket": 4,
+        "frustrated": 4,
+        "manager_escalation": 6,
+        "narrative": 7,
+        "polite_request": 4,
+        "terse": 6
+      },
+      "ticket_chars": {
+        "max": 284,
+        "mean": 215.7,
+        "min": 106
+      },
+      "users_affected": {
+        "max": 189,
+        "min": 1
+      }
+    }
+  },
+  "family_table": [
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "access_management",
+      "details": 4,
+      "fid": "am_password_reset",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "access_management",
+      "details": 4,
+      "fid": "am_mfa_device_lost",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "access_management",
+      "details": 4,
+      "fid": "am_account_lockout",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "crm",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "access_management",
+      "details": 4,
+      "fid": "am_permission_request",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "access_management",
+      "details": 4,
+      "fid": "am_sso_failure",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "access_management",
+      "details": 4,
+      "fid": "am_offboarding_access",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "access_management",
+      "details": 4,
+      "fid": "am_ex_employee_active",
+      "is_security_incident": true,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "laptop",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "hardware",
+      "details": 4,
+      "fid": "hw_laptop_wont_boot",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "laptop",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "hardware",
+      "details": 4,
+      "fid": "hw_battery_swelling",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single"
+      ]
+    },
+    {
+      "affected_service": "printer",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "hardware",
+      "details": 4,
+      "fid": "hw_printer_jam",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "laptop",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "hardware",
+      "details": 4,
+      "fid": "hw_docking_station",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "hardware",
+      "details": 4,
+      "fid": "hw_monitor_dead",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "phone",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "hardware",
+      "details": 4,
+      "fid": "hw_headset_mic",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "laptop",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "hardware",
+      "details": 4,
+      "fid": "hw_stolen_laptop",
+      "is_security_incident": true,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single"
+      ]
+    },
+    {
+      "affected_service": "vpn",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "network",
+      "details": 4,
+      "fid": "net_vpn_drops",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "wifi",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "network",
+      "details": 4,
+      "fid": "net_wifi_dead_zone",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "network",
+      "details": 4,
+      "fid": "net_slow_internet",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "network",
+      "details": 4,
+      "fid": "net_dns_failure",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "network",
+      "details": 4,
+      "fid": "net_switch_outage",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "network",
+      "details": 4,
+      "fid": "net_firewall_block",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "wifi",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "network",
+      "details": 4,
+      "fid": "net_guest_wifi_captive",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "crm",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "software",
+      "details": 4,
+      "fid": "sw_crm_crash",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "software",
+      "details": 4,
+      "fid": "sw_license_expired",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "software",
+      "details": 4,
+      "fid": "sw_install_request",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "laptop",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "software",
+      "details": 4,
+      "fid": "sw_update_broke_app",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "database",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "software",
+      "details": 4,
+      "fid": "sw_db_query_timeout",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "payroll",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "software",
+      "details": 4,
+      "fid": "sw_payroll_calc_error",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "software",
+      "details": 4,
+      "fid": "sw_file_corrupt",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "email",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "security",
+      "details": 4,
+      "fid": "sec_phishing_email",
+      "is_security_incident": true,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "laptop",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "security",
+      "details": 4,
+      "fid": "sec_malware_detected",
+      "is_security_incident": true,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "database",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "security",
+      "details": 4,
+      "fid": "sec_data_exfil_alert",
+      "is_security_incident": true,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "security",
+      "details": 4,
+      "fid": "sec_credential_leak",
+      "is_security_incident": true,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "security",
+      "details": 4,
+      "fid": "sec_suspicious_login",
+      "is_security_incident": true,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "laptop",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "security",
+      "details": 4,
+      "fid": "sec_usb_unknown_device",
+      "is_security_incident": true,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "security",
+      "details": 4,
+      "fid": "sec_ransomware_note",
+      "is_security_incident": true,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "account_billing",
+      "details": 4,
+      "fid": "ab_invoice_dispute",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "account_billing",
+      "details": 4,
+      "fid": "ab_license_overcharge",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "account_billing",
+      "details": 4,
+      "fid": "ab_subscription_renewal",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "payroll",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "account_billing",
+      "details": 4,
+      "fid": "ab_payroll_deduction_q",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "account_billing",
+      "details": 4,
+      "fid": "ab_expense_reimbursement",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "account_billing",
+      "details": 4,
+      "fid": "ab_vendor_quote",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "account_billing",
+      "details": 4,
+      "fid": "ab_cost_center_wrong",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "email",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "email",
+      "details": 4,
+      "fid": "email_not_receiving",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "email",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "email",
+      "details": 4,
+      "fid": "email_mailbox_full",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "phone",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "email",
+      "details": 4,
+      "fid": "email_calendar_sync",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "email",
+      "details": 4,
+      "fid": "email_dl_update",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "email",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "email",
+      "details": 4,
+      "fid": "email_spam_flood",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "email",
+      "asks": 4,
+      "base_severity": 2,
+      "category": "email",
+      "details": 4,
+      "fid": "email_spoofed_sender",
+      "is_security_incident": true,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "email",
+      "details": 4,
+      "fid": "email_signature_broken",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "other",
+      "details": 4,
+      "fid": "oth_onboarding_setup",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "other",
+      "details": 4,
+      "fid": "oth_meeting_room_av",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "other",
+      "details": 4,
+      "fid": "oth_desk_move",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 1,
+      "category": "other",
+      "details": 4,
+      "fid": "oth_badge_access",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "other",
+      "details": 4,
+      "fid": "oth_training_request",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 0,
+      "category": "other",
+      "details": 4,
+      "fid": "oth_asset_inventory",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 4,
+      "base_severity": 3,
+      "category": "other",
+      "details": 4,
+      "fid": "oth_server_room_ac",
+      "is_security_incident": false,
+      "n_examples": 5,
+      "symptoms": 4,
+      "user_scales": [
+        "dept"
+      ]
+    }
+  ],
+  "overall": {
+    "affected_services": {
+      "crm": 11,
+      "database": 10,
+      "email": 25,
+      "laptop": 39,
+      "none": 171,
+      "payroll": 10,
+      "phone": 11,
+      "printer": 6,
+      "vpn": 6,
+      "wifi": 11
+    },
+    "categories": {
+      "access_management": 42,
+      "account_billing": 35,
+      "email": 35,
+      "hardware": 42,
+      "network": 41,
+      "other": 35,
+      "security": 35,
+      "software": 35
+    },
+    "is_security_incident": {
+      "False": 248,
+      "True": 52
+    },
+    "n": 300,
+    "priorities": {
+      "critical": 37,
+      "high": 76,
+      "low": 149,
+      "medium": 38
+    },
+    "scenario_families": 56,
+    "template_families": {
+      "bulleted": 38,
+      "chat_style": 37,
+      "formal_ticket": 37,
+      "frustrated": 37,
+      "manager_escalation": 38,
+      "narrative": 38,
+      "polite_request": 37,
+      "terse": 38
+    },
+    "ticket_chars": {
+      "max": 289,
+      "mean": 219.3,
+      "min": 106
+    },
+    "users_affected": {
+      "max": 189,
+      "min": 1
+    }
+  }
+}

@@ -1,0 +1,30 @@
+# Line-ending policy.
+#
+# This matters more than usual here: the dataset files and the split manifest
+# are verified by sha256 (see data/DATASET_VERSION.json and
+# scripts/06_audit.py). The generator writes them with explicit LF newlines.
+# If git rewrote them to CRLF on checkout -- which it does by default on Windows
+# -- every checksum would mismatch and the evidence audit would fail for anyone
+# who cloned the repository. So checksum-verified formats opt out of all
+# newline conversion.
+
+# Never touch: byte-exactness is asserted by the audit.
+*.jsonl   -text
+*.json    -text
+*.ipynb   -text
+
+# Normalise to LF in the repository and in the working tree.
+*.py      text eol=lf
+*.md      text eol=lf
+*.txt     text eol=lf
+*.toml    text eol=lf
+*.cfg     text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+.gitignore      text eol=lf
+.gitattributes  text eol=lf
+LICENSE   text eol=lf
+
+# Binary.
+*.png           binary
+*.safetensors   binary

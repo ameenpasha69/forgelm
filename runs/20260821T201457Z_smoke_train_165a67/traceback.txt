@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "D:\projects\forgelm\scripts\02_smoke_train.py", line 131, in main
+    overfit = T.tiny_overfit(model, tokenizer, train_encoded,
+                             steps=30, lr=1e-3, n_examples=4)
+  File "D:\projects\forgelm\src\forgelm\training.py", line 349, in tiny_overfit
+    torch.nn.utils.clip_grad_norm_(trainable, 1.0)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "D:\projects\forgelm\.venv\Lib\site-packages\torch\nn\utils\clip_grad.py", line 41, in _no_grad_wrapper
+    return func(*args, **kwargs)
+  File "D:\projects\forgelm\.venv\Lib\site-packages\torch\nn\utils\clip_grad.py", line 230, in clip_grad_norm_
+    total_norm = _get_total_norm(grads, norm_type, error_if_nonfinite, foreach)
+  File "D:\projects\forgelm\.venv\Lib\site-packages\torch\nn\utils\clip_grad.py", line 41, in _no_grad_wrapper
+    return func(*args, **kwargs)
+  File "D:\projects\forgelm\.venv\Lib\site-packages\torch\nn\utils\clip_grad.py", line 105, in _get_total_norm
+    total_norm = torch.linalg.vector_norm(
+        torch.stack([norm.to(first_device) for norm in norms]), norm_type
+    )
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+For more detailed error information, run with CUDA_LOG_FILE=stderr
+

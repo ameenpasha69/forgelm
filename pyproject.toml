@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "forgelm"
+version = "1.0.0"
+description = "A small, reproducible LoRA adaptation experiment on structured helpdesk ticket triage"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "ForgeLM" }]
+
+# Runtime dependencies. Exact observed versions are pinned in requirements.txt,
+# which is generated from the environment that actually produced the results.
+dependencies = [
+  "torch>=2.4",
+  "transformers>=4.44",
+  "peft>=0.11",
+  "accelerate>=0.33",
+  "datasets>=2.20",
+  "numpy>=1.26",
+  "scipy>=1.11",
+  "safetensors>=0.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "matplotlib>=3.8"]
+demo = ["gradio>=4.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = [
+  "slow: tests that load a model or run generation (deselect with '-m \"not slow\"')",
+  "gpu: tests that require a CUDA device",
+]

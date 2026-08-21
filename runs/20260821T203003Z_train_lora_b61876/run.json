@@ -1,0 +1,72 @@
+{
+  "run_id": "20260821T203003Z_train_lora_b61876",
+  "kind": "train_lora",
+  "status": "running",
+  "started_utc": "2026-08-21T20:30:03.007059+00:00",
+  "ended_utc": null,
+  "elapsed_seconds": 0.0,
+  "git": {
+    "commit": null,
+    "branch": null,
+    "dirty": true,
+    "dirty_files": [
+      "?? DECISIONS.md",
+      "?? data/",
+      "?? pyproject.toml",
+      "?? reports/",
+      "?? runs/",
+      "?? scripts/",
+      "?? src/",
+      "?? tests/"
+    ]
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+    "cpu_count": 8,
+    "python_version": "3.13.14",
+    "python_executable": "D:\\projects\\forgelm\\.venv\\Scripts\\python.exe",
+    "torch_version": "2.13.0+cu126",
+    "cuda_available": true,
+    "cuda_version_torch": "12.6",
+    "cudnn_version": 91002,
+    "gpu_name": "NVIDIA GeForce GTX 1650",
+    "gpu_total_memory_bytes": 4294639616,
+    "gpu_total_memory_gib": 4.0,
+    "gpu_capability": "sm_75",
+    "gpu_multi_processor_count": 16,
+    "bf16_supported": true,
+    "nvidia_smi": "NVIDIA GeForce GTX 1650, 592.82, 4096 MiB"
+  },
+  "packages": {
+    "torch": "2.13.0+cu126",
+    "transformers": "5.15.1",
+    "peft": "0.20.0",
+    "accelerate": "1.14.0",
+    "datasets": "5.0.1",
+    "tokenizers": "0.22.2",
+    "numpy": "2.5.2",
+    "safetensors": "0.8.0",
+    "scipy": "1.18.0"
+  },
+  "seeds": {
+    "dataset_generation": 20240517,
+    "split_assignment": 913,
+    "fewshot_selection": 41,
+    "training": 1337,
+    "bootstrap": 7
+  },
+  "inputs": {},
+  "config": {},
+  "metrics": {},
+  "peak_memory": {
+    "peak_allocated_bytes": 512,
+    "peak_reserved_bytes": 2097152,
+    "peak_allocated_gib": 0.0,
+    "peak_reserved_gib": 0.002
+  },
+  "artifacts": {},
+  "warnings": [],
+  "notes": []
+}

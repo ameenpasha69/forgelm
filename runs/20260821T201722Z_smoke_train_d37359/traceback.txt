@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "D:\projects\forgelm\scripts\02_smoke_train.py", line 170, in main
+    result = trainer.train()
+  File "D:\projects\forgelm\.venv\Lib\site-packages\transformers\trainer.py", line 1449, in train
+    return inner_training_loop(
+        args=args,
+    ...<2 lines>...
+        ignore_keys_for_eval=ignore_keys_for_eval,
+    )
+  File "D:\projects\forgelm\.venv\Lib\site-packages\transformers\trainer.py", line 1524, in _inner_training_loop
+    self.control = self.callback_handler.on_train_begin(args, self.state, self.control)
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\projects\forgelm\.venv\Lib\site-packages\transformers\trainer_callback.py", line 492, in on_train_begin
+    return self.call_event("on_train_begin", args, state, control, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\projects\forgelm\.venv\Lib\site-packages\transformers\trainer_callback.py", line 545, in call_event
+    result = getattr(callback, event)(
+        args,
+    ...<8 lines>...
+        **kwargs,
+    )
+  File "D:\projects\forgelm\.venv\Lib\site-packages\transformers\trainer_callback.py", line 754, in on_train_begin
+    assert args.eval_strategy != IntervalStrategy.NO, (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: EarlyStoppingCallback requires IntervalStrategy of steps or epoch

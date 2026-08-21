@@ -1,0 +1,119 @@
+{
+  "errors": 0,
+  "findings": [
+    {
+      "check": "balance",
+      "detail": {
+        "counts": {
+          "access_management": 42,
+          "account_billing": 35,
+          "email": 35,
+          "hardware": 42,
+          "network": 41,
+          "other": 35,
+          "security": 35,
+          "software": 35
+        },
+        "ratio": 1.2
+      },
+      "message": "category counts min=35 max=42 imbalance_ratio=1.20",
+      "severity": "info"
+    },
+    {
+      "check": "balance",
+      "detail": {
+        "counts": {
+          "critical": 37,
+          "high": 76,
+          "low": 149,
+          "medium": 38
+        }
+      },
+      "message": "priority distribution: {'critical': 37, 'high': 76, 'low': 149, 'medium': 38}",
+      "severity": "info"
+    },
+    {
+      "check": "cross_split_near_duplicate",
+      "detail": {
+        "max_pair": [
+          "ab_expense_reimbursement-04",
+          "oth_training_request-02",
+          "test",
+          "train"
+        ],
+        "max_similarity": 0.3255,
+        "threshold": 0.8
+      },
+      "message": "no cross-split pair reaches similarity 0.8; maximum observed = 0.3255",
+      "severity": "info"
+    },
+    {
+      "check": "template_family_spread",
+      "detail": {
+        "spanning": {
+          "bulleted": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "chat_style": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "formal_ticket": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "frustrated": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "manager_escalation": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "narrative": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "polite_request": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "terse": [
+            "test",
+            "train",
+            "validation"
+          ]
+        }
+      },
+      "message": "8/8 template families appear in more than one split. This is intended: template families are surface styles and carry no label information. The generalisation axis under test is scenario_family, which is held out strictly.",
+      "severity": "info"
+    },
+    {
+      "check": "family_split_summary",
+      "detail": {
+        "counts": {
+          "test": 16,
+          "train": 32,
+          "validation": 8
+        }
+      },
+      "message": "56 scenario families assigned across splits",
+      "severity": "info"
+    }
+  ],
+  "info": 5,
+  "n_findings": 5,
+  "n_records": 300,
+  "near_duplicate_pairs_across_families": [],
+  "near_duplicate_pairs_within_family": [],
+  "passed": true,
+  "warnings": 0
+}

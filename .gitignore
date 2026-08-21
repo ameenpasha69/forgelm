@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Model caches -- never commit base-model weights. The base model is pinned by
+# revision in src/forgelm/modeling.py and downloaded on demand.
+.cache/
+hf_cache/
+*.safetensors.tmp
+
+# Training checkpoints. These are large and fully reproducible; the selected
+# adapter is saved separately to artifacts/lora_adapter/.
+runs/*/checkpoints/
+runs/*/smoke_output/
+artifacts/**/checkpoint-*/
+*.zip
+
+# Notebook noise
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets -- nothing in this project needs a token, but belt and braces.
+.env
+*.pem
+*_token*
+hf_token*
