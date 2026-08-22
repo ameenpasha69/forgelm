@@ -28,6 +28,10 @@ SPLIT_PATTERN_V2: tuple[str, ...] = ("train", "test", "validation", "test")
 
 SPLIT_NAMES_V2 = ("train", "validation", "test")
 
+# Which split is sealed. Named rather than hard-coded at every call site so
+# that "what is sealed" is a single, greppable fact.
+SEALED_SPLIT_DEFAULT = "test"
+
 
 def assign_families_v2(records: list[dict[str, Any]]) -> dict[str, str]:
     """Group-aware, category- and severity-stratified family assignment."""
@@ -94,7 +98,7 @@ def build_manifest_v2(records: list[dict[str, Any]]) -> dict[str, Any]:
                                for n in SPLIT_NAMES_V2},
         "counts_by_priority": {n: dict(sorted(per_split_priority[n].items()))
                                for n in SPLIT_NAMES_V2},
-        "sealed_split": "test",
+        "sealed_split": SEALED_SPLIT_DEFAULT,
     }
     manifest["checksum"] = _manifest_checksum(manifest)
     manifest["test_membership_checksum"] = test_membership_checksum(example_split)
@@ -152,7 +156,7 @@ class SealedTestAccessError(RuntimeError):
 
 def sealed_example_ids(manifest: dict[str, Any]) -> frozenset[str]:
     return frozenset(eid for eid, split in manifest["example_split"].items()
-                     if split == manifest.get("sealed_split", "test"))
+                     if split == manifest.get("sealed_split", SEALED_SPLIT_DEFAULT))
 
 
 def assert_not_sealed(example_ids: Iterable[str], manifest: dict[str, Any],
