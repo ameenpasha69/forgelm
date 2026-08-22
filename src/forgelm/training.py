@@ -217,8 +217,14 @@ def supported_training_arguments(requested: dict[str, Any]) -> tuple[dict, list[
 
 
 def build_trainer(model, tokenizer, train_encoded, eval_encoded,
-                  output_dir: str, config: dict[str, Any], seed: int):
-    """Assemble a Trainer, returning it plus the arguments actually applied."""
+                  output_dir: str, config: dict[str, Any], seed: int,
+                  data_seed: int | None = None):
+    """Assemble a Trainer, returning it plus the arguments actually applied.
+
+    `seed` drives parameter initialisation; `data_seed` drives batch ordering.
+    They default to the same value (v1 behaviour) but are separable so a
+    variance study can attribute run-to-run differences to one or the other.
+    """
     import math
 
     from transformers import EarlyStoppingCallback, Trainer, TrainingArguments
@@ -262,7 +268,7 @@ def build_trainer(model, tokenizer, train_encoded, eval_encoded,
         "fp16": config["fp16"],
         "bf16": config["bf16"],
         "seed": seed,
-        "data_seed": seed,
+        "data_seed": seed if data_seed is None else data_seed,
         "report_to": [],
         "remove_unused_columns": False,
         # PEFT-wrapped models confuse Trainer's automatic label detection;
