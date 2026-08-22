@@ -432,6 +432,92 @@ def main() -> int:
             audit.check("adapter reloads and is active", False,
                         f"{type(exc).__name__}: {exc}")
 
+    # -- 11. v2 evidence, if present ----------------------------------------
+    v2_root = REPO_ROOT / "experiments" / "v2"
+    v2_dataset = v2_root / "data" / "tickets_v2.jsonl"
+    if v2_dataset.exists():
+        print("\n11. v2 continuation evidence")
+
+        v2_version = dataio.read_json(v2_root / "data" / "DATASET_VERSION_V2.json")
+        audit.check("v2 dataset checksum matches",
+                    sha256_file(v2_dataset) == v2_version["dataset_sha256"],
+                    f"{sha256_file(v2_dataset)[:16]}...")
+
+        from forgelm.datagen_v2 import generate_dataset_v2
+
+        v2_records = dataio.read_jsonl(v2_dataset)
+        v2_regen = generate_dataset_v2()
+        same_v2 = (len(v2_records) == len(v2_regen) and all(
+            a["ticket_text"] == b["ticket_text"]
+            and a["expected_output"] == b["expected_output"]
+            for a, b in zip(sorted(v2_records, key=lambda r: r["example_id"]),
+                            sorted(v2_regen, key=lambda r: r["example_id"]))))
+        audit.check("v2 dataset regenerates identically from the seed", same_v2,
+                    f"{len(v2_records)} examples compared field by field")
+
+        from forgelm.splits_v2 import (build_manifest_v2, load_manifest_v2,
+                                       sealed_example_ids,
+                                       test_membership_checksum)
+
+        v2_manifest = load_manifest_v2(
+            v2_root / "data" / "split_manifest_v2.json")   # verifies both sums
+        rebuilt_v2 = build_manifest_v2(v2_records)
+        audit.check("v2 split is unchanged",
+                    rebuilt_v2["checksum"] == v2_manifest["checksum"],
+                    f"{v2_manifest['checksum'][:24]}...")
+
+        recomputed_seal = test_membership_checksum(v2_manifest["example_split"])
+        audit.check("v2 SEALED test membership is intact",
+                    recomputed_seal == v2_manifest["test_membership_checksum"],
+                    f"{recomputed_seal[:32]}... "
+                    f"({len(sealed_example_ids(v2_manifest))} sealed examples)")
+
+        similarity_path = v2_root / "reports" / "cross_version_similarity.json"
+        if similarity_path.exists():
+            cross = dataio.read_json(similarity_path)
+            audit.check("v2 families are not paraphrases of v1",
+                        cross["max_similarity"] < 0.80
+                        and not cross["family_overlap"],
+                        f"max similarity {cross['max_similarity']} across "
+                        f"{cross['n_comparisons']:,} comparisons; "
+                        f"family overlap {cross['family_overlap'] or 'none'}")
+
+        # Every v2 metric must recompute from its raw predictions, exactly as
+        # v1's do. A v2 number that cannot be re-derived is not evidence.
+        v2_pred_dirs = [v2_root / "reports" / "sealed",
+                        v2_root / "reports" / "diagnostics"]
+        recomputed_ok, checked_files = True, 0
+        for directory in v2_pred_dirs:
+            if not directory.exists():
+                continue
+            for pred in sorted(directory.glob("*.jsonl")):
+                recorded = pred.with_suffix(".json")
+                if not recorded.exists():
+                    continue
+                got = M.compute_metrics(dataio.read_jsonl(pred))
+                want = dataio.read_json(recorded).get("metrics", {})
+                for key in ("n", "exact_match", "schema_valid_rate"):
+                    if key in want and want[key] != got.get(key):
+                        recomputed_ok = False
+                checked_files += 1
+        if checked_files:
+            audit.check("v2 metrics recompute from raw predictions",
+                        recomputed_ok,
+                        f"{checked_files} v2 prediction file(s) re-scored")
+
+        multiseed = v2_root / "reports" / "multiseed" / "multiseed.json"
+        if multiseed.exists():
+            data = dataio.read_json(multiseed)
+            n_met = data["n_seeds_meeting_v1_criterion"]
+            n_seeds = data["n_seeds"]
+            audit.check("multi-seed verdict is derived, not asserted",
+                        data["verdict"] in ("survives", "partially survives",
+                                            "does not survive"),
+                        f"verdict '{data['verdict']}' from {n_met}/{n_seeds} "
+                        f"seeds meeting the pre-registered criterion; per-seed "
+                        f"exact match "
+                        f"{data['aggregate']['exact_match']['per_seed_means']}")
+
     # -- write the evidence table -------------------------------------------
     lines = [
         "# ForgeLM -- final evidence audit",
