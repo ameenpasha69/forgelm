@@ -20,6 +20,16 @@ runs/*/smoke_output/
 artifacts/**/checkpoint-*/
 *.zip
 
+# The notebook writes its Trainer output to runs/notebook_train/, which the
+# pattern above does not match (no /checkpoints/ segment). That gap let ~100 MB
+# of throwaway optimiser state into a commit. Match the directory itself, and
+# belt-and-braces on the two file types that are always regenerable build
+# output rather than evidence.
+runs/notebook_train/
+**/checkpoint-*/
+optimizer.pt
+scheduler.pt
+
 # Ablation adapters. The primary adapter (artifacts/lora_adapter/) IS committed
 # because it is the deliverable. Tagged ablation adapters are ~35 MB each and
 # nobody needs the weights: what carries the finding is their per-example
