@@ -26,7 +26,7 @@ checksums matching.
 | Gradio demo checks | **verified** | **11/11** checks; `reports/demo_checks.json` | Gradio server not booted (optional dependency) |
 | Full test suite | **verified** | **215 passed** | -- |
 | Final evidence audit | **verified** | **27/27 checks passed**, `reports/EVIDENCE.md` | -- |
-| Colab verification | **blocked** | no Colab access from this environment | see below |
+| Colab verification | **verified** | executed end to end on a real Tesla T4, 2026-08-23; training reproduced the local run's step count, early-stopping epoch and selected checkpoint, and all three exact-match figures matched to 4 dp | 1 Colab-only bug found and fixed (torchao/peft) |
 
 ---
 
@@ -130,17 +130,81 @@ robustness or safety claim.
 
 ---
 
-## Colab: honestly unverified
+## Colab: VERIFIED on a Tesla T4
 
-This environment has no Colab access, so no Colab result is claimed and none is
-invented. The notebook's GPU cells remain **implemented but unverified**; its
-CPU-only cells were executed locally and passed.
+Executed end to end on a real Colab T4 by the repository owner, 2026-08-23.
+Every cell ran; the results below are theirs, not a local proxy.
 
-To verify, open `notebooks/forgelm_colab.ipynb` on a T4 runtime and run all
-cells. Record GPU, VRAM, Python, CUDA, torch, transformers, peft, runtime,
-seeds, adapter sha256 and final metrics. A T4 is also sm_75, so
-`modeling.select_precision()` takes the same fp16 branch as the reference
-machine.
+| | Colab | Local reference |
+|---|---|---|
+| GPU | **Tesla T4**, 15,360 MiB, sm_75 | GTX 1650, 4,096 MiB, sm_75 |
+| Driver / CUDA | 580.82.07 / 13.0 | 592.82 / 12.6 |
+| OS | Linux 6.6.122 | Windows 11 |
+| Python | 3.13.15 | 3.13.14 |
+| torch | **2.11.0+cu128** (build 12.8) | 2.13.0+cu126 |
+| `bf16 native` | **False** | False |
+
+### Training reproduced independently
+
+| | Local | Colab |
+|---|---|---|
+| Optimiser steps | 110 | **110** |
+| Early stopping | epoch 5 of 8 | **epoch 5 of 8** |
+| Selected checkpoint | epoch 2 (`checkpoint-44`) | **epoch 2 (`checkpoint-44`)** |
+| Best eval loss | 0.0743 | **0.0732** |
+| Wall clock | 2202 s | **204 s** (10.8x faster) |
+
+Per-epoch validation loss: local `0.0891 / 0.0743 / 0.0954 / 0.0939 / 0.0977`
+against Colab `0.0902 / 0.0732 / 0.1038 / 0.0991 / 0.1136`. Different OS,
+different torch major-minor, different CUDA build, different GPU -- and the run
+selected the same epoch and stopped at the same point.
+
+### The headline metric reproduced exactly
+
+| metric | zero-shot | few-shot | LoRA |
+|---|---|---|---|
+| `json_parse_rate_strict` | 0.0581 | 1.0000 | 1.0000 |
+| **`exact_match`** | **0.0000** | **0.0116** | **0.1163** |
+| `markdown_fence_rate` | 0.9419 | 0.0000 | 0.0000 |
+
+All three exact-match figures are **identical to the reported v1 values** to
+four decimal places.
+
+### What did NOT reproduce bit-for-bit, and why
+
+A handful of metrics moved by one to three examples out of 86:
+
+| metric | local | Colab |
+|---|---|---|
+| `schema_valid_rate` (few-shot) | 0.6163 | 0.6279 |
+| `schema_valid_rate` (LoRA) | 0.7907 | 0.8023 |
+| `field: is_security_incident` (LoRA) | 0.9186 | 0.8837 |
+| `field: category` (LoRA) | 0.5349 | 0.5465 |
+
+This is expected and was predicted. Greedy decoding is deterministic *given
+identical arithmetic*, but floating-point matmul results differ across GPU
+architectures, so a few borderline generations diverge. Note that the zero-shot
+condition is **identical on every metric** -- it has the least room for a
+near-tie to flip -- and that `exact_match` is unmoved throughout: the flips
+changed *wrong* answers into differently-wrong answers.
+
+`EXPERIMENT_CARD.md` stated in v1 that bit-exact determinism was not claimed and
+that results "may differ in the last decimal places across runs, and more on
+different hardware". That is now measured rather than asserted.
+
+### One Colab-only bug this found
+
+peft raised `ImportError: Found an incompatible version of torchao ... 0.10.0,
+but only versions above 0.16.0 are supported` inside `get_peft_model()`. Colab
+preinstalls torchao 0.10.0; the notebook installed the latest peft, which probes
+for torchao and raises on anything older than 0.16. **Invisible locally** -- this
+machine has no torchao at all, so the probe returns False cleanly. Fixed by
+uninstalling torchao before installing peft (ForgeLM never uses quantisation).
+
+Two further Colab-fatal defects were found and fixed by inspection beforehand: a
+`YOUR-USERNAME` placeholder in the clone URL, and `check=False` on that clone
+swallowing the failure so it surfaced as a confusing `ImportError` nine cells
+later.
 
 ---
 
