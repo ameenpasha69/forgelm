@@ -323,20 +323,33 @@ applied identically to both systems:
 | LoRA, **constrained** | 100% | **16.3%** |
 
 The decoder alone lifted the *base* model by **+7.0 pp (p = 0.031)** — more than
-it lifted the fine-tuned one. And in the like-for-like comparison
-(constrained vs constrained) LoRA's remaining advantage is **+8.1 pp, 95% CI
-[−2.3, +18.6], p = 0.19 — no longer distinguishable from zero**.
+it lifted the fine-tuned one. So v1's headline was measuring, in substantial
+part, format compliance that a grammar provides for free.
 
-That does *not* show LoRA is no better; the interval is wide because n = 86.
-It does show that v1's headline was measuring, in large part, something you can
-get without training.
+On v1's test split the like-for-like comparison (+8.1 pp, p = 0.19) was **not**
+significant, which looked at first like the adapter's advantage dissolving.
+**It was a power limitation, not a dissolving effect.** Repeating the same
+like-for-like comparison on the larger, better-balanced sealed v2 set settles
+it:
+
+| Test set | Decoding | LoRA − few-shot | p |
+|---|---|---|---|
+| v1 test (n=86) | unconstrained | +10.5 pp | 0.012 |
+| v1 test (n=86) | constrained | +8.1 pp | **0.19** |
+| v2 sealed (n=96) | unconstrained | +26.0 pp | <0.0001 |
+| **v2 sealed (n=96)** | **constrained** | **+31.2 pp** | **<0.0001** |
+
+**Constraining the decoder removes format failures for both systems; the
+adapter's remaining advantage is real and large.** Constrained LoRA reaches
+**40.6%** exact match on scenario families that did not exist when it was
+trained.
 
 | v1 weakness | v2 response | Outcome |
 |---|---|---|
 | One seed per condition | 3 seeds, all reported, none promoted | conclusion survives, magnitude does not |
 | Ablation dropped a scenario family | Equal-count, label-matched coverage arms | **no detectable difference** (−0.0 pp) |
-| 18/86 outputs had invented enum values | Constrained decoding, applied symmetrically | schema failures eliminated; adapter advantage no longer separable from noise |
-| Test split had been seen | A sealed v2 set: 96 examples, 32 new families | evaluated once |
+| 18/86 outputs had invented enum values | Constrained decoding, applied symmetrically | schema failures eliminated for both; adapter advantage survives at **+31.2 pp** on the sealed set |
+| Test split had been seen | A sealed v2 set: 96 examples, 32 new families | evaluated once; **LoRA 29.2%** vs few-shot 3.1% |
 
 See [`experiments/v2/STATUS.md`](experiments/v2/STATUS.md) and
 [`experiments/v2/PREREGISTRATION.md`](experiments/v2/PREREGISTRATION.md)

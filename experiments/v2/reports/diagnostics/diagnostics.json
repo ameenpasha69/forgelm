@@ -1,0 +1,138 @@
+{
+  "lora": {
+    "contradictory": {
+      "constraint_violation_rate": 0.1354,
+      "invalid_enum_rate": 0.1354,
+      "json_parse_rate_strict": 1.0,
+      "n": 96,
+      "note": "input is ambiguous or not a helpdesk ticket, so there is no correct answer; only format compliance is scored",
+      "schema_valid_rate": 0.8646,
+      "scoring_mode": "schema_only",
+      "wrong_values_only_rate": 0.8646
+    },
+    "irrelevant_detail": {
+      "category_macro_f1": 0.5322,
+      "constraint_violation_rate": 0.0833,
+      "exact_match": 0.125,
+      "exact_match_scored_fields": 0.125,
+      "field_accuracy": {
+        "affected_service": 0.6771,
+        "category": 0.5625,
+        "is_security_incident": 0.8646,
+        "priority": 0.3854,
+        "users_affected": 0.9792
+      },
+      "invalid_enum_rate": 0.0833,
+      "json_parse_rate_strict": 1.0,
+      "mean_field_accuracy": 0.6938,
+      "n": 96,
+      "n_families": 16,
+      "n_families_zero_scoring": 11,
+      "priority_macro_f1": 0.2513,
+      "schema_valid_rate": 0.9167,
+      "scoring_mode": "full",
+      "worst_family_accuracy": 0.0,
+      "wrong_values_only_rate": 0.7917
+    },
+    "long_tickets": {
+      "category_macro_f1": 0.439,
+      "constraint_violation_rate": 0.0208,
+      "exact_match": 0.0938,
+      "exact_match_scored_fields": 0.0938,
+      "field_accuracy": {
+        "affected_service": 0.5625,
+        "category": 0.4896,
+        "is_security_incident": 0.8333,
+        "priority": 0.3229,
+        "users_affected": 1.0
+      },
+      "invalid_enum_rate": 0.0208,
+      "json_parse_rate_strict": 1.0,
+      "mean_field_accuracy": 0.6417,
+      "n": 96,
+      "n_families": 16,
+      "n_families_zero_scoring": 13,
+      "priority_macro_f1": 0.2029,
+      "schema_valid_rate": 0.9792,
+      "scoring_mode": "full",
+      "worst_family_accuracy": 0.0,
+      "wrong_values_only_rate": 0.8854
+    },
+    "missing_user_count": {
+      "constraint_violation_rate": 0.2812,
+      "exact_match_scored_fields": 0.1458,
+      "field_accuracy": {
+        "affected_service": 0.6562,
+        "category": 0.5729,
+        "is_security_incident": 0.8958,
+        "priority": 0.4167
+      },
+      "invalid_enum_rate": 0.2292,
+      "json_parse_rate_strict": 1.0,
+      "mean_field_accuracy": 0.6354,
+      "n": 96,
+      "note": "users_affected was removed from the ticket text, so it is unknowable and excluded from scoring",
+      "schema_valid_rate": 0.7188,
+      "scoring_mode": "except_users",
+      "wrong_values_only_rate": 0.6562
+    },
+    "noisy_text": {
+      "category_macro_f1": 0.5059,
+      "constraint_violation_rate": 0.1667,
+      "exact_match": 0.1146,
+      "exact_match_scored_fields": 0.1146,
+      "field_accuracy": {
+        "affected_service": 0.6146,
+        "category": 0.5104,
+        "is_security_incident": 0.875,
+        "priority": 0.375,
+        "users_affected": 0.9896
+      },
+      "invalid_enum_rate": 0.1667,
+      "json_parse_rate_strict": 1.0,
+      "mean_field_accuracy": 0.6729,
+      "n": 96,
+      "n_families": 16,
+      "n_families_zero_scoring": 11,
+      "priority_macro_f1": 0.2465,
+      "schema_valid_rate": 0.8333,
+      "scoring_mode": "full",
+      "worst_family_accuracy": 0.0,
+      "wrong_values_only_rate": 0.7188
+    },
+    "out_of_domain": {
+      "constraint_violation_rate": 0.5,
+      "invalid_enum_rate": 0.25,
+      "json_parse_rate_strict": 1.0,
+      "n": 12,
+      "note": "input is ambiguous or not a helpdesk ticket, so there is no correct answer; only format compliance is scored",
+      "schema_valid_rate": 0.5,
+      "scoring_mode": "schema_only",
+      "wrong_values_only_rate": 0.5
+    },
+    "unseen_families": {
+      "category_macro_f1": 0.5667,
+      "constraint_violation_rate": 0.2188,
+      "exact_match": 0.1458,
+      "exact_match_scored_fields": 0.1458,
+      "field_accuracy": {
+        "affected_service": 0.6667,
+        "category": 0.5625,
+        "is_security_incident": 0.8958,
+        "priority": 0.3854,
+        "users_affected": 1.0
+      },
+      "invalid_enum_rate": 0.2188,
+      "json_parse_rate_strict": 1.0,
+      "mean_field_accuracy": 0.7021,
+      "n": 96,
+      "n_families": 16,
+      "n_families_zero_scoring": 11,
+      "priority_macro_f1": 0.2614,
+      "schema_valid_rate": 0.7812,
+      "scoring_mode": "full",
+      "worst_family_accuracy": 0.0,
+      "wrong_values_only_rate": 0.6354
+    }
+  }
+}

@@ -205,14 +205,31 @@ McNemar **p = 0.19** -- **not distinguishable from zero**.
 
 **Reading this.** A grammar requiring no training gave the *base* model a
 statistically significant **+7.0 pp** -- larger than the gain it gave the
-fine-tuned model. Once both systems have it, the adapter's remaining advantage
-is real in direction but not separable from noise at n = 86.
+fine-tuned model. v1's headline was therefore measuring, in substantial part,
+format compliance obtainable without any training.
 
-This does **not** show LoRA is no better. The interval spans zero because the
-test set is small; +8.1 pp with an upper bound of +18.6 is entirely consistent
-with a genuine benefit this design lacks the power to confirm. What it does show
-is that v1's headline was measuring, in substantial part, format compliance --
-and format compliance is obtainable without training.
+**The null on this test split was underpowered, and E5 resolves it.** Taken
+alone, +8.1 pp at p = 0.19 invites the reading "the adapter's advantage
+dissolves once you equalise the decoder". Repeating the *identical* like-for-like
+comparison on the larger, better-balanced sealed v2 split shows that reading is
+wrong:
+
+| Test set | Decoding | LoRA - few-shot | 95% CI | p |
+|---|---|---|---|---|
+| v1 test (n=86) | unconstrained | +10.5 pp | [+3.5, +18.6] | 0.012 |
+| v1 test (n=86) | constrained | +8.1 pp | [-2.3, +18.6] | **0.19** |
+| v2 sealed (n=96) | unconstrained | +26.0 pp | [+16.7, +35.4] | <0.0001 |
+| **v2 sealed (n=96)** | **constrained** | **+31.2 pp** | **[+20.8, +41.7]** | **<0.0001** |
+
+**Conclusion: constraining the decoder does not eliminate the adapter's
+advantage.** It removes format failures for both systems, and what remains is
+large and unambiguous once measured on a test set with enough signal. The v1
+split simply could not resolve an effect of that size.
+
+This is recorded as a correction to an intermediate interpretation made during
+v2 itself, not just to v1: the moment E3's null appeared, the tempting summary
+was "LoRA's gain was mostly formatting". It was partly formatting, and the rest
+is real.
 
 **The comparison deliberately not headlined.** Unconstrained few-shot against
 constrained LoRA gives **+15.1 pp**, nearly double the honest +8.1. The gap
