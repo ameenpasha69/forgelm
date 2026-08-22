@@ -199,9 +199,15 @@ Verified means it ran and left evidence. See `STATUS.md` for the full table and
   LoRA weights are inert.
 - **Metrics recomputed** from raw predictions and audited against the values
   recorded at run time.
-- **142 tests**, including tests that deliberately poison the data to prove the
+- **215 tests**, including tests that deliberately poison the data to prove the
   leakage and duplicate detectors actually fire, and one that saves an
   untrained adapter to prove the liveness guard rejects it.
+- **CI green on GitHub Actions** — CPU-only, offline, no GPU and no model
+  weights. Every headline number re-derives from the committed per-example
+  predictions on a machine that has never downloaded the model.
+- **Reproduced on independent hardware.** The notebook was executed on a Colab
+  T4 (Linux, torch 2.11+cu128) and selected the same checkpoint, stopped at the
+  same epoch, and produced `exact_match` identical to four decimal places.
 
 ## Repository map
 
@@ -286,14 +292,47 @@ Just the fast ones (no model download):
 pytest tests/ -m "not slow"
 ```
 
-### Colab
+### Colab — verified on a T4
 
-Open `notebooks/forgelm_colab.ipynb` in Colab and select a T4 runtime. It runs
-the whole experiment with an explanation before every cell covering what the
-cell does, why it is needed, what may fail and how to read the output. The
-notebook's CPU-only cells were executed locally as a check; the GPU cells were
-not executed on Colab hardware, so it is marked *implemented but unverified* in
-`STATUS.md`.
+[**Open the notebook in Colab**](https://colab.research.google.com/github/ameenpasha69/forgelm/blob/main/notebooks/forgelm_colab.ipynb)
+→ *Runtime → Change runtime type → T4 GPU* → *Run all*. ~40 min.
+
+It runs the whole experiment with an explanation before every cell: what the
+cell does, why it is needed, what may fail, and how to read the output.
+
+**It has been run there, and it reproduced this repository's results on
+hardware sharing nothing with the reference machine but its compute
+capability.**
+
+| | Reference (Windows, GTX 1650) | Colab (Linux, Tesla T4) |
+|---|---|---|
+| torch / CUDA build | 2.13.0+cu126 | **2.11.0+cu128** |
+| OS | Windows 11 | **Linux 6.6.122** |
+| VRAM | 4.0 GiB | 15.0 GiB |
+| Optimiser steps | 110 | **110** |
+| Early stopping | epoch 5 of 8 | **epoch 5 of 8** |
+| Selected checkpoint | epoch 2 | **epoch 2** |
+| Best validation loss | 0.0743 | **0.0732** |
+| Training wall clock | 2202 s | **204 s** |
+
+**`exact_match` came out identical to four decimal places** — 0.0000 /
+0.0116 / 0.1163 for zero-shot / few-shot / LoRA.
+
+Four secondary metrics moved by one to three examples out of 86
+(`schema_valid_rate`, and two field accuracies). Floating-point matmul differs
+across GPU architectures, so borderline greedy generations diverge. The
+zero-shot condition is identical on every metric, and `exact_match` never
+moved — the flips turned wrong answers into differently-wrong answers. v1 said
+bit-exact determinism was not claimed and that results would differ more on
+different hardware; that is now measured rather than asserted.
+
+**The run also found a bug that was invisible locally.** peft raised
+`ImportError: Found an incompatible version of torchao ... 0.10.0` inside
+`get_peft_model()` — Colab preinstalls torchao 0.10.0, and recent peft rejects
+anything below 0.16 when it probes for one. This machine has no torchao at all,
+so the probe returned cleanly and nothing surfaced. Fixed by removing torchao
+before installing peft; ForgeLM never uses quantisation. Full record in
+[`experiments/v2/STATUS.md`](experiments/v2/STATUS.md).
 
 ---
 
