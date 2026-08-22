@@ -1,0 +1,74 @@
+{
+  "run_id": "20260822T141808Z_coverage_report_57dce7",
+  "kind": "coverage_report",
+  "status": "success",
+  "started_utc": "2026-08-22T14:18:08.336488+00:00",
+  "ended_utc": "2026-08-22T14:18:35.835865+00:00",
+  "elapsed_seconds": 27.499,
+  "git": {
+    "commit": "e64f4a167af9dd60c99401fc52bccf1b28ae4b64",
+    "branch": "v2-continuation",
+    "dirty": true,
+    "dirty_files": [
+      "M runs/20260822T135102Z_eval_lora_4b8651/run.json",
+      "?? experiments/v2/reports/coverage_depth/",
+      "?? reports/metrics/lora_lowcov_s2718_test.json",
+      "?? reports/metrics/lora_lowcov_s3141_test.json",
+      "?? reports/metrics/lora_lowcov_s3141_validation.json",
+      "?? reports/predictions/lora_lowcov_s2718_test.jsonl",
+      "?? reports/predictions/lora_lowcov_s3141_test.jsonl",
+      "?? reports/predictions/lora_lowcov_s3141_validation.jsonl",
+      "?? reports/training_history_lowcov_s3141.json",
+      "?? runs/20260822T135401Z_train_lora_349f91/",
+      "?? runs/20260822T141437Z_eval_lora_3cf725/",
+      "?? runs/20260822T141808Z_coverage_report_57dce7/"
+    ]
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+    "cpu_count": 8,
+    "python_version": "3.13.14",
+    "python_executable": "D:\\projects\\forgelm\\.venv\\Scripts\\python.exe",
+    "torch_version": "2.13.0+cu126",
+    "cuda_available": true,
+    "cuda_version_torch": "12.6",
+    "cudnn_version": 91002,
+    "gpu_name": "NVIDIA GeForce GTX 1650",
+    "gpu_total_memory_bytes": 4294639616,
+    "gpu_total_memory_gib": 4.0,
+    "gpu_capability": "sm_75",
+    "gpu_multi_processor_count": 16,
+    "bf16_supported": true,
+    "nvidia_smi": "NVIDIA GeForce GTX 1650, 592.82, 4096 MiB"
+  },
+  "packages": {
+    "torch": "2.13.0+cu126",
+    "transformers": "5.15.1",
+    "peft": "0.20.0",
+    "accelerate": "1.14.0",
+    "datasets": "5.0.1",
+    "tokenizers": "0.22.2",
+    "numpy": "2.5.2",
+    "safetensors": "0.8.0",
+    "scipy": "1.18.0"
+  },
+  "seeds": {},
+  "inputs": {},
+  "config": {},
+  "metrics": {
+    "verdict": "no detectable difference",
+    "mean_diff": -3.333333333333429e-05,
+    "n_significant": 0
+  },
+  "peak_memory": {
+    "peak_allocated_bytes": 512,
+    "peak_reserved_bytes": 2097152,
+    "peak_allocated_gib": 0.0,
+    "peak_reserved_gib": 0.002
+  },
+  "artifacts": {},
+  "warnings": [],
+  "notes": []
+}

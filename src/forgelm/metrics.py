@@ -214,6 +214,75 @@ def paired_bootstrap_diff(a: Sequence[float], b: Sequence[float],
     }
 
 
+def hierarchical_bootstrap(per_seed_values: Sequence[Sequence[float]],
+                           n_resamples: int = 10000, alpha: float = 0.05,
+                           seed: int | None = None) -> dict[str, Any]:
+    """Interval accounting for BOTH test-example sampling and training-seed choice.
+
+    v1 reported a paired bootstrap over test examples only. That answers "if I
+    drew a different test set, how would this number move?" -- but not "if I had
+    trained with a different seed, how would it move?". With one training run
+    the second question is unanswerable; with several it is estimable.
+
+    Two-level resample: draw seeds with replacement, then draw example indices
+    with replacement (the same indices for every drawn seed, preserving the
+    pairing), and average.
+
+    Honesty note: with only a handful of seeds the seed level is a *coarse*
+    estimate. The returned dict carries `n_seeds` so a reader can weigh it, and
+    `seed_spread` reports the raw observed range, which with n=3 is often the
+    more truthful summary.
+    """
+    import random
+
+    n_seeds = len(per_seed_values)
+    if n_seeds == 0:
+        return {"mean": float("nan"), "n_seeds": 0}
+    n_examples = len(per_seed_values[0])
+    if any(len(v) != n_examples for v in per_seed_values):
+        raise ValueError("every seed must be scored on the same examples")
+
+    seed_means = [sum(v) / len(v) for v in per_seed_values]
+    r = random.Random(SEEDS["bootstrap"] if seed is None else seed)
+
+    means = []
+    for _ in range(n_resamples):
+        drawn = [per_seed_values[r.randrange(n_seeds)] for _ in range(n_seeds)]
+        indices = [r.randrange(n_examples) for _ in range(n_examples)]
+        total = 0.0
+        for values in drawn:
+            total += sum(values[i] for i in indices) / n_examples
+        means.append(total / n_seeds)
+    means.sort()
+
+    spread = max(seed_means) - min(seed_means)
+    if n_seeds > 1:
+        mean_of_means = sum(seed_means) / n_seeds
+        variance = sum((m - mean_of_means) ** 2 for m in seed_means) / (n_seeds - 1)
+        std = math.sqrt(variance)
+    else:
+        std = float("nan")
+
+    return {
+        "mean": round(sum(seed_means) / n_seeds, 4),
+        "lo": round(_percentile(means, alpha / 2), 4),
+        "hi": round(_percentile(means, 1 - alpha / 2), 4),
+        "n_seeds": n_seeds,
+        "n_examples": n_examples,
+        "per_seed_means": [round(m, 4) for m in seed_means],
+        "seed_std": round(std, 4) if not math.isnan(std) else None,
+        "seed_min": round(min(seed_means), 4),
+        "seed_max": round(max(seed_means), 4),
+        "seed_spread": round(spread, 4),
+        "n_resamples": n_resamples,
+        "caveat": (
+            f"seed level estimated from {n_seeds} runs; treat the interval as "
+            f"indicative and prefer the raw per-seed spread "
+            f"({min(seed_means):.4f} to {max(seed_means):.4f}) as the honest "
+            f"summary"),
+    }
+
+
 def mcnemar(a_correct: Sequence[bool], b_correct: Sequence[bool]) -> dict[str, Any]:
     """Exact McNemar test on paired binary outcomes (system A vs system B).
 

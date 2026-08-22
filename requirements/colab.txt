@@ -1,0 +1,18 @@
+# Google Colab (T4). Colab ships a torch build matching its own CUDA runtime,
+# so torch is deliberately NOT listed here -- installing another one is the
+# usual way to break a Colab GPU runtime.
+#
+#   !pip install -q -r requirements/colab.txt
+#
+# A T4 is sm_75, the same compute capability as the GTX 1650 the results were
+# produced on, so the precision logic in modeling.select_precision() takes the
+# same fp16 branch. It has 16 GB of VRAM against 4 GB, so batch sizes here are
+# conservative rather than necessary.
+
+transformers>=4.44
+peft>=0.11
+accelerate>=0.33
+datasets>=2.20
+safetensors>=0.4
+scipy>=1.11
+matplotlib>=3.8

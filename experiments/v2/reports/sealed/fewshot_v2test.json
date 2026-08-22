@@ -1,0 +1,315 @@
+{
+  "adapter_dir": "artifacts/lora_adapter",
+  "adapter_verification": null,
+  "base_model": {
+    "chat_format": "ChatML (<|im_start|>role\\n ... <|im_end|>)",
+    "eos_token": "<|im_end|>",
+    "gated": false,
+    "hidden_layers": 24,
+    "hidden_size": 896,
+    "licence": "apache-2.0",
+    "max_position_embeddings": 32768,
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "pad_token": "<|endoftext|>",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "source": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct",
+    "tie_word_embeddings": true,
+    "total_params_reported": "0.49B (0.36B non-embedding)"
+  },
+  "condition": "fewshot",
+  "constrained": false,
+  "fewshot_demo_ids": [
+    "sec_usb_unknown_device-02",
+    "am_password_reset-00",
+    "net_guest_wifi_captive-04",
+    "hw_battery_swelling-02",
+    "email_not_receiving-00",
+    "oth_desk_move-01",
+    "ab_payroll_deduction_q-01",
+    "sw_db_query_timeout-03"
+  ],
+  "metrics": {
+    "category": {
+      "macro_f1": 0.4984,
+      "per_label": {
+        "access_management": {
+          "f1": 0.2857,
+          "precision": 1.0,
+          "predicted": 2,
+          "recall": 0.1667,
+          "support": 12
+        },
+        "account_billing": {
+          "f1": 0.2963,
+          "precision": 0.2667,
+          "predicted": 15,
+          "recall": 0.3333,
+          "support": 12
+        },
+        "email": {
+          "f1": 0.7368,
+          "precision": 1.0,
+          "predicted": 7,
+          "recall": 0.5833,
+          "support": 12
+        },
+        "hardware": {
+          "f1": 0.7273,
+          "precision": 0.5714,
+          "predicted": 21,
+          "recall": 1.0,
+          "support": 12
+        },
+        "network": {
+          "f1": 0.6364,
+          "precision": 0.7,
+          "predicted": 10,
+          "recall": 0.5833,
+          "support": 12
+        },
+        "other": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 12
+        },
+        "security": {
+          "f1": 0.7333,
+          "precision": 0.6111,
+          "predicted": 18,
+          "recall": 0.9167,
+          "support": 12
+        },
+        "software": {
+          "f1": 0.5714,
+          "precision": 0.4348,
+          "predicted": 23,
+          "recall": 0.8333,
+          "support": 12
+        }
+      }
+    },
+    "category_accuracy": 0.5521,
+    "confusion_category": {
+      "access_management": {
+        "<invalid>": 0,
+        "access_management": 2,
+        "account_billing": 3,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 5,
+        "software": 2
+      },
+      "account_billing": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 4,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 8
+      },
+      "email": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 2,
+        "email": 7,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 3
+      },
+      "hardware": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 12,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "network": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 5,
+        "network": 7,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "other": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 3,
+        "email": 0,
+        "hardware": 4,
+        "network": 3,
+        "other": 0,
+        "security": 2,
+        "software": 0
+      },
+      "security": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 1,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 11,
+        "software": 0
+      },
+      "software": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 2,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 10
+      }
+    },
+    "confusion_priority": {
+      "critical": {
+        "<invalid>": 0,
+        "critical": 0,
+        "high": 30,
+        "low": 0,
+        "medium": 0
+      },
+      "high": {
+        "<invalid>": 0,
+        "critical": 0,
+        "high": 18,
+        "low": 0,
+        "medium": 0
+      },
+      "low": {
+        "<invalid>": 0,
+        "critical": 0,
+        "high": 24,
+        "low": 7,
+        "medium": 0
+      },
+      "medium": {
+        "<invalid>": 0,
+        "critical": 0,
+        "high": 14,
+        "low": 3,
+        "medium": 0
+      }
+    },
+    "constraint_violation_rate": 0.3229,
+    "error_categories": {
+      "correct": 3,
+      "invalid_enum": 31,
+      "wrong_values_only": 62
+    },
+    "exact_match": 0.0312,
+    "exact_match_by_category": {
+      "access_management": {
+        "exact_match": 0.0833,
+        "n": 12
+      },
+      "account_billing": {
+        "exact_match": 0.0833,
+        "n": 12
+      },
+      "email": {
+        "exact_match": 0.0833,
+        "n": 12
+      },
+      "hardware": {
+        "exact_match": 0.0,
+        "n": 12
+      },
+      "network": {
+        "exact_match": 0.0,
+        "n": 12
+      },
+      "other": {
+        "exact_match": 0.0,
+        "n": 12
+      },
+      "security": {
+        "exact_match": 0.0,
+        "n": 12
+      },
+      "software": {
+        "exact_match": 0.0,
+        "n": 12
+      }
+    },
+    "field_accuracy": {
+      "affected_service": 0.5,
+      "category": 0.5521,
+      "is_security_incident": 0.8646,
+      "priority": 0.2604,
+      "users_affected": 1.0
+    },
+    "json_parse_rate_lenient": 1.0,
+    "json_parse_rate_strict": 1.0,
+    "latency_seconds": {
+      "max": 3.2273,
+      "mean": 2.5577,
+      "min": 2.4763,
+      "note": "Observation only. Measured on one consumer GPU with batched generation; not a serving-performance claim."
+    },
+    "markdown_fence_rate": 0.0,
+    "mean_field_accuracy": 0.6354,
+    "n": 96,
+    "priority": {
+      "macro_f1": 0.1719,
+      "per_label": {
+        "critical": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 30
+        },
+        "high": {
+          "f1": 0.3462,
+          "precision": 0.2093,
+          "predicted": 86,
+          "recall": 1.0,
+          "support": 18
+        },
+        "low": {
+          "f1": 0.3415,
+          "precision": 0.7,
+          "predicted": 10,
+          "recall": 0.2258,
+          "support": 31
+        },
+        "medium": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 17
+        }
+      }
+    },
+    "priority_accuracy": 0.2604,
+    "prose_outside_json_rate": 0.0,
+    "schema_valid_rate": 0.6771,
+    "truncation_rate": 0.0
+  },
+  "run_id": "20260822T145254Z_sealed_eval_fewshot_d9955e",
+  "seal_checksum": "0122062c5432ed0253fb34c45a4164c79c230680121368e80db8aa04b9463489",
+  "split": "v2 sealed test",
+  "system_prompt_sha": "72c01508c1ea3d5c"
+}

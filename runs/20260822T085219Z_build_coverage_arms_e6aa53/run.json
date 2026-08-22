@@ -1,0 +1,126 @@
+{
+  "run_id": "20260822T085219Z_build_coverage_arms_e6aa53",
+  "kind": "build_coverage_arms",
+  "status": "success",
+  "started_utc": "2026-08-22T08:52:19.401680+00:00",
+  "ended_utc": "2026-08-22T08:52:30.598998+00:00",
+  "elapsed_seconds": 11.197,
+  "git": {
+    "commit": "95b39c93bf8dbb47761b29c0b8f3df6d408102d7",
+    "branch": "v2-continuation",
+    "dirty": true,
+    "dirty_files": [
+      "M scripts/v2_02_build_coverage_arms.py",
+      "?? experiments/v2/configs/",
+      "?? runs/20260822T085035Z_build_coverage_arms_3bc95d/",
+      "?? runs/20260822T085219Z_build_coverage_arms_e6aa53/"
+    ]
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+    "cpu_count": 8,
+    "python_version": "3.13.14",
+    "python_executable": "D:\\projects\\forgelm\\.venv\\Scripts\\python.exe",
+    "torch_version": "2.13.0+cu126",
+    "cuda_available": true,
+    "cuda_version_torch": "12.6",
+    "cudnn_version": 91002,
+    "gpu_name": "NVIDIA GeForce GTX 1650",
+    "gpu_total_memory_bytes": 4294639616,
+    "gpu_total_memory_gib": 4.0,
+    "gpu_capability": "sm_75",
+    "gpu_multi_processor_count": 16,
+    "bf16_supported": true,
+    "nvidia_smi": "NVIDIA GeForce GTX 1650, 592.82, 4096 MiB"
+  },
+  "packages": {
+    "torch": "2.13.0+cu126",
+    "transformers": "5.15.1",
+    "peft": "0.20.0",
+    "accelerate": "1.14.0",
+    "datasets": "5.0.1",
+    "tokenizers": "0.22.2",
+    "numpy": "2.5.2",
+    "safetensors": "0.8.0",
+    "scipy": "1.18.0"
+  },
+  "seeds": {},
+  "inputs": {},
+  "config": {},
+  "metrics": {
+    "high": {
+      "n": 64,
+      "n_families": 32,
+      "by_category": {
+        "access_management": 8,
+        "account_billing": 8,
+        "email": 8,
+        "hardware": 8,
+        "network": 8,
+        "other": 8,
+        "security": 8,
+        "software": 8
+      },
+      "by_priority": {
+        "critical": 9,
+        "high": 9,
+        "low": 37,
+        "medium": 9
+      },
+      "by_service": {
+        "crm": 2,
+        "database": 4,
+        "email": 6,
+        "laptop": 6,
+        "none": 32,
+        "payroll": 4,
+        "phone": 2,
+        "printer": 2,
+        "vpn": 2,
+        "wifi": 4
+      },
+      "security_incidents": 10,
+      "examples_per_family": 2.0
+    },
+    "low": {
+      "n": 64,
+      "n_families": 16,
+      "by_category": {
+        "access_management": 8,
+        "account_billing": 8,
+        "email": 8,
+        "hardware": 8,
+        "network": 8,
+        "other": 8,
+        "security": 8,
+        "software": 8
+      },
+      "by_priority": {
+        "critical": 8,
+        "high": 14,
+        "low": 35,
+        "medium": 7
+      },
+      "by_service": {
+        "database": 4,
+        "email": 8,
+        "laptop": 8,
+        "none": 40,
+        "wifi": 4
+      },
+      "security_incidents": 12,
+      "examples_per_family": 4.0
+    }
+  },
+  "peak_memory": {
+    "peak_allocated_bytes": 512,
+    "peak_reserved_bytes": 2097152,
+    "peak_allocated_gib": 0.0,
+    "peak_reserved_gib": 0.002
+  },
+  "artifacts": {},
+  "warnings": [],
+  "notes": []
+}

@@ -1,0 +1,16 @@
+# Linux + CUDA. Not the environment the recorded results came from -- those are
+# Windows/CUDA 12.6 -- so expect small numeric differences in training loss.
+# Dataset generation, splitting, parsing, metrics and report regeneration are
+# deterministic and should reproduce exactly.
+#
+#   pip install torch --index-url https://download.pytorch.org/whl/cu126
+#   pip install -r requirements/linux-cuda.txt
+#
+# Match the cu-index to your driver. cu126 supports compute capability
+# sm_50 through sm_90; check yours with:
+#   python -c "import torch; print(torch.cuda.get_arch_list())"
+
+-r base.txt
+
+pytest>=8.0
+matplotlib>=3.8

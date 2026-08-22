@@ -297,6 +297,64 @@ not executed on Colab hardware, so it is marked *implemented but unverified* in
 
 ---
 
+## v2 — the continuation that audits this one
+
+The results above are v1, and they stand as recorded. A follow-up
+(`experiments/v2/`, branch `v2-continuation`) addresses four weaknesses that
+v1's own evidence exposed, without editing any v1 artefact.
+
+**Two corrections that change how the table above should be read.**
+
+**1. v1 reported one training run.** Three seeds of the identical configuration
+give exact match of **11.6% / 8.1% / 22.1%**. All three still beat few-shot, so
+the conclusion holds — but the seed spread (14.0 pp) is larger than the weakest
+seed's entire effect (+7.0 pp). *"LoRA beats few-shot"* is supported; *"by about
+10 points"* is **not**.
+
+**2. Much of the gain was format compliance, which a grammar gives away free.**
+Constraining the decoder so illegal output is unrepresentable — no training,
+applied identically to both systems:
+
+| Condition | Schema valid | Exact match |
+|---|---|---|
+| few-shot, unconstrained | 61.6% | 1.2% |
+| LoRA, unconstrained | 79.1% | 11.6% |
+| few-shot, **constrained** | 100% | **8.1%** |
+| LoRA, **constrained** | 100% | **16.3%** |
+
+The decoder alone lifted the *base* model by **+7.0 pp (p = 0.031)** — more than
+it lifted the fine-tuned one. So v1's headline was measuring, in substantial
+part, format compliance that a grammar provides for free.
+
+On v1's test split the like-for-like comparison (+8.1 pp, p = 0.19) was **not**
+significant, which looked at first like the adapter's advantage dissolving.
+**It was a power limitation, not a dissolving effect.** Repeating the same
+like-for-like comparison on the larger, better-balanced sealed v2 set settles
+it:
+
+| Test set | Decoding | LoRA − few-shot | p |
+|---|---|---|---|
+| v1 test (n=86) | unconstrained | +10.5 pp | 0.012 |
+| v1 test (n=86) | constrained | +8.1 pp | **0.19** |
+| v2 sealed (n=96) | unconstrained | +26.0 pp | <0.0001 |
+| **v2 sealed (n=96)** | **constrained** | **+31.2 pp** | **<0.0001** |
+
+**Constraining the decoder removes format failures for both systems; the
+adapter's remaining advantage is real and large.** Constrained LoRA reaches
+**40.6%** exact match on scenario families that did not exist when it was
+trained.
+
+| v1 weakness | v2 response | Outcome |
+|---|---|---|
+| One seed per condition | 3 seeds, all reported, none promoted | conclusion survives, magnitude does not |
+| Ablation dropped a scenario family | Equal-count, label-matched coverage arms | **no detectable difference** (−0.0 pp) |
+| 18/86 outputs had invented enum values | Constrained decoding, applied symmetrically | schema failures eliminated for both; adapter advantage survives at **+31.2 pp** on the sealed set |
+| Test split had been seen | A sealed v2 set: 96 examples, 32 new families | evaluated once; **LoRA 29.2%** vs few-shot 3.1% |
+
+See [`experiments/v2/STATUS.md`](experiments/v2/STATUS.md) and
+[`experiments/v2/PREREGISTRATION.md`](experiments/v2/PREREGISTRATION.md)
+(written before any v2 run).
+
 ## Documentation
 
 | Document | Contents |

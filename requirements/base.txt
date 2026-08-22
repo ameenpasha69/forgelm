@@ -1,0 +1,20 @@
+# Platform-independent core. Does NOT pin torch -- pick a torch line from one
+# of the sibling files, because the right build depends on your OS and CUDA.
+#
+#   requirements/windows-cuda.txt   the exact historical environment that
+#                                   produced every recorded v1 result
+#   requirements/linux-cuda.txt     Linux + CUDA
+#   requirements/colab.txt          Google Colab (torch preinstalled)
+#   requirements/cpu.txt            CPU only: tests, dataset build, report
+#                                   regeneration. No training.
+
+transformers==5.15.1
+tokenizers==0.22.2
+peft==0.20.0
+accelerate==1.14.0
+datasets==5.0.1
+safetensors==0.8.0
+huggingface_hub==1.28.0
+
+numpy>=1.26
+scipy>=1.11

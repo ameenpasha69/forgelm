@@ -1,0 +1,73 @@
+{
+  "run_id": "20260822T150012Z_sealed_report_6774d8",
+  "kind": "sealed_report",
+  "status": "success",
+  "started_utc": "2026-08-22T15:00:12.564114+00:00",
+  "ended_utc": "2026-08-22T15:00:28.890889+00:00",
+  "elapsed_seconds": 16.327,
+  "git": {
+    "commit": "625041bf9bae4633f049684f68893cb5fafa05d7",
+    "branch": "v2-continuation",
+    "dirty": true,
+    "dirty_files": [
+      "M runs/20260822T143259Z_diagnostics_lora_98af94/run.json",
+      "?? experiments/v2/reports/diagnostics/DIAGNOSTICS.md",
+      "?? experiments/v2/reports/diagnostics/diagnostics.json",
+      "?? experiments/v2/reports/diagnostics/lora_contradictory.jsonl",
+      "?? experiments/v2/reports/diagnostics/lora_irrelevant_detail.jsonl",
+      "?? experiments/v2/reports/diagnostics/lora_long_tickets.jsonl",
+      "?? experiments/v2/reports/diagnostics/lora_missing_user_count.jsonl",
+      "?? experiments/v2/reports/diagnostics/lora_noisy_text.jsonl",
+      "?? experiments/v2/reports/diagnostics/lora_out_of_domain.jsonl",
+      "?? experiments/v2/reports/sealed/",
+      "?? runs/20260822T145005Z_diagnostics_report_0d51e9/",
+      "?? runs/20260822T145022Z_sealed_eval_zeroshot_f9569a/",
+      "?? runs/20260822T145254Z_sealed_eval_fewshot_d9955e/",
+      "?? runs/20260822T145740Z_sealed_eval_lora_250af2/",
+      "?? runs/20260822T150012Z_sealed_report_6774d8/"
+    ]
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+    "cpu_count": 8,
+    "python_version": "3.13.14",
+    "python_executable": "D:\\projects\\forgelm\\.venv\\Scripts\\python.exe",
+    "torch_version": "2.13.0+cu126",
+    "cuda_available": true,
+    "cuda_version_torch": "12.6",
+    "cudnn_version": 91002,
+    "gpu_name": "NVIDIA GeForce GTX 1650",
+    "gpu_total_memory_bytes": 4294639616,
+    "gpu_total_memory_gib": 4.0,
+    "gpu_capability": "sm_75",
+    "gpu_multi_processor_count": 16,
+    "bf16_supported": true,
+    "nvidia_smi": "NVIDIA GeForce GTX 1650, 592.82, 4096 MiB"
+  },
+  "packages": {
+    "torch": "2.13.0+cu126",
+    "transformers": "5.15.1",
+    "peft": "0.20.0",
+    "accelerate": "1.14.0",
+    "datasets": "5.0.1",
+    "tokenizers": "0.22.2",
+    "numpy": "2.5.2",
+    "safetensors": "0.8.0",
+    "scipy": "1.18.0"
+  },
+  "seeds": {},
+  "inputs": {},
+  "config": {},
+  "metrics": {},
+  "peak_memory": {
+    "peak_allocated_bytes": 512,
+    "peak_reserved_bytes": 2097152,
+    "peak_allocated_gib": 0.0,
+    "peak_reserved_gib": 0.002
+  },
+  "artifacts": {},
+  "warnings": [],
+  "notes": []
+}

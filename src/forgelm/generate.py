@@ -25,8 +25,14 @@ def _oom_safe_batches(items: list, batch_size: int):
 
 
 def generate_batch(model, tokenizer, prompts: list[str],
-                   max_new_tokens: int) -> list[dict[str, Any]]:
-    """Greedy-decode one batch, returning text plus a finish reason."""
+                   max_new_tokens: int,
+                   constraint: Any | None = None) -> list[dict[str, Any]]:
+    """Greedy-decode one batch, returning text plus a finish reason.
+
+    If `constraint` is a SchemaConstraint, decoding is masked so that only
+    strings inside the output language can be produced. The constraint object
+    is shared across batches so its prefix cache stays warm.
+    """
     import torch
 
     previous_side = tokenizer.padding_side
@@ -36,6 +42,17 @@ def generate_batch(model, tokenizer, prompts: list[str],
                             add_special_tokens=False)
         encoded = {k: v.to(model.device) for k, v in encoded.items()}
         prompt_len = encoded["input_ids"].shape[1]
+
+        processors = None
+        if constraint is not None:
+            from transformers import LogitsProcessorList
+
+            from .constrained import build_logits_processor
+
+            processor, _ = build_logits_processor(
+                tokenizer, [prompt_len] * encoded["input_ids"].shape[0],
+                constraint=constraint)
+            processors = LogitsProcessorList([processor])
 
         with torch.no_grad():
             output = model.generate(
@@ -48,6 +65,7 @@ def generate_batch(model, tokenizer, prompts: list[str],
                 top_k=None,
                 pad_token_id=tokenizer.pad_token_id,
                 eos_token_id=tokenizer.eos_token_id,
+                logits_processor=processors,
             )
     finally:
         tokenizer.padding_side = previous_side
@@ -77,7 +95,9 @@ def run_evaluation(model, tokenizer, records: list[dict[str, Any]],
                    demonstrations: list[dict[str, Any]] | None = None,
                    max_new_tokens: int = 96,
                    batch_size: int = 8,
-                   progress: Callable[[int, int], None] | None = None
+                   progress: Callable[[int, int], None] | None = None,
+                   constrained: bool = False,
+                   constraint: Any | None = None
                    ) -> list[dict[str, Any]]:
     """Evaluate a model on a list of dataset records.
 
@@ -92,20 +112,30 @@ def run_evaluation(model, tokenizer, records: list[dict[str, Any]],
     outputs: list[dict[str, Any]] = []
     done = 0
 
+    # One constraint object for the whole run so its prefix cache stays warm;
+    # every output shares the leading '{"category": "'.
+    if constrained and constraint is None:
+        from .constrained import SchemaConstraint
+
+        constraint = SchemaConstraint(tokenizer)
+    active_constraint = constraint if constrained else None
+
     for chunk in _oom_safe_batches(records, batch_size):
         prompts = [render_prompt(tokenizer, r["ticket_text"], demonstrations)
                    for r in chunk]
 
         start = time.perf_counter()
         try:
-            generations = generate_batch(model, tokenizer, prompts, max_new_tokens)
+            generations = generate_batch(model, tokenizer, prompts,
+                                         max_new_tokens, active_constraint)
         except torch.cuda.OutOfMemoryError:
             # Fall back to one-at-a-time rather than losing the whole run.
             torch.cuda.empty_cache()
             generations = []
             for p in prompts:
                 generations.extend(
-                    generate_batch(model, tokenizer, [p], max_new_tokens))
+                    generate_batch(model, tokenizer, [p], max_new_tokens,
+                                   active_constraint))
         elapsed = time.perf_counter() - start
         per_example_latency = elapsed / len(chunk)
 
@@ -123,11 +153,18 @@ def run_evaluation(model, tokenizer, records: list[dict[str, Any]],
                 "finish_reason": gen["finish_reason"],
                 "n_generated_tokens": gen["n_generated_tokens"],
                 "latency_seconds": round(per_example_latency, 4),
+                "constrained": bool(constrained),
                 **evaluated,
             })
 
         done += len(chunk)
         if progress:
             progress(done, len(records))
+
+    if active_constraint is not None:
+        # Attach decoder diagnostics to every row so the report can show that
+        # the constraint never dead-ended (which would silently truncate).
+        for row in outputs:
+            row["constraint_stats"] = dict(active_constraint.stats)
 
     return outputs

@@ -1,0 +1,239 @@
+{
+  "run_id": "20260822T150828Z_sealed_eval_lora_96fc41",
+  "kind": "sealed_eval_lora",
+  "status": "success",
+  "started_utc": "2026-08-22T15:08:28.023738+00:00",
+  "ended_utc": "2026-08-22T15:13:13.643685+00:00",
+  "elapsed_seconds": 285.62,
+  "git": {
+    "commit": "625041bf9bae4633f049684f68893cb5fafa05d7",
+    "branch": "v2-continuation",
+    "dirty": true,
+    "dirty_files": [
+      "M runs/20260822T143259Z_diagnostics_lora_98af94/run.json",
+      "?? experiments/v2/reports/diagnostics/DIAGNOSTICS.md",
+      "?? experiments/v2/reports/diagnostics/diagnostics.json",
+      "?? experiments/v2/reports/diagnostics/lora_contradictory.jsonl",
+      "?? experiments/v2/reports/diagnostics/lora_irrelevant_detail.jsonl",
+      "?? experiments/v2/reports/diagnostics/lora_long_tickets.jsonl",
+      "?? experiments/v2/reports/diagnostics/lora_missing_user_count.jsonl",
+      "?? experiments/v2/reports/diagnostics/lora_noisy_text.jsonl",
+      "?? experiments/v2/reports/diagnostics/lora_out_of_domain.jsonl",
+      "?? experiments/v2/reports/sealed/",
+      "?? runs/20260822T145005Z_diagnostics_report_0d51e9/",
+      "?? runs/20260822T145022Z_sealed_eval_zeroshot_f9569a/",
+      "?? runs/20260822T145254Z_sealed_eval_fewshot_d9955e/",
+      "?? runs/20260822T145740Z_sealed_eval_lora_250af2/",
+      "?? runs/20260822T150012Z_sealed_report_6774d8/",
+      "?? runs/20260822T150136Z_sealed_eval_fewshot_b15cbc/",
+      "?? runs/20260822T150828Z_sealed_eval_lora_96fc41/"
+    ]
+  },
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+    "cpu_count": 8,
+    "python_version": "3.13.14",
+    "python_executable": "D:\\projects\\forgelm\\.venv\\Scripts\\python.exe",
+    "torch_version": "2.13.0+cu126",
+    "cuda_available": true,
+    "cuda_version_torch": "12.6",
+    "cudnn_version": 91002,
+    "gpu_name": "NVIDIA GeForce GTX 1650",
+    "gpu_total_memory_bytes": 4294639616,
+    "gpu_total_memory_gib": 4.0,
+    "gpu_capability": "sm_75",
+    "gpu_multi_processor_count": 16,
+    "bf16_supported": true,
+    "nvidia_smi": "NVIDIA GeForce GTX 1650, 592.82, 4096 MiB"
+  },
+  "packages": {
+    "torch": "2.13.0+cu126",
+    "transformers": "5.15.1",
+    "peft": "0.20.0",
+    "accelerate": "1.14.0",
+    "datasets": "5.0.1",
+    "tokenizers": "0.22.2",
+    "numpy": "2.5.2",
+    "safetensors": "0.8.0",
+    "scipy": "1.18.0"
+  },
+  "seeds": {
+    "dataset_generation": 20240517,
+    "split_assignment": 913,
+    "fewshot_selection": 41,
+    "training": 1337,
+    "bootstrap": 7
+  },
+  "inputs": {},
+  "config": {},
+  "metrics": {
+    "n": 96,
+    "json_parse_rate_strict": 1.0,
+    "json_parse_rate_lenient": 1.0,
+    "schema_valid_rate": 1.0,
+    "exact_match": 0.4062,
+    "constraint_violation_rate": 0.0,
+    "markdown_fence_rate": 0.0,
+    "prose_outside_json_rate": 0.0,
+    "truncation_rate": 0.0,
+    "field_accuracy": {
+      "category": 0.6667,
+      "priority": 0.5938,
+      "affected_service": 0.7917,
+      "is_security_incident": 0.9167,
+      "users_affected": 1.0
+    },
+    "mean_field_accuracy": 0.7938,
+    "category": {
+      "macro_f1": 0.6267,
+      "per_label": {
+        "access_management": {
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6667,
+          "support": 12,
+          "predicted": 24
+        },
+        "hardware": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 12,
+          "predicted": 0
+        },
+        "network": {
+          "precision": 0.8571,
+          "recall": 1.0,
+          "f1": 0.9231,
+          "support": 12,
+          "predicted": 14
+        },
+        "software": {
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4,
+          "support": 12,
+          "predicted": 3
+        },
+        "security": {
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6667,
+          "support": 12,
+          "predicted": 6
+        },
+        "account_billing": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 12,
+          "predicted": 12
+        },
+        "email": {
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571,
+          "support": 12,
+          "predicted": 9
+        },
+        "other": {
+          "precision": 0.3571,
+          "recall": 0.8333,
+          "f1": 0.5,
+          "support": 12,
+          "predicted": 28
+        }
+      }
+    },
+    "priority": {
+      "macro_f1": 0.4673,
+      "per_label": {
+        "low": {
+          "precision": 0.4754,
+          "recall": 0.9355,
+          "f1": 0.6304,
+          "support": 31,
+          "predicted": 61
+        },
+        "medium": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 17,
+          "predicted": 0
+        },
+        "high": {
+          "precision": 0.8571,
+          "recall": 0.3333,
+          "f1": 0.48,
+          "support": 18,
+          "predicted": 7
+        },
+        "critical": {
+          "precision": 0.7857,
+          "recall": 0.7333,
+          "f1": 0.7586,
+          "support": 30,
+          "predicted": 28
+        }
+      }
+    },
+    "category_accuracy": 0.6667,
+    "priority_accuracy": 0.5938,
+    "error_categories": {
+      "correct": 39,
+      "wrong_values_only": 57
+    },
+    "exact_match_by_category": {
+      "access_management": {
+        "n": 12,
+        "exact_match": 0.25
+      },
+      "account_billing": {
+        "n": 12,
+        "exact_match": 1.0
+      },
+      "email": {
+        "n": 12,
+        "exact_match": 0.0833
+      },
+      "hardware": {
+        "n": 12,
+        "exact_match": 0.0
+      },
+      "network": {
+        "n": 12,
+        "exact_match": 0.8333
+      },
+      "other": {
+        "n": 12,
+        "exact_match": 0.5833
+      },
+      "security": {
+        "n": 12,
+        "exact_match": 0.5
+      },
+      "software": {
+        "n": 12,
+        "exact_match": 0.0
+      }
+    },
+    "latency_seconds": {
+      "mean": 2.6038,
+      "min": 1.3338,
+      "max": 4.091,
+      "note": "Observation only. Measured on one consumer GPU with batched generation; not a serving-performance claim."
+    }
+  },
+  "peak_memory": {
+    "peak_allocated_bytes": 1199195136,
+    "peak_reserved_bytes": 1270874112,
+    "peak_allocated_gib": 1.117,
+    "peak_reserved_gib": 1.184
+  },
+  "artifacts": {},
+  "warnings": [],
+  "notes": []
+}

@@ -115,9 +115,22 @@ def load_base_model(model_id: str = BASE_MODEL_ID,
     device = device or precision["device"]
     torch_dtype = getattr(torch, dtype)
 
-    model = AutoModelForCausalLM.from_pretrained(
-        model_id, revision=revision, dtype=torch_dtype,
-    )
+    # `low_cpu_mem_usage` streams the checkpoint into place instead of first
+    # materialising a full float copy in system RAM. On the reference machine
+    # (5.9 GiB total) that peak was enough to push the trainer into swap, where
+    # it ran ~19x slower without ever erroring. Purely a loading strategy: the
+    # resulting weights are identical, so no recorded number changes.
+    #
+    # Passed defensively because transformers has moved this between an opt-in
+    # flag and default behaviour across versions; an unsupported keyword should
+    # not take the loader down.
+    kwargs: dict[str, Any] = {"revision": revision, "dtype": torch_dtype}
+    try:
+        model = AutoModelForCausalLM.from_pretrained(
+            model_id, low_cpu_mem_usage=True, **kwargs)
+    except TypeError:
+        model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
+
     model.to(device)
     return model
 

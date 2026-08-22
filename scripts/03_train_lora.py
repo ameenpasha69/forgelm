@@ -82,6 +82,17 @@ def main() -> int:
                     help="use only this fraction of the training split "
                          "(category-stratified, deterministic). For the "
                          "training-data-size ablation.")
+    ap.add_argument("--seed", type=int, default=None,
+                    help="override the training (initialisation) seed. "
+                         "Defaults to SEEDS['training']. Used by the "
+                         "multi-seed variance study.")
+    ap.add_argument("--data-seed", type=int, default=None,
+                    help="override the data-ordering seed. Defaults to the "
+                         "initialisation seed, matching v1 behaviour.")
+    ap.add_argument("--families", default=None,
+                    help="JSON file listing the scenario families to train on "
+                         "(coverage-vs-depth experiment). Restricts the "
+                         "training split to those families.")
     args = ap.parse_args()
 
     if not 0.0 < args.train_fraction <= 1.0:
@@ -96,7 +107,17 @@ def main() -> int:
     run = Run(kind="train_lora", seeds=dict(SEEDS)).start()
     try:
         precision = select_precision()
-        run.seeds["applied"] = seed_everything(SEEDS["training"])
+        # Seeds. `training_seed` drives parameter initialisation and the RNG
+        # state; `data_seed` drives batch ordering. v1 used a single value for
+        # both; the multi-seed study varies them together but records them
+        # separately so a future run can vary one alone.
+        training_seed = args.seed if args.seed is not None else SEEDS["training"]
+        data_seed = args.data_seed if args.data_seed is not None else training_seed
+        run.seeds["applied"] = seed_everything(training_seed)
+        run.seeds["training_seed"] = training_seed
+        run.seeds["data_seed"] = data_seed
+        run.seeds["is_v1_default"] = (training_seed == SEEDS["training"]
+                                      and data_seed == SEEDS["training"])
 
         overrides = dataio.read_json(args.config) if args.config else {}
         config = {**TRAINING, **overrides,
@@ -112,6 +133,44 @@ def main() -> int:
         # Training-data-size ablation. Subsampling is category-stratified and
         # deterministic so the smaller run differs from the full run in exactly
         # one variable: how many examples it saw.
+        # Coverage-vs-depth arms: restrict training to an explicit family list
+        # and, optionally, an explicit example-id list so both arms can be held
+        # to exactly equal example counts.
+        family_restriction = None
+        if args.families:
+            spec = dataio.read_json(args.families)
+            allowed = set(spec["families"])
+            explicit_ids = spec.get("example_ids")
+            before = len(train_records)
+            if explicit_ids is not None:
+                wanted = set(explicit_ids)
+                train_records = [r for r in train_records
+                                 if r["example_id"] in wanted]
+            else:
+                train_records = [r for r in train_records
+                                 if r["scenario_family"] in allowed]
+            missing = allowed - {r["scenario_family"] for r in train_records}
+            family_restriction = {
+                "spec_file": args.families,
+                "arm": spec.get("arm"),
+                "n_families_requested": len(allowed),
+                "n_families_used": len({r["scenario_family"]
+                                        for r in train_records}),
+                "families_missing_from_train_split": sorted(missing),
+                "n_before": before,
+                "n_after": len(train_records),
+                "used_explicit_example_ids": explicit_ids is not None,
+            }
+            if missing:
+                raise RuntimeError(
+                    f"family spec {args.families} names families that are not "
+                    f"in the training split: {sorted(missing)}. Training on a "
+                    f"validation or test family would leak held-out data."
+                )
+            print(f"coverage arm {spec.get('arm')!r}: "
+                  f"{family_restriction['n_after']} examples across "
+                  f"{family_restriction['n_families_used']} families")
+
         subsample = None
         if args.train_fraction < 1.0:
             kept = subsample_stratified(train_records, args.train_fraction)
@@ -159,6 +218,7 @@ def main() -> int:
             "label_masking": {k: v for k, v in masking.items() if k != "problems"},
             "smoke_gate": smoke,
             "train_subsample": subsample,
+            "family_restriction": family_restriction,
         }
 
         # ---- model -------------------------------------------------------
@@ -212,7 +272,7 @@ def main() -> int:
         output_dir = run.dir / "checkpoints"
         trainer, applied = T.build_trainer(
             model, tokenizer, train_encoded, val_encoded,
-            str(output_dir), config, seed=SEEDS["training"])
+            str(output_dir), config, seed=training_seed, data_seed=data_seed)
         if applied["dropped"]:
             run.warn(f"TrainingArguments dropped: {applied['dropped']}")
         run.config["training_arguments_applied"] = applied
