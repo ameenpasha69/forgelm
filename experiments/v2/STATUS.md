@@ -23,7 +23,7 @@ checksums matching.
 | **E4 diagnostics** | **verified** | 588 examples, 7 suites; `reports/diagnostics/DIAGNOSTICS.md` | 3 suites have no ground truth by design |
 | Portability | **verified** | 5 requirements files; `PORTABILITY.md` | Linux/Colab paths written but not executed here |
 | CI workflow | **verified** | run [32582858525](https://github.com/ameenpasha69/forgelm/actions/runs/32582858525) passed in 1m34s on a clean Ubuntu CPU runner, offline, no GPU and no model weights: checksums matched, split frozen (max cross-split similarity 0.3255), **v2 seal intact** (`0122062c5432ed02`), all three v1 conditions recomputed == recorded, report regenerated, 26/26 audit checks | Node 20 deprecation warning from `actions/checkout@v4` |
-| Gradio demo checks | **verified** | **11/11** checks; `reports/demo_checks.json` | Gradio server not booted (optional dependency) |
+| Gradio demo checks | **verified** | **11/11** checks; `reports/demo_checks.json`. Server additionally booted and probed: HTTP 200 on 127.0.0.1:7860, title `ForgeLM local demonstration`, all four components live (ticket input, schema check, triage JSON, base-model comparison) | localhost-bound by design; not a deployment |
 | Full test suite | **verified** | **215 passed** | -- |
 | Final evidence audit | **verified** | **27/27 checks passed**, `reports/EVIDENCE.md` | -- |
 | Colab verification | **verified** | executed end to end on a real Tesla T4, 2026-08-23; training reproduced the local run's step count, early-stopping epoch and selected checkpoint, and all three exact-match figures matched to 4 dp | 1 Colab-only bug found and fixed (torchao/peft) |

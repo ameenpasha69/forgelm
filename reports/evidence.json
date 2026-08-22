@@ -70,7 +70,7 @@
     {
       "check": "no secrets or credentials in tracked files",
       "detail": "[]",
-      "evidence": "224 text files scanned against 6 patterns",
+      "evidence": "225 text files scanned against 6 patterns",
       "passed": true
     },
     {

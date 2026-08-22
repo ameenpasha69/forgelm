@@ -410,6 +410,9 @@ See [`experiments/v2/STATUS.md`](experiments/v2/STATUS.md) and
 
 ## Two-minute demonstration
 
+*(Presenting this to someone? [`DEMO.md`](DEMO.md) is a timed 10-minute
+walkthrough with the questions to expect and what to say.)*
+
 If you have two minutes and want to see whether this is real:
 
 1. **Open [`reports/RESULTS.md`](reports/RESULTS.md).** Every number there was
