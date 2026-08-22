@@ -297,6 +297,30 @@ not executed on Colab hardware, so it is marked *implemented but unverified* in
 
 ---
 
+## v2 — the continuation that audits this one
+
+The results above are v1, and they stand as recorded. A follow-up
+(`experiments/v2/`, branch `v2-continuation`) addresses four weaknesses that
+v1's own evidence exposed, without editing any v1 artefact.
+
+The headline correction: **v1 reported one training run.** Three seeds of the
+identical configuration give exact match of **11.6% / 8.1% / 22.1%**. All three
+still beat few-shot, so the conclusion holds — but the seed spread (14.0 pp) is
+larger than the weakest seed's entire effect (+7.0 pp). So *"LoRA beats
+few-shot"* is supported; *"by about 10 points"* — which the table above
+invites — is **not**.
+
+| v1 weakness | v2 response |
+|---|---|
+| One seed per condition | 3 seeds, all reported, none promoted |
+| Ablation dropped a scenario family | Equal-count, label-matched coverage arms |
+| 18/86 outputs had invented enum values | Constrained decoding, applied symmetrically |
+| Test split had been seen | A sealed v2 set: 96 examples, 32 new families |
+
+See [`experiments/v2/STATUS.md`](experiments/v2/STATUS.md) and
+[`experiments/v2/PREREGISTRATION.md`](experiments/v2/PREREGISTRATION.md)
+(written before any v2 run).
+
 ## Documentation
 
 | Document | Contents |
