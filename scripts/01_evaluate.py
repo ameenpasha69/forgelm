@@ -62,12 +62,18 @@ def main() -> int:
     ap.add_argument("--batch-size", type=int, default=DECODING["batch_size"])
     ap.add_argument("--tag", default=None,
                     help="suffix for the output filenames, e.g. an ablation name")
+    ap.add_argument("--constrained", action="store_true",
+                    help="mask decoding so only schema-legal strings can be "
+                         "produced. Applied identically to base and adapted "
+                         "conditions; see experiments/v2/PREREGISTRATION.md E3.")
     args = ap.parse_args()
 
     if args.condition == "lora" and not args.adapter:
         ap.error("--adapter is required when --condition lora")
 
-    name = args.condition + (f"_{args.tag}" if args.tag else "")
+    name = (args.condition
+            + (f"_{args.tag}" if args.tag else "")
+            + ("_constrained" if args.constrained else ""))
     stem = f"{name}_{args.split}" + ("_smoke" if args.limit else "")
 
     run = Run(kind=f"eval_{args.condition}", seeds=dict(SEEDS)).start()
@@ -131,7 +137,8 @@ def main() -> int:
             # instruction, rather than taking it on trust.
             "system_prompt_sha": hashlib.sha256(
                 SYSTEM_PROMPT.encode()).hexdigest()[:16],
-            "decoding": {**DECODING, "batch_size": args.batch_size},
+            "decoding": {**DECODING, "batch_size": args.batch_size,
+                         "constrained": args.constrained},
             "base_model": BASE_MODEL_FACTS,
             "precision": precision,
             "adapter_dir": args.adapter,
@@ -156,6 +163,7 @@ def main() -> int:
             max_new_tokens=DECODING["max_new_tokens"],
             batch_size=args.batch_size,
             progress=progress,
+            constrained=args.constrained,
         )
         print()
 
