@@ -201,16 +201,34 @@ from pathlib import Path
 
 IN_COLAB = "google.colab" in sys.modules
 
+REPO_URL = "https://github.com/ameenpasha69/forgelm.git"
+
 if IN_COLAB:
     subprocess.run([sys.executable, "-m", "pip", "install", "-q",
                     "transformers>=4.44", "peft", "accelerate", "datasets",
                     "scipy", "matplotlib"], check=False)
-    # Replace with your fork if you have one.
     REPO = Path("/content/forgelm")
     if not REPO.exists():
-        subprocess.run(["git", "clone", "--depth", "1",
-                        "https://github.com/YOUR-USERNAME/forgelm.git",
-                        str(REPO)], check=False)
+        # NOTE: the clone is checked. An earlier version passed check=False,
+        # so a failed clone was swallowed and you got a confusing ImportError
+        # two lines later instead of the actual cause.
+        result = subprocess.run(["git", "clone", "--depth", "1", REPO_URL,
+                                 str(REPO)], capture_output=True, text=True)
+        if result.returncode != 0:
+            print(result.stderr[-600:])
+            raise RuntimeError(
+                "git clone failed.\\n\\n"
+                "If the repository is PRIVATE, Colab cannot clone it without "
+                "credentials. Pick one:\\n"
+                "  (a) make the repository public, then re-run this cell; or\\n"
+                "  (b) clone with a personal access token:\\n"
+                "        from getpass import getpass\\n"
+                "        tok = getpass('GitHub token: ')\\n"
+                "        !git clone --depth 1 https://$tok@github.com/"
+                "ameenpasha69/forgelm.git /content/forgelm\\n"
+                "  (c) upload the repository folder to /content/forgelm using "
+                "the Colab file browser.\\n"
+            )
 else:
     REPO = Path.cwd()
     if not (REPO / "src").exists():
