@@ -204,6 +204,23 @@ IN_COLAB = "google.colab" in sys.modules
 REPO_URL = "https://github.com/ameenpasha69/forgelm.git"
 
 if IN_COLAB:
+    # Colab preinstalls torchao 0.10.0. Recent peft raises
+    #   ImportError: Found an incompatible version of torchao ... 0.10.0,
+    #   but only versions above 0.16.0 are supported
+    # the first time it probes for one -- which happens inside
+    # get_peft_model(), long after the install cell looked fine.
+    #
+    # ForgeLM never uses quantisation (no QLoRA, stated throughout), so the
+    # right fix is to remove torchao rather than upgrade it: upgrading risks
+    # disturbing the torch build Colab ships. peft's probe then returns False
+    # cleanly instead of raising.
+    #
+    # Done BEFORE peft is imported, so no runtime restart is needed.
+    subprocess.run([sys.executable, "-m", "pip", "uninstall", "-y", "-q",
+                    "torchao"], check=False)
+    import importlib
+    importlib.invalidate_caches()
+
     subprocess.run([sys.executable, "-m", "pip", "install", "-q",
                     "transformers>=4.44", "peft", "accelerate", "datasets",
                     "scipy", "matplotlib"], check=False)
