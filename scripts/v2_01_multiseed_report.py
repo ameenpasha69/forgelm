@@ -297,6 +297,61 @@ def main() -> int:
                 f"| {stats['seed_spread']*100:.1f} pp |")
         add("")
 
+        # --- honesty block: things a reader could otherwise miss -----------
+        add("## How to read this")
+        add("")
+
+        spread = aggregate["exact_match"]["seed_spread"]
+        weakest = min(c["vs_fewshot"]["diff"] for c in criterion)
+        strongest = max(c["vs_fewshot"]["diff"] for c in criterion)
+        add(f"**The direction is robust; the magnitude is not.** Every seed "
+            f"beats few-shot, but the seed-to-seed spread in exact match is "
+            f"**{spread * 100:.1f} pp**, which is "
+            f"{'larger than' if spread > weakest else 'comparable to'} the "
+            f"weakest seed's entire effect ({weakest * 100:+.1f} pp). The "
+            f"per-seed effect ranges from {weakest * 100:+.1f} pp to "
+            f"{strongest * 100:+.1f} pp.")
+        add("")
+        add(f"So the defensible claim is *\"LoRA beats few-shot on this task\"*, "
+            f"which held in {n_met}/{n_seeds} runs. The claim *\"LoRA beats "
+            f"few-shot by about 10 points\"* -- which v1's single run invited -- "
+            f"is **not** supported: v1's seed happened to land mid-range, and a "
+            f"different seed would have reported anywhere from "
+            f"{weakest * 100:+.0f} to {strongest * 100:+.0f} pp.")
+        add("")
+
+        # Where the two significance tests disagree, say so rather than
+        # quoting whichever one is more convenient.
+        disagreements = [
+            c for c in criterion
+            if c["vs_fewshot"]["excludes_zero"] != (c["mcnemar_p"] < 0.05)
+        ]
+        if disagreements:
+            add("**Two tests disagree on some seeds.** The pre-registered "
+                "criterion is the paired bootstrap CI, so that is what decides "
+                "the verdict -- but where McNemar's exact test disagrees, both "
+                "are reported:")
+            add("")
+            for c in disagreements:
+                d = c["vs_fewshot"]
+                add(f"- seed {c['seed']}: bootstrap CI "
+                    f"[{d['lo'] * 100:+.1f}, {d['hi'] * 100:+.1f}] pp "
+                    f"{'excludes' if d['excludes_zero'] else 'includes'} zero, "
+                    f"but McNemar p = {c['mcnemar_p']:.4f} "
+                    f"({'below' if c['mcnemar_p'] < 0.05 else 'above'} 0.05). "
+                    f"This seed sits at the margin and should not be described "
+                    f"as a clear win on its own.")
+            add("")
+
+        zero_fams = [(s, d["n_families_zero_correct"], d["n_families"])
+                     for s, d in sorted(seeds.items())]
+        add(f"**Generalisation stays poor in every seed.** Zero-scoring "
+            f"held-out scenario families: "
+            + ", ".join(f"{n}/{t} (seed {s})" for s, n, t in zero_fams)
+            + ". The v1 finding that the adapter learns the output contract "
+              "far better than the task is not a seed artefact.")
+        add("")
+
         add("## Deviation from the pre-registration")
         add("")
         add(payload["deviation_from_preregistration"])
