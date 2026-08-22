@@ -1,0 +1,390 @@
+{
+  "arms": {
+    "high": {
+      "description": "Arm A -- high coverage (32 families x 2)",
+      "examples_per_family": 2,
+      "n_examples": 64,
+      "n_families": 32,
+      "stats": {
+        "by_category": {
+          "access_management": 8,
+          "account_billing": 8,
+          "email": 8,
+          "hardware": 8,
+          "network": 8,
+          "other": 8,
+          "security": 8,
+          "software": 8
+        },
+        "by_priority": {
+          "critical": 9,
+          "high": 9,
+          "low": 37,
+          "medium": 9
+        },
+        "by_service": {
+          "crm": 2,
+          "database": 4,
+          "email": 6,
+          "laptop": 6,
+          "none": 32,
+          "payroll": 4,
+          "phone": 2,
+          "printer": 2,
+          "vpn": 2,
+          "wifi": 4
+        },
+        "examples_per_family": 2.0,
+        "n": 64,
+        "n_families": 32,
+        "security_incidents": 10
+      }
+    },
+    "low": {
+      "description": "Arm B -- low coverage (16 families x 4)",
+      "examples_per_family": 4,
+      "n_examples": 64,
+      "n_families": 16,
+      "stats": {
+        "by_category": {
+          "access_management": 8,
+          "account_billing": 8,
+          "email": 8,
+          "hardware": 8,
+          "network": 8,
+          "other": 8,
+          "security": 8,
+          "software": 8
+        },
+        "by_priority": {
+          "critical": 8,
+          "high": 14,
+          "low": 35,
+          "medium": 7
+        },
+        "by_service": {
+          "database": 4,
+          "email": 8,
+          "laptop": 8,
+          "none": 40,
+          "wifi": 4
+        },
+        "examples_per_family": 4.0,
+        "n": 64,
+        "n_families": 16,
+        "security_incidents": 12
+      }
+    }
+  },
+  "direction_counts": {
+    "high_better": 2,
+    "low_better": 1,
+    "tied": 0
+  },
+  "experiment": "E2 coverage vs depth at a fixed example budget",
+  "mean_diff_high_minus_low": -0.0,
+  "n_seeds_with_significant_difference": 0,
+  "per_seed": [
+    {
+      "comparison": {
+        "a_ci": {
+          "alpha": 0.05,
+          "hi": 0.2674,
+          "lo": 0.1047,
+          "mean": 0.186,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "a_rate": 0.186,
+        "b_ci": {
+          "alpha": 0.05,
+          "hi": 0.2907,
+          "lo": 0.1163,
+          "mean": 0.1977,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "b_rate": 0.1977,
+        "mcnemar": {
+          "backend": "scipy.stats.binomtest",
+          "both_correct": 11,
+          "n_discordant": 11,
+          "neither_correct": 64,
+          "only_a_correct": 5,
+          "only_b_correct": 6,
+          "p_value": 1.0,
+          "test": "exact binomial (McNemar)"
+        },
+        "metric": "exact_match",
+        "n_examples": 86,
+        "paired_diff": {
+          "alpha": 0.05,
+          "diff": 0.0116,
+          "excludes_zero": false,
+          "hi": 0.0814,
+          "lo": -0.0698,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "system_a": "low_coverage",
+        "system_b": "high_coverage"
+      },
+      "high": {
+        "exact_match": 0.1977,
+        "field_accuracy": {
+          "affected_service": 0.4651,
+          "category": 0.7093,
+          "is_security_incident": 0.9419,
+          "priority": 0.5814,
+          "users_affected": 1.0
+        },
+        "n_families": 16,
+        "n_zero_scoring": 8,
+        "schema_valid_rate": 0.7907
+      },
+      "low": {
+        "exact_match": 0.186,
+        "field_accuracy": {
+          "affected_service": 0.5116,
+          "category": 0.6163,
+          "is_security_incident": 0.8605,
+          "priority": 0.5116,
+          "users_affected": 1.0
+        },
+        "n_families": 16,
+        "n_zero_scoring": 10,
+        "schema_valid_rate": 0.7791
+      },
+      "seed": 1337
+    },
+    {
+      "comparison": {
+        "a_ci": {
+          "alpha": 0.05,
+          "hi": 0.2558,
+          "lo": 0.093,
+          "mean": 0.1744,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "a_rate": 0.1744,
+        "b_ci": {
+          "alpha": 0.05,
+          "hi": 0.2674,
+          "lo": 0.1047,
+          "mean": 0.186,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "b_rate": 0.186,
+        "mcnemar": {
+          "backend": "scipy.stats.binomtest",
+          "both_correct": 10,
+          "n_discordant": 11,
+          "neither_correct": 65,
+          "only_a_correct": 5,
+          "only_b_correct": 6,
+          "p_value": 1.0,
+          "test": "exact binomial (McNemar)"
+        },
+        "metric": "exact_match",
+        "n_examples": 86,
+        "paired_diff": {
+          "alpha": 0.05,
+          "diff": 0.0116,
+          "excludes_zero": false,
+          "hi": 0.093,
+          "lo": -0.0581,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "system_a": "low_coverage",
+        "system_b": "high_coverage"
+      },
+      "high": {
+        "exact_match": 0.186,
+        "field_accuracy": {
+          "affected_service": 0.5698,
+          "category": 0.6744,
+          "is_security_incident": 0.9186,
+          "priority": 0.5465,
+          "users_affected": 1.0
+        },
+        "n_families": 16,
+        "n_zero_scoring": 8,
+        "schema_valid_rate": 0.7791
+      },
+      "low": {
+        "exact_match": 0.1744,
+        "field_accuracy": {
+          "affected_service": 0.5814,
+          "category": 0.6744,
+          "is_security_incident": 0.8372,
+          "priority": 0.4302,
+          "users_affected": 1.0
+        },
+        "n_families": 16,
+        "n_zero_scoring": 9,
+        "schema_valid_rate": 0.7791
+      },
+      "seed": 2718
+    },
+    {
+      "comparison": {
+        "a_ci": {
+          "alpha": 0.05,
+          "hi": 0.2907,
+          "lo": 0.1163,
+          "mean": 0.1977,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "a_rate": 0.1977,
+        "b_ci": {
+          "alpha": 0.05,
+          "hi": 0.2558,
+          "lo": 0.1047,
+          "mean": 0.1744,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "b_rate": 0.1744,
+        "mcnemar": {
+          "backend": "scipy.stats.binomtest",
+          "both_correct": 10,
+          "n_discordant": 12,
+          "neither_correct": 64,
+          "only_a_correct": 7,
+          "only_b_correct": 5,
+          "p_value": 0.7744140625,
+          "test": "exact binomial (McNemar)"
+        },
+        "metric": "exact_match",
+        "n_examples": 86,
+        "paired_diff": {
+          "alpha": 0.05,
+          "diff": -0.0233,
+          "excludes_zero": false,
+          "hi": 0.0581,
+          "lo": -0.1047,
+          "n": 86,
+          "n_resamples": 10000
+        },
+        "system_a": "low_coverage",
+        "system_b": "high_coverage"
+      },
+      "high": {
+        "exact_match": 0.1744,
+        "field_accuracy": {
+          "affected_service": 0.5814,
+          "category": 0.686,
+          "is_security_incident": 0.907,
+          "priority": 0.5,
+          "users_affected": 1.0
+        },
+        "n_families": 16,
+        "n_zero_scoring": 8,
+        "schema_valid_rate": 0.8372
+      },
+      "low": {
+        "exact_match": 0.1977,
+        "field_accuracy": {
+          "affected_service": 0.5233,
+          "category": 0.5814,
+          "is_security_incident": 0.8256,
+          "priority": 0.5233,
+          "users_affected": 1.0
+        },
+        "n_families": 16,
+        "n_zero_scoring": 8,
+        "schema_valid_rate": 0.686
+      },
+      "seed": 3141
+    }
+  ],
+  "pooled": {
+    "exact_match": {
+      "high": {
+        "caveat": "seed level estimated from 3 runs; treat the interval as indicative and prefer the raw per-seed spread (0.1744 to 0.1977) as the honest summary",
+        "hi": 0.2674,
+        "lo": 0.1124,
+        "mean": 0.186,
+        "n_examples": 86,
+        "n_resamples": 10000,
+        "n_seeds": 3,
+        "per_seed_means": [
+          0.1977,
+          0.186,
+          0.1744
+        ],
+        "seed_max": 0.1977,
+        "seed_min": 0.1744,
+        "seed_spread": 0.0233,
+        "seed_std": 0.0116
+      },
+      "low": {
+        "caveat": "seed level estimated from 3 runs; treat the interval as indicative and prefer the raw per-seed spread (0.1744 to 0.1977) as the honest summary",
+        "hi": 0.2674,
+        "lo": 0.1124,
+        "mean": 0.186,
+        "n_examples": 86,
+        "n_resamples": 10000,
+        "n_seeds": 3,
+        "per_seed_means": [
+          0.186,
+          0.1744,
+          0.1977
+        ],
+        "seed_max": 0.1977,
+        "seed_min": 0.1744,
+        "seed_spread": 0.0233,
+        "seed_std": 0.0116
+      }
+    },
+    "schema_valid_rate": {
+      "high": {
+        "caveat": "seed level estimated from 3 runs; treat the interval as indicative and prefer the raw per-seed spread (0.7791 to 0.8372) as the honest summary",
+        "hi": 0.8798,
+        "lo": 0.7171,
+        "mean": 0.8023,
+        "n_examples": 86,
+        "n_resamples": 10000,
+        "n_seeds": 3,
+        "per_seed_means": [
+          0.7907,
+          0.7791,
+          0.8372
+        ],
+        "seed_max": 0.8372,
+        "seed_min": 0.7791,
+        "seed_spread": 0.0581,
+        "seed_std": 0.0308
+      },
+      "low": {
+        "caveat": "seed level estimated from 3 runs; treat the interval as indicative and prefer the raw per-seed spread (0.6860 to 0.7791) as the honest summary",
+        "hi": 0.8372,
+        "lo": 0.6473,
+        "mean": 0.7481,
+        "n_examples": 86,
+        "n_resamples": 10000,
+        "n_seeds": 3,
+        "per_seed_means": [
+          0.7791,
+          0.7791,
+          0.686
+        ],
+        "seed_max": 0.7791,
+        "seed_min": 0.686,
+        "seed_spread": 0.093,
+        "seed_std": 0.0537
+      }
+    }
+  },
+  "reporting_rule": "Fixed before any arm ran: a null result is reported as 'no detectable difference', not as evidence that the arms are equivalent. With 64 training examples per arm, 3 seeds and 86 test examples this design is underpowered for small effects.",
+  "seeds": [
+    1337,
+    2718,
+    3141
+  ],
+  "verdict": "no detectable difference"
+}

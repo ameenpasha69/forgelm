@@ -1,17 +1,30 @@
 {
-  "run_id": "20260822T135102Z_eval_lora_4b8651",
+  "run_id": "20260822T141850Z_eval_lora_fa18e1",
   "kind": "eval_lora",
   "status": "success",
-  "started_utc": "2026-08-22T13:51:02.847931+00:00",
-  "ended_utc": "2026-08-22T13:53:49.654953+00:00",
-  "elapsed_seconds": 166.807,
+  "started_utc": "2026-08-22T14:18:50.753634+00:00",
+  "ended_utc": "2026-08-22T14:19:59.116422+00:00",
+  "elapsed_seconds": 68.363,
   "git": {
     "commit": "e64f4a167af9dd60c99401fc52bccf1b28ae4b64",
     "branch": "v2-continuation",
     "dirty": true,
     "dirty_files": [
+      "M runs/20260822T135102Z_eval_lora_4b8651/run.json",
+      "?? experiments/v2/reports/coverage_depth/",
+      "?? reports/metrics/lora_constrained_test_smoke.json",
       "?? reports/metrics/lora_lowcov_s2718_test.json",
-      "?? reports/predictions/lora_lowcov_s2718_test.jsonl"
+      "?? reports/metrics/lora_lowcov_s3141_test.json",
+      "?? reports/metrics/lora_lowcov_s3141_validation.json",
+      "?? reports/predictions/lora_constrained_test_smoke.jsonl",
+      "?? reports/predictions/lora_lowcov_s2718_test.jsonl",
+      "?? reports/predictions/lora_lowcov_s3141_test.jsonl",
+      "?? reports/predictions/lora_lowcov_s3141_validation.jsonl",
+      "?? reports/training_history_lowcov_s3141.json",
+      "?? runs/20260822T135401Z_train_lora_349f91/",
+      "?? runs/20260822T141437Z_eval_lora_3cf725/",
+      "?? runs/20260822T141808Z_coverage_report_57dce7/",
+      "?? runs/20260822T141850Z_eval_lora_fa18e1/"
     ]
   },
   "hardware": {
@@ -63,7 +76,7 @@
   },
   "inputs": {
     "split": "test",
-    "n_examples": 86,
+    "n_examples": 8,
     "dataset_fingerprint": {
       "raw_dataset": {
         "path": "data\\raw\\tickets_v1.jsonl",
@@ -96,7 +109,7 @@
       }
     },
     "split_manifest_checksum": "994141c6e09e98667f0d57375cfbf552afdb2e8a4ed85c68663191e289846060",
-    "limit": null
+    "limit": 8
   },
   "config": {
     "condition": "lora",
@@ -107,9 +120,9 @@
       "do_sample": false,
       "num_beams": 1,
       "max_new_tokens": 160,
-      "batch_size": 8,
+      "batch_size": 4,
       "rationale": "Greedy decoding removes sampling variance; the task has exactly one correct answer. The token budget is identical across zero-shot, few-shot and adapted conditions.",
-      "constrained": false
+      "constrained": true
     },
     "base_model": {
       "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
@@ -135,9 +148,9 @@
       "capability": "sm_75",
       "reason": "compute capability sm_75 predates Ampere. torch.cuda.is_bf16_supported() may report True via emulation, but there is no native bf16 datapath, so fp16 autocast with a gradient scaler is used and LoRA parameters are kept in fp32."
     },
-    "adapter_dir": "artifacts/lora_adapter_lowcov_s2718",
+    "adapter_dir": "artifacts/lora_adapter",
     "adapter_verification": {
-      "adapter_dir": "artifacts/lora_adapter_lowcov_s2718",
+      "adapter_dir": "artifacts/lora_adapter",
       "is_peft_model": true,
       "active_adapters": [
         "default"
@@ -146,8 +159,8 @@
       "n_nonzero_lora_tensors": 336,
       "n_lora_B_tensors": 168,
       "n_nonzero_lora_B_tensors": 168,
-      "max_abs_lora_weight": 0.03612123057246208,
-      "max_abs_lora_B_weight": 0.003499047365039587,
+      "max_abs_lora_weight": 0.03833334147930145,
+      "max_abs_lora_B_weight": 0.005929074715822935,
       "adapter_is_active": true,
       "liveness_criterion": "at least one lora_B tensor is non-zero; B is zero-initialised, so an all-zero B means the adapter is a mathematical no-op regardless of A"
     },
@@ -166,174 +179,145 @@
     }
   },
   "metrics": {
-    "n": 86,
+    "n": 8,
     "json_parse_rate_strict": 1.0,
     "json_parse_rate_lenient": 1.0,
-    "schema_valid_rate": 0.7791,
-    "exact_match": 0.1744,
-    "constraint_violation_rate": 0.2209,
+    "schema_valid_rate": 1.0,
+    "exact_match": 0.125,
+    "constraint_violation_rate": 0.0,
     "markdown_fence_rate": 0.0,
     "prose_outside_json_rate": 0.0,
     "truncation_rate": 0.0,
     "field_accuracy": {
-      "category": 0.6744,
-      "priority": 0.4302,
-      "affected_service": 0.5814,
-      "is_security_incident": 0.8372,
+      "category": 0.375,
+      "priority": 0.25,
+      "affected_service": 0.375,
+      "is_security_incident": 0.875,
       "users_affected": 1.0
     },
-    "mean_field_accuracy": 0.7046,
+    "mean_field_accuracy": 0.575,
     "category": {
-      "macro_f1": 0.7034,
+      "macro_f1": 0.0682,
       "per_label": {
         "access_management": {
-          "precision": 0.4286,
-          "recall": 0.5,
-          "f1": 0.4615,
-          "support": 12,
-          "predicted": 14
+          "precision": 1.0,
+          "recall": 0.375,
+          "f1": 0.5455,
+          "support": 8,
+          "predicted": 3
         },
         "hardware": {
-          "precision": 1.0,
-          "recall": 0.3333,
-          "f1": 0.5,
-          "support": 12,
-          "predicted": 4
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "predicted": 0
         },
         "network": {
-          "precision": 0.8,
-          "recall": 1.0,
-          "f1": 0.8889,
-          "support": 12,
-          "predicted": 15
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "predicted": 5
         },
         "software": {
-          "precision": 1.0,
-          "recall": 0.8,
-          "f1": 0.8889,
-          "support": 10,
-          "predicted": 8
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "predicted": 0
         },
         "security": {
-          "precision": 0.5294,
-          "recall": 0.9,
-          "f1": 0.6667,
-          "support": 10,
-          "predicted": 17
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "predicted": 0
         },
         "account_billing": {
-          "precision": 0.9,
-          "recall": 0.9,
-          "f1": 0.9,
-          "support": 10,
-          "predicted": 10
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "predicted": 0
         },
         "email": {
-          "precision": 1.0,
-          "recall": 0.4,
-          "f1": 0.5714,
-          "support": 10,
-          "predicted": 4
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "predicted": 0
         },
         "other": {
-          "precision": 1.0,
-          "recall": 0.6,
-          "f1": 0.75,
-          "support": 10,
-          "predicted": 6
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "predicted": 0
         }
       }
     },
     "priority": {
-      "macro_f1": 0.3069,
+      "macro_f1": 0.2292,
       "per_label": {
         "low": {
-          "precision": 0.6667,
-          "recall": 0.6,
-          "f1": 0.6316,
-          "support": 40,
-          "predicted": 36
+          "precision": 0.5,
+          "recall": 0.1667,
+          "f1": 0.25,
+          "support": 6,
+          "predicted": 2
         },
         "medium": {
           "precision": 0.0,
           "recall": 0.0,
           "f1": 0.0,
-          "support": 3,
-          "predicted": 2
+          "support": 0,
+          "predicted": 5
         },
         "high": {
-          "precision": 0.625,
-          "recall": 0.1429,
-          "f1": 0.2326,
-          "support": 35,
-          "predicted": 8
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6667,
+          "support": 2,
+          "predicted": 1
         },
         "critical": {
-          "precision": 0.2222,
-          "recall": 1.0,
-          "f1": 0.3636,
-          "support": 8,
-          "predicted": 36
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0,
+          "predicted": 0
         }
       }
     },
-    "category_accuracy": 0.6744,
-    "priority_accuracy": 0.4302,
+    "category_accuracy": 0.375,
+    "priority_accuracy": 0.25,
     "error_categories": {
-      "correct": 15,
-      "invalid_enum": 19,
-      "wrong_values_only": 52
+      "correct": 1,
+      "wrong_values_only": 7
     },
     "exact_match_by_category": {
       "access_management": {
-        "n": 12,
-        "exact_match": 0.0
-      },
-      "account_billing": {
-        "n": 10,
-        "exact_match": 0.6
-      },
-      "email": {
-        "n": 10,
-        "exact_match": 0.0
-      },
-      "hardware": {
-        "n": 12,
-        "exact_match": 0.0
-      },
-      "network": {
-        "n": 12,
-        "exact_match": 0.1667
-      },
-      "other": {
-        "n": 10,
-        "exact_match": 0.4
-      },
-      "security": {
-        "n": 10,
-        "exact_match": 0.1
-      },
-      "software": {
-        "n": 10,
-        "exact_match": 0.2
+        "n": 8,
+        "exact_match": 0.125
       }
     },
     "latency_seconds": {
-      "mean": 1.3306,
-      "min": 1.1688,
-      "max": 2.3158,
+      "mean": 5.0655,
+      "min": 3.7773,
+      "max": 6.3538,
       "note": "Observation only. Measured on one consumer GPU with batched generation; not a serving-performance claim."
     }
   },
   "peak_memory": {
-    "peak_allocated_bytes": 1200748544,
-    "peak_reserved_bytes": 1350565888,
-    "peak_allocated_gib": 1.118,
-    "peak_reserved_gib": 1.258
+    "peak_allocated_bytes": 1119617024,
+    "peak_reserved_bytes": 1189085184,
+    "peak_allocated_gib": 1.043,
+    "peak_reserved_gib": 1.107
   },
   "artifacts": {
-    "predictions": "reports\\predictions\\lora_lowcov_s2718_test.jsonl",
-    "metrics": "reports\\metrics\\lora_lowcov_s2718_test.json"
+    "predictions": "reports\\predictions\\lora_constrained_test_smoke.jsonl",
+    "metrics": "reports\\metrics\\lora_constrained_test_smoke.json"
   },
   "warnings": [],
   "notes": []

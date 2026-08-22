@@ -125,7 +125,30 @@ underpowered for small effects.
 
 ### Result
 
-See `reports/coverage_depth/COVERAGE.md`.
+| Seed | High coverage | Low coverage | Difference | 95% CI | McNemar p | Detected? |
+|---|---|---|---|---|---|---|
+| 1337 | 19.8% | 18.6% | +1.2 pp | [-7.0, +8.1] | 1.000 | no |
+| 2718 | 18.6% | 17.4% | +1.2 pp | [-5.8, +9.3] | 1.000 | no |
+| 3141 | 17.4% | 19.8% | -2.3 pp | [-10.5, +5.8] | 0.774 | no |
+
+**Verdict: no detectable difference.** Mean **-0.0 pp**; the direction flips
+across seeds; pooled means are identical (18.6% for both arms).
+
+Per the rule fixed before running, that is **not** a claim that the arms are
+equivalent. The design is underpowered by construction: 64 examples per arm, a
+2:1 coverage contrast, 3 seeds, 86 test examples -- against a seed spread E1
+measured at 14.0 pp on the full configuration.
+
+**One asymmetry, not significant but consistent.** Schema validity favours high
+coverage (80.2% vs 74.8%), and the low-coverage arm is less stable across seeds
+(9.3 pp spread vs 5.8). Directionally consistent with breadth helping format
+generalisation more than depth, and worth a properly powered test rather than a
+conclusion here.
+
+**What this settles about v1.** v1's data-size ablation suggested *less data was
+better*. E2 shows that at a **fixed** budget, how the budget is spread barely
+matters -- which points back at total volume and overfitting rather than
+coverage as the operative variable.
 
 ---
 
@@ -162,7 +185,45 @@ reported apart. Constraining makes the first two trivially 100%.
 
 ### Result
 
-See `reports/constrained/CONSTRAINED.md`.
+| # | Condition | Decoding | Strict JSON | Schema valid | Invalid enum | **Exact match** |
+|---|---|---|---|---|---|---|
+| 1 | base zero-shot | unconstrained | 5.8% | 27.9% | 17.4% | 0.0% |
+| 2 | base few-shot k=8 | unconstrained | 100% | 61.6% | 38.4% | 1.2% |
+| 3 | base + LoRA | unconstrained | 100% | 79.1% | 20.9% | 11.6% |
+| 4 | base few-shot k=8 | **constrained** | 100% | **100%** | **0%** | **8.1%** |
+| 5 | base + LoRA | **constrained** | 100% | **100%** | **0%** | **16.3%** |
+
+**The fair comparison (4 vs 5).** +8.1 pp, 95% CI **[-2.3, +18.6]**,
+McNemar **p = 0.19** -- **not distinguishable from zero**.
+
+**What the decoder alone buys, per model:**
+
+| Model | Unconstrained | Constrained | Difference | 95% CI | p |
+|---|---|---|---|---|---|
+| few-shot | 1.2% | 8.1% | **+7.0 pp** | [+2.3, +12.8] | **0.031** |
+| LoRA | 11.6% | 16.3% | +4.7 pp | [+1.2, +9.3] | 0.125 |
+
+**Reading this.** A grammar requiring no training gave the *base* model a
+statistically significant **+7.0 pp** -- larger than the gain it gave the
+fine-tuned model. Once both systems have it, the adapter's remaining advantage
+is real in direction but not separable from noise at n = 86.
+
+This does **not** show LoRA is no better. The interval spans zero because the
+test set is small; +8.1 pp with an upper bound of +18.6 is entirely consistent
+with a genuine benefit this design lacks the power to confirm. What it does show
+is that v1's headline was measuring, in substantial part, format compliance --
+and format compliance is obtainable without training.
+
+**The comparison deliberately not headlined.** Unconstrained few-shot against
+constrained LoRA gives **+15.1 pp**, nearly double the honest +8.1. The gap
+between those two numbers is the decoder's contribution. It is computed in the
+report only so it can be displayed and set aside.
+
+**Failure taxonomy after constraining:** every `invalid_enum`, `wrong_type` and
+fence failure is gone by construction. What remains is exclusively
+`wrong_values_only` -- well-formed objects with incorrect values. That is the
+residue that is genuinely a model problem, and it is the honest target for any
+further work.
 
 ---
 

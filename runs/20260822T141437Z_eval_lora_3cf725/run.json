@@ -1,17 +1,25 @@
 {
-  "run_id": "20260822T135102Z_eval_lora_4b8651",
+  "run_id": "20260822T141437Z_eval_lora_3cf725",
   "kind": "eval_lora",
   "status": "success",
-  "started_utc": "2026-08-22T13:51:02.847931+00:00",
-  "ended_utc": "2026-08-22T13:53:49.654953+00:00",
-  "elapsed_seconds": 166.807,
+  "started_utc": "2026-08-22T14:14:37.140915+00:00",
+  "ended_utc": "2026-08-22T14:17:41.992140+00:00",
+  "elapsed_seconds": 184.851,
   "git": {
     "commit": "e64f4a167af9dd60c99401fc52bccf1b28ae4b64",
     "branch": "v2-continuation",
     "dirty": true,
     "dirty_files": [
+      "M runs/20260822T135102Z_eval_lora_4b8651/run.json",
       "?? reports/metrics/lora_lowcov_s2718_test.json",
-      "?? reports/predictions/lora_lowcov_s2718_test.jsonl"
+      "?? reports/metrics/lora_lowcov_s3141_test.json",
+      "?? reports/metrics/lora_lowcov_s3141_validation.json",
+      "?? reports/predictions/lora_lowcov_s2718_test.jsonl",
+      "?? reports/predictions/lora_lowcov_s3141_test.jsonl",
+      "?? reports/predictions/lora_lowcov_s3141_validation.jsonl",
+      "?? reports/training_history_lowcov_s3141.json",
+      "?? runs/20260822T135401Z_train_lora_349f91/",
+      "?? runs/20260822T141437Z_eval_lora_3cf725/"
     ]
   },
   "hardware": {
@@ -135,9 +143,9 @@
       "capability": "sm_75",
       "reason": "compute capability sm_75 predates Ampere. torch.cuda.is_bf16_supported() may report True via emulation, but there is no native bf16 datapath, so fp16 autocast with a gradient scaler is used and LoRA parameters are kept in fp32."
     },
-    "adapter_dir": "artifacts/lora_adapter_lowcov_s2718",
+    "adapter_dir": "artifacts/lora_adapter_lowcov_s3141",
     "adapter_verification": {
-      "adapter_dir": "artifacts/lora_adapter_lowcov_s2718",
+      "adapter_dir": "artifacts/lora_adapter_lowcov_s3141",
       "is_peft_model": true,
       "active_adapters": [
         "default"
@@ -146,8 +154,8 @@
       "n_nonzero_lora_tensors": 336,
       "n_lora_B_tensors": 168,
       "n_nonzero_lora_B_tensors": 168,
-      "max_abs_lora_weight": 0.03612123057246208,
-      "max_abs_lora_B_weight": 0.003499047365039587,
+      "max_abs_lora_weight": 0.03641633316874504,
+      "max_abs_lora_B_weight": 0.00352079956792295,
       "adapter_is_active": true,
       "liveness_criterion": "at least one lora_B tensor is non-zero; B is zero-initialised, so an all-zero B means the adapter is a mathematical no-op regardless of A"
     },
@@ -169,90 +177,90 @@
     "n": 86,
     "json_parse_rate_strict": 1.0,
     "json_parse_rate_lenient": 1.0,
-    "schema_valid_rate": 0.7791,
-    "exact_match": 0.1744,
-    "constraint_violation_rate": 0.2209,
+    "schema_valid_rate": 0.686,
+    "exact_match": 0.1977,
+    "constraint_violation_rate": 0.314,
     "markdown_fence_rate": 0.0,
     "prose_outside_json_rate": 0.0,
     "truncation_rate": 0.0,
     "field_accuracy": {
-      "category": 0.6744,
-      "priority": 0.4302,
-      "affected_service": 0.5814,
-      "is_security_incident": 0.8372,
+      "category": 0.5814,
+      "priority": 0.5233,
+      "affected_service": 0.5233,
+      "is_security_incident": 0.8256,
       "users_affected": 1.0
     },
-    "mean_field_accuracy": 0.7046,
+    "mean_field_accuracy": 0.6907,
     "category": {
-      "macro_f1": 0.7034,
+      "macro_f1": 0.5582,
       "per_label": {
         "access_management": {
-          "precision": 0.4286,
-          "recall": 0.5,
-          "f1": 0.4615,
+          "precision": 0.4118,
+          "recall": 0.5833,
+          "f1": 0.4828,
           "support": 12,
-          "predicted": 14
+          "predicted": 17
         },
         "hardware": {
-          "precision": 1.0,
+          "precision": 0.6667,
           "recall": 0.3333,
-          "f1": 0.5,
+          "f1": 0.4444,
           "support": 12,
-          "predicted": 4
+          "predicted": 6
         },
         "network": {
-          "precision": 0.8,
-          "recall": 1.0,
-          "f1": 0.8889,
+          "precision": 0.8462,
+          "recall": 0.9167,
+          "f1": 0.88,
           "support": 12,
-          "predicted": 15
+          "predicted": 13
         },
         "software": {
+          "precision": 0.625,
+          "recall": 1.0,
+          "f1": 0.7692,
+          "support": 10,
+          "predicted": 16
+        },
+        "security": {
+          "precision": 0.4375,
+          "recall": 0.7,
+          "f1": 0.5385,
+          "support": 10,
+          "predicted": 16
+        },
+        "account_billing": {
           "precision": 1.0,
           "recall": 0.8,
           "f1": 0.8889,
           "support": 10,
           "predicted": 8
         },
-        "security": {
-          "precision": 0.5294,
-          "recall": 0.9,
-          "f1": 0.6667,
-          "support": 10,
-          "predicted": 17
-        },
-        "account_billing": {
-          "precision": 0.9,
-          "recall": 0.9,
-          "f1": 0.9,
-          "support": 10,
-          "predicted": 10
-        },
         "email": {
-          "precision": 1.0,
-          "recall": 0.4,
-          "f1": 0.5714,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
           "support": 10,
-          "predicted": 4
+          "predicted": 0
         },
         "other": {
           "precision": 1.0,
-          "recall": 0.6,
-          "f1": 0.75,
+          "recall": 0.3,
+          "f1": 0.4615,
           "support": 10,
-          "predicted": 6
+          "predicted": 3
         }
       }
     },
     "priority": {
-      "macro_f1": 0.3069,
+      "macro_f1": 0.2859,
       "per_label": {
         "low": {
-          "precision": 0.6667,
-          "recall": 0.6,
-          "f1": 0.6316,
+          "precision": 0.6098,
+          "recall": 0.625,
+          "f1": 0.6173,
           "support": 40,
-          "predicted": 36
+          "predicted": 41
         },
         "medium": {
           "precision": 0.0,
@@ -262,32 +270,32 @@
           "predicted": 2
         },
         "high": {
-          "precision": 0.625,
-          "recall": 0.1429,
-          "f1": 0.2326,
+          "precision": 0.4878,
+          "recall": 0.5714,
+          "f1": 0.5263,
           "support": 35,
-          "predicted": 8
+          "predicted": 41
         },
         "critical": {
-          "precision": 0.2222,
-          "recall": 1.0,
-          "f1": 0.3636,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
           "support": 8,
-          "predicted": 36
+          "predicted": 0
         }
       }
     },
-    "category_accuracy": 0.6744,
-    "priority_accuracy": 0.4302,
+    "category_accuracy": 0.5814,
+    "priority_accuracy": 0.5233,
     "error_categories": {
-      "correct": 15,
-      "invalid_enum": 19,
-      "wrong_values_only": 52
+      "correct": 17,
+      "invalid_enum": 27,
+      "wrong_values_only": 42
     },
     "exact_match_by_category": {
       "access_management": {
         "n": 12,
-        "exact_match": 0.0
+        "exact_match": 0.0833
       },
       "account_billing": {
         "n": 10,
@@ -299,29 +307,29 @@
       },
       "hardware": {
         "n": 12,
-        "exact_match": 0.0
+        "exact_match": 0.0833
       },
       "network": {
         "n": 12,
-        "exact_match": 0.1667
+        "exact_match": 0.0
       },
       "other": {
         "n": 10,
-        "exact_match": 0.4
+        "exact_match": 0.3
       },
       "security": {
         "n": 10,
-        "exact_match": 0.1
+        "exact_match": 0.2
       },
       "software": {
         "n": 10,
-        "exact_match": 0.2
+        "exact_match": 0.4
       }
     },
     "latency_seconds": {
-      "mean": 1.3306,
-      "min": 1.1688,
-      "max": 2.3158,
+      "mean": 1.3106,
+      "min": 1.164,
+      "max": 2.0735,
       "note": "Observation only. Measured on one consumer GPU with batched generation; not a serving-performance claim."
     }
   },
@@ -332,8 +340,8 @@
     "peak_reserved_gib": 1.258
   },
   "artifacts": {
-    "predictions": "reports\\predictions\\lora_lowcov_s2718_test.jsonl",
-    "metrics": "reports\\metrics\\lora_lowcov_s2718_test.json"
+    "predictions": "reports\\predictions\\lora_lowcov_s3141_test.jsonl",
+    "metrics": "reports\\metrics\\lora_lowcov_s3141_test.json"
   },
   "warnings": [],
   "notes": []

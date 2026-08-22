@@ -1,0 +1,415 @@
+{
+  "condition": "lora_constrained",
+  "config": {
+    "adapter_dir": "artifacts/lora_adapter",
+    "adapter_verification": {
+      "active_adapters": [
+        "default"
+      ],
+      "adapter_dir": "artifacts/lora_adapter",
+      "adapter_is_active": true,
+      "is_peft_model": true,
+      "liveness_criterion": "at least one lora_B tensor is non-zero; B is zero-initialised, so an all-zero B means the adapter is a mathematical no-op regardless of A",
+      "max_abs_lora_B_weight": 0.005929074715822935,
+      "max_abs_lora_weight": 0.03833334147930145,
+      "n_lora_B_tensors": 168,
+      "n_lora_tensors": 336,
+      "n_nonzero_lora_B_tensors": 168,
+      "n_nonzero_lora_tensors": 336
+    },
+    "base_model": {
+      "chat_format": "ChatML (<|im_start|>role\\n ... <|im_end|>)",
+      "eos_token": "<|im_end|>",
+      "gated": false,
+      "hidden_layers": 24,
+      "hidden_size": 896,
+      "licence": "apache-2.0",
+      "max_position_embeddings": 32768,
+      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+      "pad_token": "<|endoftext|>",
+      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+      "source": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct",
+      "tie_word_embeddings": true,
+      "total_params_reported": "0.49B (0.36B non-embedding)"
+    },
+    "condition": "lora",
+    "decoding": {
+      "batch_size": 4,
+      "constrained": true,
+      "do_sample": false,
+      "max_new_tokens": 160,
+      "num_beams": 1,
+      "rationale": "Greedy decoding removes sampling variance; the task has exactly one correct answer. The token budget is identical across zero-shot, few-shot and adapted conditions.",
+      "strategy": "greedy"
+    },
+    "fewshot_demo_ids": [],
+    "fewshot_k": 0,
+    "parameters": {
+      "n_trainable_tensors": 0,
+      "param_dtypes": {
+        "torch.float16": 494032768,
+        "torch.float32": 8798208
+      },
+      "total_params": 502830976,
+      "trainable_param_dtypes": {},
+      "trainable_params": 0,
+      "trainable_percent": 0.0
+    },
+    "precision": {
+      "bf16": false,
+      "capability": "sm_75",
+      "device": "cuda",
+      "dtype": "float16",
+      "fp16": true,
+      "gpu": "NVIDIA GeForce GTX 1650",
+      "reason": "compute capability sm_75 predates Ampere. torch.cuda.is_bf16_supported() may report True via emulation, but there is no native bf16 datapath, so fp16 autocast with a gradient scaler is used and LoRA parameters are kept in fp32."
+    },
+    "prompt_version": "1.0.0",
+    "system_prompt_sha": "72c01508c1ea3d5c"
+  },
+  "metrics": {
+    "category": {
+      "macro_f1": 0.0682,
+      "per_label": {
+        "access_management": {
+          "f1": 0.5455,
+          "precision": 1.0,
+          "predicted": 3,
+          "recall": 0.375,
+          "support": 8
+        },
+        "account_billing": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "email": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "hardware": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "network": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 5,
+          "recall": 0.0,
+          "support": 0
+        },
+        "other": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "security": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "software": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 0
+        }
+      }
+    },
+    "category_accuracy": 0.375,
+    "confusion_category": {
+      "access_management": {
+        "<invalid>": 0,
+        "access_management": 3,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 5,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "account_billing": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "email": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "hardware": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "network": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "other": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "security": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      },
+      "software": {
+        "<invalid>": 0,
+        "access_management": 0,
+        "account_billing": 0,
+        "email": 0,
+        "hardware": 0,
+        "network": 0,
+        "other": 0,
+        "security": 0,
+        "software": 0
+      }
+    },
+    "confusion_priority": {
+      "critical": {
+        "<invalid>": 0,
+        "critical": 0,
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "high": {
+        "<invalid>": 0,
+        "critical": 0,
+        "high": 1,
+        "low": 1,
+        "medium": 0
+      },
+      "low": {
+        "<invalid>": 0,
+        "critical": 0,
+        "high": 0,
+        "low": 1,
+        "medium": 5
+      },
+      "medium": {
+        "<invalid>": 0,
+        "critical": 0,
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      }
+    },
+    "constraint_violation_rate": 0.0,
+    "error_categories": {
+      "correct": 1,
+      "wrong_values_only": 7
+    },
+    "exact_match": 0.125,
+    "exact_match_by_category": {
+      "access_management": {
+        "exact_match": 0.125,
+        "n": 8
+      }
+    },
+    "field_accuracy": {
+      "affected_service": 0.375,
+      "category": 0.375,
+      "is_security_incident": 0.875,
+      "priority": 0.25,
+      "users_affected": 1.0
+    },
+    "intervals": {
+      "constraint_violation_rate": {
+        "alpha": 0.05,
+        "hi": 0.0,
+        "lo": 0.0,
+        "mean": 0.0,
+        "n": 8,
+        "n_resamples": 10000
+      },
+      "exact_match": {
+        "alpha": 0.05,
+        "hi": 0.375,
+        "lo": 0.0,
+        "mean": 0.125,
+        "n": 8,
+        "n_resamples": 10000
+      },
+      "field_accuracy.affected_service": {
+        "alpha": 0.05,
+        "hi": 0.75,
+        "lo": 0.125,
+        "mean": 0.375,
+        "n": 8,
+        "n_resamples": 10000
+      },
+      "field_accuracy.category": {
+        "alpha": 0.05,
+        "hi": 0.75,
+        "lo": 0.125,
+        "mean": 0.375,
+        "n": 8,
+        "n_resamples": 10000
+      },
+      "field_accuracy.is_security_incident": {
+        "alpha": 0.05,
+        "hi": 1.0,
+        "lo": 0.625,
+        "mean": 0.875,
+        "n": 8,
+        "n_resamples": 10000
+      },
+      "field_accuracy.priority": {
+        "alpha": 0.05,
+        "hi": 0.625,
+        "lo": 0.0,
+        "mean": 0.25,
+        "n": 8,
+        "n_resamples": 10000
+      },
+      "field_accuracy.users_affected": {
+        "alpha": 0.05,
+        "hi": 1.0,
+        "lo": 1.0,
+        "mean": 1.0,
+        "n": 8,
+        "n_resamples": 10000
+      },
+      "json_parse_rate_lenient": {
+        "alpha": 0.05,
+        "hi": 1.0,
+        "lo": 1.0,
+        "mean": 1.0,
+        "n": 8,
+        "n_resamples": 10000
+      },
+      "schema_valid_rate": {
+        "alpha": 0.05,
+        "hi": 1.0,
+        "lo": 1.0,
+        "mean": 1.0,
+        "n": 8,
+        "n_resamples": 10000
+      }
+    },
+    "json_parse_rate_lenient": 1.0,
+    "json_parse_rate_strict": 1.0,
+    "latency_seconds": {
+      "max": 6.3538,
+      "mean": 5.0655,
+      "min": 3.7773,
+      "note": "Observation only. Measured on one consumer GPU with batched generation; not a serving-performance claim."
+    },
+    "markdown_fence_rate": 0.0,
+    "mean_field_accuracy": 0.575,
+    "n": 8,
+    "priority": {
+      "macro_f1": 0.2292,
+      "per_label": {
+        "critical": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 0
+        },
+        "high": {
+          "f1": 0.6667,
+          "precision": 1.0,
+          "predicted": 1,
+          "recall": 0.5,
+          "support": 2
+        },
+        "low": {
+          "f1": 0.25,
+          "precision": 0.5,
+          "predicted": 2,
+          "recall": 0.1667,
+          "support": 6
+        },
+        "medium": {
+          "f1": 0.0,
+          "precision": 0.0,
+          "predicted": 5,
+          "recall": 0.0,
+          "support": 0
+        }
+      }
+    },
+    "priority_accuracy": 0.25,
+    "prose_outside_json_rate": 0.0,
+    "schema_valid_rate": 1.0,
+    "truncation_rate": 0.0
+  },
+  "run_id": "20260822T141850Z_eval_lora_fa18e1",
+  "split": "test",
+  "success_criteria": {
+    "declared_at": "before any training run; see DECISIONS.md D-008",
+    "explicitly_not_claimed": [
+      "production or deployment readiness",
+      "generalisation beyond this synthetic dataset",
+      "improved safety, alignment, fairness or robustness",
+      "latency or cost improvements",
+      "any capability on real helpdesk tickets"
+    ],
+    "primary": {
+      "metric": "exact_match on the frozen test split",
+      "requirement": "The LoRA-adapted model must beat BOTH unchanged-model baselines (zero-shot and few-shot), and the paired bootstrap 95% CI for the difference against the stronger baseline must exclude zero."
+    },
+    "secondary": [
+      "schema_valid_rate must not regress against the stronger baseline",
+      "constraint_violation_rate must not increase against the stronger baseline"
+    ]
+  }
+}
