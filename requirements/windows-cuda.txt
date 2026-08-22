@@ -1,0 +1,17 @@
+# The exact historical environment that produced every recorded v1 result.
+# Preserved verbatim: Windows 11, Python 3.13.14, CUDA 12.6, GTX 1650 (sm_75).
+# Do not "modernise" these pins -- the numbers in reports/ were produced by
+# this stack and re-recorded in every runs/<run_id>/run.json.
+#
+#   pip install torch==2.13.0 --index-url https://download.pytorch.org/whl/cu126
+#   pip install -r requirements/windows-cuda.txt
+#
+# torch is installed separately because it must come from the CUDA index; the
+# default PyPI wheel on Windows is CPU-only and will silently give you no GPU.
+
+-r base.txt
+
+# torch==2.13.0+cu126   <- install via the command above, not from PyPI
+
+pytest==9.1.1
+matplotlib==3.11.1

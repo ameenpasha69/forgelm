@@ -1,0 +1,738 @@
+{
+  "by_split": {
+    "test": {
+      "affected_services": {
+        "database": 6,
+        "email": 12,
+        "laptop": 6,
+        "none": 72
+      },
+      "categories": {
+        "access_management": 12,
+        "account_billing": 12,
+        "email": 12,
+        "hardware": 12,
+        "network": 12,
+        "other": 12,
+        "security": 12,
+        "software": 12
+      },
+      "is_security_incident": {
+        "False": 84,
+        "True": 12
+      },
+      "n": 96,
+      "priorities": {
+        "critical": 30,
+        "high": 18,
+        "low": 31,
+        "medium": 17
+      },
+      "scenario_families": 16,
+      "template_families": {
+        "bulleted": 12,
+        "chat_style": 12,
+        "formal_ticket": 12,
+        "frustrated": 10,
+        "manager_escalation": 12,
+        "narrative": 13,
+        "polite_request": 12,
+        "terse": 13
+      },
+      "ticket_chars": {
+        "max": 282,
+        "mean": 227.1,
+        "min": 128
+      },
+      "users_affected": {
+        "max": 190,
+        "min": 1
+      }
+    },
+    "train": {
+      "affected_services": {
+        "email": 6,
+        "none": 24,
+        "printer": 18
+      },
+      "categories": {
+        "access_management": 6,
+        "account_billing": 6,
+        "email": 6,
+        "hardware": 6,
+        "network": 6,
+        "other": 6,
+        "security": 6,
+        "software": 6
+      },
+      "is_security_incident": {
+        "False": 42,
+        "True": 6
+      },
+      "n": 48,
+      "priorities": {
+        "high": 8,
+        "low": 26,
+        "medium": 14
+      },
+      "scenario_families": 8,
+      "template_families": {
+        "bulleted": 6,
+        "chat_style": 6,
+        "formal_ticket": 7,
+        "frustrated": 7,
+        "manager_escalation": 5,
+        "narrative": 5,
+        "polite_request": 6,
+        "terse": 6
+      },
+      "ticket_chars": {
+        "max": 278,
+        "mean": 220.1,
+        "min": 130
+      },
+      "users_affected": {
+        "max": 185,
+        "min": 1
+      }
+    },
+    "validation": {
+      "affected_services": {
+        "email": 6,
+        "laptop": 6,
+        "none": 30,
+        "wifi": 6
+      },
+      "categories": {
+        "access_management": 6,
+        "account_billing": 6,
+        "email": 6,
+        "hardware": 6,
+        "network": 6,
+        "other": 6,
+        "security": 6,
+        "software": 6
+      },
+      "is_security_incident": {
+        "False": 36,
+        "True": 12
+      },
+      "n": 48,
+      "priorities": {
+        "critical": 2,
+        "high": 10,
+        "low": 6,
+        "medium": 30
+      },
+      "scenario_families": 8,
+      "template_families": {
+        "bulleted": 6,
+        "chat_style": 6,
+        "formal_ticket": 5,
+        "frustrated": 7,
+        "manager_escalation": 7,
+        "narrative": 6,
+        "polite_request": 6,
+        "terse": 5
+      },
+      "ticket_chars": {
+        "max": 272,
+        "mean": 229.3,
+        "min": 132
+      },
+      "users_affected": {
+        "max": 174,
+        "min": 1
+      }
+    }
+  },
+  "cross_version_similarity": {
+    "family_overlap": [],
+    "max_pair": [
+      "v2_sec_shadow_it-05",
+      "email_not_receiving-04"
+    ],
+    "max_similarity": 0.3313,
+    "n_comparisons": 57600,
+    "n_pairs_at_or_above_0.60": 0,
+    "pairs_at_or_above_0.60": []
+  },
+  "errors": 0,
+  "family_table": [
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 1,
+      "category": "access_management",
+      "details": 3,
+      "fid": "v2_am_group_nesting",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 2,
+      "category": "access_management",
+      "details": 3,
+      "fid": "v2_am_service_account_expiry",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 0,
+      "category": "access_management",
+      "details": 3,
+      "fid": "v2_am_privilege_escalation_request",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 3,
+      "category": "access_management",
+      "details": 3,
+      "fid": "v2_am_federation_cert_rotation",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "laptop",
+      "asks": 3,
+      "base_severity": 1,
+      "category": "hardware",
+      "details": 3,
+      "fid": "v2_hw_fan_noise",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "printer",
+      "asks": 3,
+      "base_severity": 0,
+      "category": "hardware",
+      "details": 3,
+      "fid": "v2_hw_scanner_feeder",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 3,
+      "category": "hardware",
+      "details": 3,
+      "fid": "v2_hw_ups_battery",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "laptop",
+      "asks": 3,
+      "base_severity": 2,
+      "category": "hardware",
+      "details": 3,
+      "fid": "v2_hw_touchscreen_ghost",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 2,
+      "category": "network",
+      "details": 3,
+      "fid": "v2_net_ipv6_misconfig",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 1,
+      "category": "network",
+      "details": 3,
+      "fid": "v2_net_bandwidth_shaping",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "wifi",
+      "asks": 3,
+      "base_severity": 2,
+      "category": "network",
+      "details": 3,
+      "fid": "v2_net_rogue_ap",
+      "is_security_incident": true,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 3,
+      "category": "network",
+      "details": 3,
+      "fid": "v2_net_cable_damage",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 1,
+      "category": "software",
+      "details": 3,
+      "fid": "v2_sw_macro_blocked",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 1,
+      "category": "software",
+      "details": 3,
+      "fid": "v2_sw_browser_extension",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team"
+      ]
+    },
+    {
+      "affected_service": "database",
+      "asks": 3,
+      "base_severity": 2,
+      "category": "software",
+      "details": 3,
+      "fid": "v2_sw_api_deprecation",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "printer",
+      "asks": 3,
+      "base_severity": 1,
+      "category": "software",
+      "details": 3,
+      "fid": "v2_sw_print_driver",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 2,
+      "category": "security",
+      "details": 3,
+      "fid": "v2_sec_mfa_fatigue",
+      "is_security_incident": true,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 2,
+      "category": "security",
+      "details": 3,
+      "fid": "v2_sec_shadow_it",
+      "is_security_incident": true,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 3,
+      "category": "security",
+      "details": 3,
+      "fid": "v2_sec_insider_download",
+      "is_security_incident": true,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 3,
+      "category": "security",
+      "details": 3,
+      "fid": "v2_sec_supply_chain_alert",
+      "is_security_incident": true,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 1,
+      "category": "account_billing",
+      "details": 3,
+      "fid": "v2_ab_currency_mismatch",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 1,
+      "category": "account_billing",
+      "details": 3,
+      "fid": "v2_ab_auto_renew_surprise",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 0,
+      "category": "account_billing",
+      "details": 3,
+      "fid": "v2_ab_po_mismatch",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single",
+        "small"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 0,
+      "category": "account_billing",
+      "details": 3,
+      "fid": "v2_ab_tax_code_wrong",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "email",
+      "asks": 3,
+      "base_severity": 1,
+      "category": "email",
+      "details": 3,
+      "fid": "v2_email_quarantine_release",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team"
+      ]
+    },
+    {
+      "affected_service": "email",
+      "asks": 3,
+      "base_severity": 1,
+      "category": "email",
+      "details": 3,
+      "fid": "v2_email_shared_mailbox_sync",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "small"
+      ]
+    },
+    {
+      "affected_service": "email",
+      "asks": 3,
+      "base_severity": 2,
+      "category": "email",
+      "details": 3,
+      "fid": "v2_email_autoreply_loop",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team"
+      ]
+    },
+    {
+      "affected_service": "email",
+      "asks": 3,
+      "base_severity": 0,
+      "category": "email",
+      "details": 3,
+      "fid": "v2_email_attachment_size",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 0,
+      "category": "other",
+      "details": 3,
+      "fid": "v2_oth_visitor_wifi_policy",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "single"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 0,
+      "category": "other",
+      "details": 3,
+      "fid": "v2_oth_relocation_survey",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "team",
+        "dept"
+      ]
+    },
+    {
+      "affected_service": "printer",
+      "asks": 3,
+      "base_severity": 0,
+      "category": "other",
+      "details": 3,
+      "fid": "v2_oth_printer_consumables",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "small",
+        "team"
+      ]
+    },
+    {
+      "affected_service": "none",
+      "asks": 3,
+      "base_severity": 3,
+      "category": "other",
+      "details": 3,
+      "fid": "v2_oth_power_outage_plan",
+      "is_security_incident": false,
+      "n_examples": 6,
+      "symptoms": 3,
+      "user_scales": [
+        "dept"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "check": "balance",
+      "detail": {
+        "counts": {
+          "access_management": 24,
+          "account_billing": 24,
+          "email": 24,
+          "hardware": 24,
+          "network": 24,
+          "other": 24,
+          "security": 24,
+          "software": 24
+        },
+        "ratio": 1.0
+      },
+      "message": "category counts min=24 max=24 imbalance_ratio=1.00",
+      "severity": "info"
+    },
+    {
+      "check": "balance",
+      "detail": {
+        "counts": {
+          "critical": 32,
+          "high": 36,
+          "low": 63,
+          "medium": 61
+        }
+      },
+      "message": "priority distribution: {'critical': 32, 'high': 36, 'low': 63, 'medium': 61}",
+      "severity": "info"
+    },
+    {
+      "check": "cross_split_near_duplicate",
+      "detail": {
+        "max_pair": [
+          "v2_ab_currency_mismatch-02",
+          "v2_oth_visitor_wifi_policy-02",
+          "test",
+          "validation"
+        ],
+        "max_similarity": 0.3188,
+        "threshold": 0.8
+      },
+      "message": "no cross-split pair reaches similarity 0.8; maximum observed = 0.3188",
+      "severity": "info"
+    },
+    {
+      "check": "template_family_spread",
+      "detail": {
+        "spanning": {
+          "bulleted": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "chat_style": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "formal_ticket": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "frustrated": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "manager_escalation": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "narrative": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "polite_request": [
+            "test",
+            "train",
+            "validation"
+          ],
+          "terse": [
+            "test",
+            "train",
+            "validation"
+          ]
+        }
+      },
+      "message": "8/8 template families appear in more than one split. This is intended: template families are surface styles and carry no label information. The generalisation axis under test is scenario_family, which is held out strictly.",
+      "severity": "info"
+    },
+    {
+      "check": "family_split_summary",
+      "detail": {
+        "counts": {
+          "test": 16,
+          "train": 8,
+          "validation": 8
+        }
+      },
+      "message": "32 scenario families assigned across splits",
+      "severity": "info"
+    }
+  ],
+  "info": 5,
+  "n_findings": 5,
+  "n_records": 192,
+  "passed": true,
+  "warnings": 0
+}

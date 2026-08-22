@@ -1,0 +1,130 @@
+name: deterministic-cpu-checks
+
+# CPU-only, offline, no model weights. Everything here is a property of the
+# code and the committed evidence, not of a GPU or a download. HF_HUB_OFFLINE
+# is set globally so that any test needing the tokenizer skips itself rather
+# than quietly pulling from the network.
+
+on:
+  push:
+    branches: [main, v2-continuation]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  HF_HUB_OFFLINE: "1"
+  TRANSFORMERS_OFFLINE: "1"
+  PYTHONHASHSEED: "0"
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install CPU-only dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements/cpu.txt
+
+      - name: Dataset regenerates deterministically and checksums match
+        run: |
+          python - <<'PY'
+          import hashlib, json, sys
+          sys.path.insert(0, "src")
+          from forgelm.datagen import generate_dataset
+          from forgelm import dataio
+
+          a = generate_dataset()
+          b = generate_dataset()
+          assert a == b, "generation is not reproducible"
+
+          on_disk = dataio.read_jsonl(dataio.PROCESSED_DATASET)
+          by_id = {r["example_id"]: r for r in on_disk}
+          assert len(a) == len(on_disk), (len(a), len(on_disk))
+          for rec in a:
+              stored = by_id[rec["example_id"]]
+              assert stored["ticket_text"] == rec["ticket_text"]
+              assert stored["expected_output"] == rec["expected_output"]
+
+          version = dataio.read_json(dataio.DATASET_VERSION_FILE)
+          def sha(path):
+              h = hashlib.sha256()
+              with open(path, "rb") as fh:
+                  for chunk in iter(lambda: fh.read(1 << 20), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          assert sha(dataio.RAW_DATASET) == version["raw_sha256"], "raw checksum"
+          assert sha(dataio.PROCESSED_DATASET) == version["processed_sha256"], "processed checksum"
+          print("dataset deterministic; all checksums match")
+          PY
+
+      - name: Split isolation, leakage detection and seal integrity
+        run: |
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, "src")
+          from forgelm import dataio, validate
+          from forgelm.splits import build_manifest, load_manifest
+
+          records = dataio.read_jsonl(dataio.PROCESSED_DATASET)
+          stored = load_manifest(dataio.SPLIT_MANIFEST)
+          rebuilt = build_manifest(records)
+          assert rebuilt["checksum"] == stored["checksum"], "split moved"
+
+          findings = validate.check_cross_split_leakage(records, stored)
+          errors = [f for f in findings if f.severity == "error"]
+          assert not errors, [f.message for f in errors]
+          worst = [f for f in findings
+                   if f.check == "cross_split_near_duplicate"][0]
+          print("split frozen; max cross-split similarity",
+                worst.detail.get("max_similarity"))
+
+          from pathlib import Path
+          v2_manifest = Path("experiments/v2/data/split_manifest_v2.json")
+          if v2_manifest.exists():
+              from forgelm.splits_v2 import load_manifest_v2
+              m2 = load_manifest_v2(v2_manifest)   # verifies the seal checksum
+              print("v2 seal intact:", m2["test_membership_checksum"][:16])
+          PY
+
+      - name: Schemas, parsing, metrics and statistical utilities
+        run: pytest tests/ -m "not slow" -q
+
+      - name: Metrics regenerate from committed raw predictions
+        run: |
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, "src")
+          from pathlib import Path
+          from forgelm import dataio, metrics as M
+
+          checked = 0
+          for name in ("zeroshot", "fewshot", "lora"):
+              preds = Path(f"reports/predictions/{name}_test.jsonl")
+              recorded = Path(f"reports/metrics/{name}_test.json")
+              if not (preds.exists() and recorded.exists()):
+                  continue
+              got = M.compute_metrics(dataio.read_jsonl(preds))
+              want = dataio.read_json(recorded)["metrics"]
+              for key in ("n", "exact_match", "schema_valid_rate",
+                          "json_parse_rate_strict"):
+                  assert got[key] == want[key], (name, key, got[key], want[key])
+              checked += 1
+              print(f"{name}: recomputed == recorded")
+          assert checked >= 3, f"only {checked} condition(s) verified"
+          PY
+
+      - name: Report regeneration
+        run: python scripts/04_report.py --split test
+
+      - name: Placeholder and unsupported-claim scans
+        run: python scripts/06_audit.py --skip-tests

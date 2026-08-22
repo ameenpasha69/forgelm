@@ -1,0 +1,15 @@
+# CPU only. Enough to build the dataset, verify every checksum, run the
+# deterministic test suite, and regenerate every report from the committed raw
+# predictions. NOT enough to train or to generate -- and that is the point:
+# the evidence in this repository is auditable without a GPU.
+#
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   pip install -r requirements/cpu.txt
+#
+# torch is needed only because a few modules import it; the deterministic
+# checks do not use it. This is what CI runs.
+
+-r base.txt
+
+pytest>=8.0
+matplotlib>=3.8

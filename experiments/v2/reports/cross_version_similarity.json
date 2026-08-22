@@ -1,0 +1,11 @@
+{
+  "family_overlap": [],
+  "max_pair": [
+    "v2_sec_shadow_it-05",
+    "email_not_receiving-04"
+  ],
+  "max_similarity": 0.3313,
+  "n_comparisons": 57600,
+  "n_pairs_at_or_above_0.60": 0,
+  "pairs_at_or_above_0.60": []
+}
