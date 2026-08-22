@@ -1,0 +1,199 @@
+{
+  "cells": [
+    {
+      "cell": 0,
+      "reason": "shells out to nvidia-smi; environment is captured separately below",
+      "status": "skipped"
+    },
+    {
+      "cell": 1,
+      "first_line": "import sys, platform",
+      "seconds": 0.0,
+      "status": "ok",
+      "stdout_tail": "python  : 3.13.14\nplatform: Windows-11-10.0.26200-SP0\ntorch   : 2.13.0+cu126 | cuda build: 12.6\ncuda available: True\ngpu     : NVIDIA GeForce GTX 1650  sm_75  4.0 GiB\nbf16 native (needs sm_80+): False"
+    },
+    {
+      "cell": 2,
+      "reason": "installs packages and git-clones the repo; on local hardware the notebook's own IN_COLAB guard already takes the no-op branch, but running pip here would disturb the verified environment",
+      "status": "skipped"
+    },
+    {
+      "cell": 3,
+      "first_line": "from forgelm.seeding import SEEDS, seed_everything",
+      "seconds": 0.18,
+      "status": "ok",
+      "stdout_tail": "named seeds: {\n  \"dataset_generation\": 20240517,\n  \"split_assignment\": 913,\n  \"fewshot_selection\": 41,\n  \"training\": 1337,\n  \"bootstrap\": 7\n}\n\napplied: {\n  \"seed\": 1337,\n  \"python_random\": true,\n  \"numpy\": true,\n  \"torch\": true,\n  \"torch_cuda\": true,\n  \"cudnn_deterministic\": true,\n  \"use_deterministic_algorithms\": false,\n  \"determinism_caveat\": \"cuDNN set deterministic; torch.use_deterministic_algorithms not enabled because some kernels lack deterministic variants. Greedy decoding is deterministic in practice; training loss may vary in the last decimal places across runs.\"\n}"
+    },
+    {
+      "cell": 4,
+      "first_line": "from forgelm.datagen import generate_dataset, FAMILIES, TEMPLATE_FAMILIES",
+      "seconds": 0.04,
+      "status": "ok",
+      "stdout_tail": "300 examples from 56 scenario families x 8 writing styles\n\n--- one example ---\nticket: The self-service password reset tool rejects every new password I try. So far 23 people have reported it. Could someone reset it for me?\ntarget: {\"category\": \"access_management\", \"priority\": \"low\", \"affected_service\": \"none\", \"is_security_incident\": false, \"users_affected\": 23}\nlineage: {'example_id': 'am_password_reset-00', 'scenario_family': 'am_password_reset', 'template_family': 'terse', 'user_scale': 'team', 'base_severity': 0}"
+    },
+    {
+      "cell": 5,
+      "first_line": "assert generate_dataset() == records, \"generation is not reproducible!\"",
+      "seconds": 0.02,
+      "status": "ok",
+      "stdout_tail": "PASS -- generation is deterministic"
+    },
+    {
+      "cell": 6,
+      "first_line": "from forgelm import validate",
+      "seconds": 0.02,
+      "status": "ok",
+      "stdout_tail": "errors=0  warnings=0  info=2\n\nPASS -- no structural errors"
+    },
+    {
+      "cell": 7,
+      "first_line": "from forgelm.splits import build_manifest, apply_split",
+      "seconds": 0.01,
+      "status": "ok",
+      "stdout_tail": "checksum: 994141c6e09e98667f0d57375cfbf552afdb2e8a4ed85c68663191e289846060\ntrain       n=171  families=32  priorities={'critical': 24, 'high': 28, 'low': 98, 'medium': 21}\nvalidation  n= 43  families= 8  priorities={'critical': 5, 'high': 13, 'low': 11, 'medium': 14}\ntest        n= 86  families=16  priorities={'critical': 8, 'high': 35, 'low': 40, 'medium': 3}"
+    },
+    {
+      "cell": 8,
+      "first_line": "findings = validate.check_cross_split_leakage(records, manifest)",
+      "seconds": 0.84,
+      "status": "ok",
+      "stdout_tail": "[info ] cross_split_near_duplicate: no cross-split pair reaches similarity 0.8; maximum observed = 0.3255\n[info ] template_family_spread: 8/8 template families appear in more than one split. This is intended: template families are surface styles and carry no label information. The generalisation axis under test is scenario_family, which is held out strictly.\n[info ] family_split_summary: 56 scenario families assigned across splits\n\nPASS -- no cross-split leakage"
+    },
+    {
+      "cell": 9,
+      "first_line": "from forgelm.modeling import (BASE_MODEL_FACTS, load_tokenizer, load_base_model,",
+      "seconds": 26.21,
+      "status": "ok",
+      "stdout_tail": "token\": \"<|im_end|>\",\n  \"pad_token\": \"<|endoftext|>\",\n  \"source\": \"https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct\"\n}\n\nprecision choice: {\n  \"device\": \"cuda\",\n  \"dtype\": \"float16\",\n  \"fp16\": true,\n  \"bf16\": false,\n  \"gpu\": \"NVIDIA GeForce GTX 1650\",\n  \"capability\": \"sm_75\",\n  \"reason\": \"compute capability sm_75 predates Ampere. torch.cuda.is_bf16_supported() may report True via emulation, but there is no native bf16 datapath, so fp16 autocast with a gradient scaler is used and LoRA parameters are kept in fp32.\"\n}\n\ntokenizer: Qwen2Tokenizer | vocab: 151643\npad: <|endoftext|> | eos: <|im_end|>"
+    },
+    {
+      "cell": 10,
+      "first_line": "from forgelm.prompts import render_prompt, SYSTEM_PROMPT",
+      "seconds": 0.14,
+      "status": "ok",
+      "stdout_tail": "service\": one of ['vpn', 'email', 'crm', 'printer', 'laptop', 'wifi', 'payroll', 'database', 'phone', 'none']\n  \"is_security_incident\": true or false\n  \"users_affected\": an integer >= 1\nOutput only the JSON object. No explanation, no markdown, no code fences.<|im_end|>\n<|im_start|>user\nTicket:\nSomething on the network appears to be retrying an old password. Honestly this has been going on far too long. It unlocks fine, then locks again within about five minutes. So far 3 people have reported it. Help would be appreciated\n\nTriage JSON:<|im_end|>\n<|im_start|>assistant\n\n\nprompt length: 232 tokens"
+    },
+    {
+      "cell": 11,
+      "first_line": "from forgelm.generate import run_evaluation",
+      "seconds": 127.77,
+      "status": "ok",
+      "stdout_tail": "s]\rLoading weights:  63%|######3   | 183/290 [00:00<00:00, 260.24it/s]\rLoading weights:  92%|#########2| 267/290 [00:01<00:00, 156.44it/s]\rLoading weights: 100%|##########| 290/290 [00:01<00:00, 148.70it/s]\n  8/86\r  16/86\r  24/86\r  32/86\r  40/86\r  48/86\r  56/86\r  64/86\r  72/86\r  80/86\r  86/86\r\n--- zero-shot ---\n  json_parse_rate_strict     0.0581\n  schema_valid_rate          0.2791\n  exact_match                0.0000\n  markdown_fence_rate        0.9419\n  field accuracy: {'category': 0.1977, 'priority': 0.407, 'affected_service': 0.1744, 'is_security_incident': 0.5465, 'users_affected': 0.9419}"
+    },
+    {
+      "cell": 12,
+      "first_line": "for row in zs[:2]:",
+      "seconds": 0.0,
+      "status": "ok",
+      "stdout_tail": "error    : wrong_type\n======================================================================\nRAW      : '```json\\n{\\n  \"category\": \"access_management\",\\n  \"priority\": \"high\",\\n  \"affected_service\": [\"vpn\", \"email\"],\\n  \"is_security_incident\": true,\\n  \"users_affected\": 3\\n}\\n```'\nparsed   : {'category': 'access_management', 'priority': 'high', 'affected_service': ['vpn', 'email'], 'is_security_incident': True, 'users_affected': 3}\nexpected : {'category': 'access_management', 'priority': 'low', 'affected_service': 'none', 'is_security_incident': False, 'users_affected': 3}\nerror    : wrong_type"
+    },
+    {
+      "cell": 13,
+      "first_line": "from forgelm.prompts import select_demonstrations, FEWSHOT_K",
+      "seconds": 515.46,
+      "status": "ok",
+      "stdout_tail": "00', 'oth_desk_move-01', 'ab_payroll_deduction_q-01', 'sw_db_query_timeout-03']\ncategories covered: ['access_management', 'account_billing', 'email', 'hardware', 'network', 'other', 'security', 'software']\n  8/86\r  16/86\r  24/86\r  32/86\r  40/86\r  48/86\r  56/86\r  64/86\r  72/86\r  80/86\r  86/86\r\n--- few-shot (k=8) ---\n  json_parse_rate_strict     1.0000\n  schema_valid_rate          0.6163\n  exact_match                0.0116\n  markdown_fence_rate        0.0000\n  field accuracy: {'category': 0.593, 'priority': 0.4186, 'affected_service': 0.3721, 'is_security_incident': 0.814, 'users_affected': 1.0}"
+    },
+    {
+      "cell": 14,
+      "first_line": "from forgelm.modeling import build_lora_model, parameter_report",
+      "seconds": 20.55,
+      "status": "ok",
+      "stdout_tail": "8s/it]\rLoading weights:  47%|####6     | 135/290 [00:03<00:02, 61.19it/s]\rLoading weights:  70%|#######   | 203/290 [00:03<00:01, 68.57it/s]\rLoading weights:  84%|########4 | 244/290 [00:04<00:00, 70.23it/s]\rLoading weights:  94%|#########3| 272/290 [00:04<00:00, 72.95it/s]\rLoading weights: 100%|##########| 290/290 [00:04<00:00, 58.66it/s]\ntrainable 8,798,208 / 502,830,976 = 1.7497%\ntrainable dtypes: {'torch.float32': 8798208}\nfrozen  dtypes: {'torch.float16': 494032768, 'torch.float32': 8798208}\nadapted projections: ['down_proj', 'gate_proj', 'k_proj', 'o_proj', 'q_proj', 'up_proj', 'v_proj']"
+    },
+    {
+      "cell": 15,
+      "first_line": "from forgelm import training as T",
+      "seconds": 1.16,
+      "status": "ok",
+      "stdout_tail": "truncation: {'n': 171, 'n_truncated': 0, 'truncation_rate': 0.0, 'total_tokens': {'min': 242, 'max': 281, 'mean': 266.6}}\n\nam_password_reset-00: 213 masked + 38 supervised\n\nSUPERVISED (contributes to loss):\n  '{\"category\": \"access_management\", \"priority\": \"low\", \"affected_service\": \"none\", \"is_security_incident\": false, \"users_affected\": 23}<|im_end|>'\n\nMASKED tail (no loss):\n  '... far 23 people have reported it. Could someone reset it for me?\\n\\nTriage JSON:<|im_end|>\\n<|im_start|>assistant\\n'\n\nPASS -- masking verified on 214 examples"
+    },
+    {
+      "cell": 16,
+      "first_line": "fwd = T.one_batch_forward(lora_model, tokenizer, train_enc, batch_size=2)",
+      "seconds": 260.32,
+      "status": "ok",
+      "stdout_tail": "forward: {'loss': 0.185542, 'perplexity': 1.2, 'n_supervised_tokens': 76, 'healthy': True}\ntiny overfit: 0.192747 -> 0.000715 (passed=True)\n\nPASS -- safe to train"
+    },
+    {
+      "cell": 17,
+      "first_line": "del lora_model, base",
+      "seconds": 14.68,
+      "status": "ok",
+      "stdout_tail": "##3  | 212/290 [00:03<00:01, 63.22it/s]\rLoading weights:  77%|#######6  | 222/290 [00:04<00:01, 61.62it/s]\rLoading weights:  80%|#######9  | 231/290 [00:04<00:00, 59.30it/s]\rLoading weights:  82%|########2 | 239/290 [00:04<00:00, 59.76it/s]\rLoading weights:  87%|########6 | 251/290 [00:04<00:00, 68.38it/s]\rLoading weights:  90%|########9 | 260/290 [00:04<00:00, 67.96it/s]\rLoading weights:  92%|#########2| 268/290 [00:04<00:00, 64.69it/s]\rLoading weights:  97%|#########6| 280/290 [00:04<00:00, 65.36it/s]\rLoading weights: 100%|##########| 290/290 [00:04<00:00, 58.48it/s]\nfresh LoRA model rebuilt"
+    },
+    {
+      "cell": 18,
+      "first_line": "import time",
+      "seconds": 459.17,
+      "status": "ok",
+      "stdout_tail": "82', 'eval_steps_per_second': '0.982', 'epoch': '1'}\n\r100%|##########| 22/22 [07:19<00:00, 14.22s/it]\n\r100%|##########| 43/43 [00:43<00:00,  1.00it/s]\u001b[A\n\r                                               \u001b[A\r                                               \r{'train_runtime': '441.9', 'train_samples_per_second': '0.387', 'train_steps_per_second': '0.05', 'train_loss': '0.1199', 'epoch': '1'}\n\r100%|##########| 22/22 [07:21<00:00, 14.22s/it]\r100%|##########| 22/22 [07:22<00:00, 20.09s/it]\n\ntrained in 445s, 22 steps\nbest checkpoint: runs/notebook_train\\checkpoint-22\nbest eval_loss : 0.1033124029636383"
+    },
+    {
+      "cell": 19,
+      "first_line": "import matplotlib.pyplot as plt",
+      "seconds": 2.07,
+      "status": "ok",
+      "stdout_tail": "<cell 19>:14: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown"
+    },
+    {
+      "cell": 20,
+      "first_line": "from forgelm.modeling import load_adapted_model",
+      "seconds": 11.41,
+      "status": "ok",
+      "stdout_tail": ": 100%|##########| 290/290 [00:02<00:00, 111.38it/s]\n\nverification: {\n  \"adapter_dir\": \"artifacts\\\\lora_adapter_notebook\",\n  \"is_peft_model\": true,\n  \"active_adapters\": [\n    \"default\"\n  ],\n  \"n_lora_tensors\": 336,\n  \"n_nonzero_lora_tensors\": 336,\n  \"n_lora_B_tensors\": 168,\n  \"n_nonzero_lora_B_tensors\": 168,\n  \"max_abs_lora_weight\": 0.03503652289509773,\n  \"max_abs_lora_B_weight\": 0.0020877541974186897,\n  \"adapter_is_active\": true,\n  \"liveness_criterion\": \"at least one lora_B tensor is non-zero; B is zero-initialised, so an all-zero B means the adapter is a mathematical no-op regardless of A\"\n}"
+    },
+    {
+      "cell": 21,
+      "first_line": "lora_preds = run_evaluation(adapted_model, tokenizer, test_records,",
+      "seconds": 111.56,
+      "status": "ok",
+      "stdout_tail": "              0.0000       0.0116       0.1395\nconstraint_violation_rate          0.9535       0.3837       0.1744\nmarkdown_fence_rate                0.9419       0.0000       0.0000\n----------------------------------------------------------------------------\n  field: category                  0.1977       0.5930       0.4302\n  field: priority                  0.4070       0.4186       0.4070\n  field: affected_service          0.1744       0.3721       0.6512\n  field: is_security_incident       0.5465       0.8140       0.8372\n  field: users_affected            0.9419       1.0000       1.0000"
+    },
+    {
+      "cell": 22,
+      "first_line": "cmp_fs = M.compare(fs, lora_preds, \"fewshot\", \"lora\", metric=\"exact_match\")",
+      "seconds": 5.22,
+      "status": "ok",
+      "stdout_tail": "zeroshot (0.0%) -> lora (14.0%)\n   difference +14.0%  95% CI [+7.0%, +22.1%]  excludes zero: True\n   McNemar: only_A=0 only_B=12 p=4.883e-04\n\nfewshot (1.2%) -> lora (14.0%)\n   difference +12.8%  95% CI [+5.8%, +20.9%]  excludes zero: True\n   McNemar: only_A=1 only_B=12 p=3.418e-03"
+    },
+    {
+      "cell": 23,
+      "first_line": "print(\"failure taxonomy (test set):\")",
+      "seconds": 0.0,
+      "status": "ok",
+      "stdout_tail": "', 'priority']\n======================================================================\n[invalid_enum] am_sso_failure-01\nticket  : Raising this at the request of the department head. Nobody can authenticate through the identity provider right now. It started at roughly 08:40 this \ngot     : {'category': 'identity_management', 'priority': 'high', 'affected_service': 'none', 'is_security_incident': False, 'users_affected': 154}\nexpected: {'category': 'access_management', 'priority': 'high', 'affected_service': 'none', 'is_security_incident': False, 'users_affected': 154}\nwrong fields: ['category']"
+    },
+    {
+      "cell": 24,
+      "error": "NameError: name 'IN_COLAB' is not defined",
+      "first_line": "from forgelm import dataio",
+      "seconds": 3.47,
+      "status": "failed",
+      "stdout_tail": "wrote reports/predictions/zeroshot_test.jsonl (86 rows)\nwrote reports/predictions/fewshot_test.jsonl (86 rows)\nwrote reports/predictions/lora_test.jsonl (86 rows)\n\nzipped adapter -> forgelm_lora_adapter.zip",
+      "traceback": "Traceback (most recent call last):\n  File \"D:\\projects\\forgelm\\scripts\\v2_08_run_notebook.py\", line 129, in main\n    exec(compile(source, f\"<cell {index}>\", \"exec\"), namespace)\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<cell 24>\", line 14, in <module>\nNameError: name 'IN_COLAB' is not defined\n"
+    }
+  ],
+  "environment": {
+    "accelerate": "1.14.0",
+    "compute_capability": "sm_75",
+    "cuda_available": true,
+    "gpu": "NVIDIA GeForce GTX 1650",
+    "peft": "0.20.0",
+    "python": "3.13.14",
+    "torch": "2.13.0+cu126",
+    "transformers": "5.15.1",
+    "vram_gib": 4.0
+  },
+  "executed_on": "local hardware, NOT Google Colab",
+  "failed": 1,
+  "failed_at_cell": 24,
+  "n_code_cells": 25,
+  "notebook": "notebooks\\forgelm_colab.ipynb",
+  "ok": 22,
+  "patches_applied": [
+    "cell 14: num_train_epochs 8 -> 1, early_stopping_patience -> 1"
+  ],
+  "scope_caveat": "Executed on a GTX 1650 (sm_75), the same compute capability as a Colab T4, so select_precision() takes the identical fp16 branch. This verifies the notebook's code paths on real CUDA hardware. It does NOT verify Colab's environment: different torch build, preinstalled packages and driver. The Colab GPU cells remain unverified ON COLAB.",
+  "skipped": 2
+}

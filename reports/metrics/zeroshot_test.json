@@ -1,55 +1,5 @@
 {
   "condition": "zeroshot",
-  "config": {
-    "adapter_dir": null,
-    "adapter_verification": null,
-    "base_model": {
-      "chat_format": "ChatML (<|im_start|>role\\n ... <|im_end|>)",
-      "eos_token": "<|im_end|>",
-      "gated": false,
-      "hidden_layers": 24,
-      "hidden_size": 896,
-      "licence": "apache-2.0",
-      "max_position_embeddings": 32768,
-      "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
-      "pad_token": "<|endoftext|>",
-      "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
-      "source": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct",
-      "tie_word_embeddings": true,
-      "total_params_reported": "0.49B (0.36B non-embedding)"
-    },
-    "condition": "zeroshot",
-    "decoding": {
-      "batch_size": 8,
-      "do_sample": false,
-      "max_new_tokens": 160,
-      "num_beams": 1,
-      "rationale": "Greedy decoding removes sampling variance; the task has exactly one correct answer. The token budget is identical across zero-shot, few-shot and adapted conditions.",
-      "strategy": "greedy"
-    },
-    "fewshot_demo_ids": [],
-    "fewshot_k": 0,
-    "parameters": {
-      "n_trainable_tensors": 290,
-      "param_dtypes": {
-        "torch.float16": 494032768
-      },
-      "total_params": 494032768,
-      "trainable_params": 494032768,
-      "trainable_percent": 100.0
-    },
-    "precision": {
-      "bf16": false,
-      "capability": "sm_75",
-      "device": "cuda",
-      "dtype": "float16",
-      "fp16": true,
-      "gpu": "NVIDIA GeForce GTX 1650",
-      "reason": "compute capability sm_75 predates Ampere. torch.cuda.is_bf16_supported() may report True via emulation, but there is no native bf16 datapath, so fp16 autocast with a gradient scaler is used and LoRA parameters are kept in fp32."
-    },
-    "prompt_version": "1.0.0",
-    "system_prompt_sha": "72c01508c1ea3d5c"
-  },
   "metrics": {
     "category": {
       "macro_f1": 0.1399,
@@ -282,86 +232,12 @@
       "priority": 0.407,
       "users_affected": 0.9419
     },
-    "intervals": {
-      "constraint_violation_rate": {
-        "alpha": 0.05,
-        "hi": 0.9884,
-        "lo": 0.907,
-        "mean": 0.9535,
-        "n": 86,
-        "n_resamples": 10000
-      },
-      "exact_match": {
-        "alpha": 0.05,
-        "hi": 0.0,
-        "lo": 0.0,
-        "mean": 0.0,
-        "n": 86,
-        "n_resamples": 10000
-      },
-      "field_accuracy.affected_service": {
-        "alpha": 0.05,
-        "hi": 0.2558,
-        "lo": 0.093,
-        "mean": 0.1744,
-        "n": 86,
-        "n_resamples": 10000
-      },
-      "field_accuracy.category": {
-        "alpha": 0.05,
-        "hi": 0.2907,
-        "lo": 0.1163,
-        "mean": 0.1977,
-        "n": 86,
-        "n_resamples": 10000
-      },
-      "field_accuracy.is_security_incident": {
-        "alpha": 0.05,
-        "hi": 0.6512,
-        "lo": 0.4419,
-        "mean": 0.5465,
-        "n": 86,
-        "n_resamples": 10000
-      },
-      "field_accuracy.priority": {
-        "alpha": 0.05,
-        "hi": 0.5116,
-        "lo": 0.3023,
-        "mean": 0.407,
-        "n": 86,
-        "n_resamples": 10000
-      },
-      "field_accuracy.users_affected": {
-        "alpha": 0.05,
-        "hi": 0.9884,
-        "lo": 0.8837,
-        "mean": 0.9419,
-        "n": 86,
-        "n_resamples": 10000
-      },
-      "json_parse_rate_lenient": {
-        "alpha": 0.05,
-        "hi": 1.0,
-        "lo": 1.0,
-        "mean": 1.0,
-        "n": 86,
-        "n_resamples": 10000
-      },
-      "schema_valid_rate": {
-        "alpha": 0.05,
-        "hi": 0.3721,
-        "lo": 0.186,
-        "mean": 0.2791,
-        "n": 86,
-        "n_resamples": 10000
-      }
-    },
     "json_parse_rate_lenient": 1.0,
     "json_parse_rate_strict": 0.0581,
     "latency_seconds": {
-      "max": 1.6538,
-      "mean": 1.0768,
-      "min": 0.9475,
+      "max": 2.2583,
+      "mean": 1.3659,
+      "min": 1.2114,
       "note": "Observation only. Measured on one consumer GPU with batched generation; not a serving-performance claim."
     },
     "markdown_fence_rate": 0.9419,
@@ -405,24 +281,5 @@
     "schema_valid_rate": 0.2791,
     "truncation_rate": 0.0
   },
-  "run_id": "20260821T200256Z_eval_zeroshot_812934",
-  "split": "test",
-  "success_criteria": {
-    "declared_at": "before any training run; see DECISIONS.md D-008",
-    "explicitly_not_claimed": [
-      "production or deployment readiness",
-      "generalisation beyond this synthetic dataset",
-      "improved safety, alignment, fairness or robustness",
-      "latency or cost improvements",
-      "any capability on real helpdesk tickets"
-    ],
-    "primary": {
-      "metric": "exact_match on the frozen test split",
-      "requirement": "The LoRA-adapted model must beat BOTH unchanged-model baselines (zero-shot and few-shot), and the paired bootstrap 95% CI for the difference against the stronger baseline must exclude zero."
-    },
-    "secondary": [
-      "schema_valid_rate must not regress against the stronger baseline",
-      "constraint_violation_rate must not increase against the stronger baseline"
-    ]
-  }
+  "split": "test"
 }

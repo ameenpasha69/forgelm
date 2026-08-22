@@ -886,9 +886,16 @@ import shutil
 shutil.make_archive("forgelm_lora_adapter", "zip", adapter_dir)
 print("\\nzipped adapter -> forgelm_lora_adapter.zip")
 
-if IN_COLAB:
+# Re-derived here rather than relying on IN_COLAB from cell 2. That name is
+# defined 22 cells earlier, so restarting the kernel -- or skipping the install
+# cell because you already have the repo -- made this final cell die with
+# NameError. Found by actually executing the notebook end to end.
+import sys as _sys
+if "google.colab" in _sys.modules:
     from google.colab import files
     files.download("forgelm_lora_adapter.zip")
+else:
+    print("not running in Colab; the zip is in the working directory")
 """)
 
 # ---------------------------------------------------------------------------
