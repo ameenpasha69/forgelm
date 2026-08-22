@@ -457,7 +457,7 @@ def main() -> int:
 
         from forgelm.splits_v2 import (build_manifest_v2, load_manifest_v2,
                                        sealed_example_ids,
-                                       test_membership_checksum)
+                                       sealed_membership_checksum)
 
         v2_manifest = load_manifest_v2(
             v2_root / "data" / "split_manifest_v2.json")   # verifies both sums
@@ -466,7 +466,7 @@ def main() -> int:
                     rebuilt_v2["checksum"] == v2_manifest["checksum"],
                     f"{v2_manifest['checksum'][:24]}...")
 
-        recomputed_seal = test_membership_checksum(v2_manifest["example_split"])
+        recomputed_seal = sealed_membership_checksum(v2_manifest["example_split"])
         audit.check("v2 SEALED test membership is intact",
                     recomputed_seal == v2_manifest["test_membership_checksum"],
                     f"{recomputed_seal[:32]}... "

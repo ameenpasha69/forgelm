@@ -20,7 +20,7 @@ from forgelm.schema import CATEGORIES, PRIORITIES, validate_output
 from forgelm.splits_v2 import (
     FAMILIES_PER_CATEGORY_V2, SEALED_SPLIT_DEFAULT, SPLIT_PATTERN_V2,
     SealedTestAccessError, apply_split_v2, assert_not_sealed, build_manifest_v2,
-    sealed_example_ids, test_membership_checksum,
+    sealed_example_ids, sealed_membership_checksum,
 )
 
 
@@ -32,6 +32,34 @@ def v2_records():
 @pytest.fixture(scope="module")
 def v2_manifest(v2_records):
     return build_manifest_v2(v2_records)
+
+
+# --------------------------------------------------------------------------
+# Repository hygiene
+# --------------------------------------------------------------------------
+
+def test_no_production_function_is_named_like_a_test():
+    """pytest collects any module-level `test_*` callable it can import.
+
+    `splits_v2.test_membership_checksum` was a production function; pytest
+    picked it up as a test case and errored trying to supply an
+    `example_split` fixture. Renamed to `sealed_membership_checksum`. This
+    guards the whole package against the same collision.
+    """
+    import ast
+    import pathlib
+
+    src = pathlib.Path(__file__).resolve().parents[1] / "src" / "forgelm"
+    offenders = []
+    for module in sorted(src.glob("*.py")):
+        tree = ast.parse(module.read_text(encoding="utf-8"))
+        for node in tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) \
+                    and node.name.startswith("test_"):
+                offenders.append(f"{module.name}::{node.name}")
+    assert offenders == [], (
+        f"production functions named like tests will be collected by pytest: "
+        f"{offenders}")
 
 
 # --------------------------------------------------------------------------
@@ -143,7 +171,7 @@ def test_no_cross_split_leakage(v2_records, v2_manifest):
 # --------------------------------------------------------------------------
 
 def test_seal_checksum_is_stable(v2_records, v2_manifest):
-    assert test_membership_checksum(v2_manifest["example_split"]) == \
+    assert sealed_membership_checksum(v2_manifest["example_split"]) == \
         v2_manifest["test_membership_checksum"]
 
 
@@ -151,14 +179,14 @@ def test_seal_checksum_changes_if_membership_changes(v2_manifest):
     tampered = dict(v2_manifest["example_split"])
     a_test_id = next(e for e, s in tampered.items() if s == "test")
     tampered[a_test_id] = "train"
-    assert test_membership_checksum(tampered) != \
+    assert sealed_membership_checksum(tampered) != \
         v2_manifest["test_membership_checksum"]
 
 
 def test_seal_checksum_ignores_unrelated_reordering(v2_manifest):
     """Narrow on purpose: it answers only 'is this the same sealed set?'."""
     shuffled = dict(reversed(list(v2_manifest["example_split"].items())))
-    assert test_membership_checksum(shuffled) == \
+    assert sealed_membership_checksum(shuffled) == \
         v2_manifest["test_membership_checksum"]
 
 

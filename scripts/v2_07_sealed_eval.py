@@ -40,13 +40,13 @@ CONDITIONS = ("zeroshot", "fewshot", "lora")
 
 def load_sealed():
     from forgelm.splits_v2 import (apply_split_v2, load_manifest_v2,
-                                   test_membership_checksum)
+                                   sealed_membership_checksum)
 
     records = dataio.read_jsonl(V2 / "data" / "tickets_v2.jsonl")
     manifest = load_manifest_v2(V2 / "data" / "split_manifest_v2.json")
 
     # Re-derive the seal independently of the stored value.
-    recomputed = test_membership_checksum(manifest["example_split"])
+    recomputed = sealed_membership_checksum(manifest["example_split"])
     if recomputed != manifest["test_membership_checksum"]:
         raise RuntimeError("sealed membership changed; results not comparable")
 

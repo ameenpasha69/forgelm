@@ -56,7 +56,7 @@ def assign_families_v2(records: list[dict[str, Any]]) -> dict[str, str]:
     return assignment
 
 
-def test_membership_checksum(example_split: dict[str, str]) -> str:
+def sealed_membership_checksum(example_split: dict[str, str]) -> str:
     """Checksum over the sealed test membership only.
 
     Narrow on purpose: it answers exactly one question -- "is this the same set
@@ -101,7 +101,7 @@ def build_manifest_v2(records: list[dict[str, Any]]) -> dict[str, Any]:
         "sealed_split": SEALED_SPLIT_DEFAULT,
     }
     manifest["checksum"] = _manifest_checksum(manifest)
-    manifest["test_membership_checksum"] = test_membership_checksum(example_split)
+    manifest["test_membership_checksum"] = sealed_membership_checksum(example_split)
     return manifest
 
 
@@ -119,7 +119,7 @@ def load_manifest_v2(path: str | Path) -> dict[str, Any]:
         raise ValueError(
             f"v2 split manifest checksum mismatch: stored="
             f"{manifest.get('checksum')} recomputed={recomputed}")
-    sealed = test_membership_checksum(manifest["example_split"])
+    sealed = sealed_membership_checksum(manifest["example_split"])
     if sealed != manifest.get("test_membership_checksum"):
         raise ValueError(
             f"v2 SEALED TEST MEMBERSHIP HAS CHANGED: stored="
