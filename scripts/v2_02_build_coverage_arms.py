@@ -93,6 +93,8 @@ def main() -> int:
 
         high_families: list[str] = []
         low_families: list[str] = []
+        selection_log: list[dict] = []
+
         for category in sorted(by_category):
             families = sorted(by_category[category])
             if len(families) != HIGH_FAMILIES_PER_CATEGORY:
@@ -100,11 +102,42 @@ def main() -> int:
                     f"{category} has {len(families)} training families, "
                     f"expected {HIGH_FAMILIES_PER_CATEGORY}")
             high_families.extend(families)
-            # Which two families Arm B keeps is decided by a dedicated seed, so
-            # it is neither alphabetical nor chosen after seeing any result.
-            shuffled = list(families)
-            rng("split_assignment", "coverage_arm_low", category).shuffle(shuffled)
-            low_families.extend(sorted(shuffled[:LOW_FAMILIES_PER_CATEGORY]))
+
+            # Arm A's contribution for this category is fixed (all 4 families,
+            # 2 examples each). Choose Arm B's 2 families so that its priority
+            # distribution matches Arm A's as closely as possible.
+            #
+            # This is a design-time balance on an INPUT distribution, decided
+            # before any model runs and without reference to any result. Leaving
+            # it to chance produced a 10-point gap in critical+high between the
+            # arms, which would have confounded coverage with label mix -- the
+            # exact defect that made v1's ablation hard to interpret.
+            arm_a_here = pick(train, HIGH_PER_FAMILY, families,
+                              "coverage_high")
+            target = Counter(r["expected_output"]["priority"]
+                             for r in arm_a_here)
+
+            best_pair, best_cost = None, None
+            for i in range(len(families)):
+                for j in range(i + 1, len(families)):
+                    pair = [families[i], families[j]]
+                    candidate = pick(train, LOW_PER_FAMILY, pair, "coverage_low")
+                    got = Counter(r["expected_output"]["priority"]
+                                  for r in candidate)
+                    cost = sum(abs(got[p] - target[p])
+                               for p in set(got) | set(target))
+                    # Deterministic tie-break on the sorted pair name.
+                    key = (cost, tuple(sorted(pair)))
+                    if best_cost is None or key < best_cost:
+                        best_cost, best_pair = key, sorted(pair)
+
+            low_families.extend(best_pair)
+            selection_log.append({
+                "category": category,
+                "arm_a_priorities": dict(sorted(target.items())),
+                "chosen_pair": best_pair,
+                "l1_priority_distance": best_cost[0],
+            })
 
         high = pick(train, HIGH_PER_FAMILY, high_families, "coverage_high")
         low = pick(train, LOW_PER_FAMILY, low_families, "coverage_low")
@@ -131,9 +164,13 @@ def main() -> int:
                 "examples_per_family": (HIGH_PER_FAMILY if arm == "high_coverage"
                                         else LOW_PER_FAMILY),
                 "stats": stats,
+                "family_selection": selection_log if arm == "low_coverage"
+                else "all training families",
                 "controlled": [
                     "equal total example count",
                     "identical category distribution (8 per category)",
+                    "priority distribution matched at design time by choosing "
+                    "Arm B's families to minimise L1 distance to Arm A's",
                     "identical prompt, LoRA settings, decoding",
                     "identical validation and test splits",
                     "identical training seeds",

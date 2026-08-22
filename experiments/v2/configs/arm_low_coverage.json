@@ -1,0 +1,229 @@
+{
+  "arm": "low_coverage",
+  "controlled": [
+    "equal total example count",
+    "identical category distribution (8 per category)",
+    "priority distribution matched at design time by choosing Arm B's families to minimise L1 distance to Arm A's",
+    "identical prompt, LoRA settings, decoding",
+    "identical validation and test splits",
+    "identical training seeds"
+  ],
+  "example_ids": [
+    "ab_cost_center_wrong-00",
+    "ab_cost_center_wrong-01",
+    "ab_cost_center_wrong-03",
+    "ab_cost_center_wrong-04",
+    "ab_subscription_renewal-00",
+    "ab_subscription_renewal-01",
+    "ab_subscription_renewal-02",
+    "ab_subscription_renewal-04",
+    "am_ex_employee_active-00",
+    "am_ex_employee_active-01",
+    "am_ex_employee_active-03",
+    "am_ex_employee_active-05",
+    "am_offboarding_access-00",
+    "am_offboarding_access-01",
+    "am_offboarding_access-02",
+    "am_offboarding_access-05",
+    "email_dl_update-00",
+    "email_dl_update-02",
+    "email_dl_update-03",
+    "email_dl_update-04",
+    "email_mailbox_full-01",
+    "email_mailbox_full-02",
+    "email_mailbox_full-03",
+    "email_mailbox_full-04",
+    "hw_battery_swelling-01",
+    "hw_battery_swelling-02",
+    "hw_battery_swelling-03",
+    "hw_battery_swelling-05",
+    "hw_docking_station-00",
+    "hw_docking_station-01",
+    "hw_docking_station-03",
+    "hw_docking_station-05",
+    "net_switch_outage-00",
+    "net_switch_outage-02",
+    "net_switch_outage-04",
+    "net_switch_outage-05",
+    "net_wifi_dead_zone-00",
+    "net_wifi_dead_zone-01",
+    "net_wifi_dead_zone-03",
+    "net_wifi_dead_zone-04",
+    "oth_desk_move-00",
+    "oth_desk_move-02",
+    "oth_desk_move-03",
+    "oth_desk_move-04",
+    "oth_onboarding_setup-00",
+    "oth_onboarding_setup-02",
+    "oth_onboarding_setup-03",
+    "oth_onboarding_setup-04",
+    "sec_credential_leak-00",
+    "sec_credential_leak-01",
+    "sec_credential_leak-03",
+    "sec_credential_leak-04",
+    "sec_phishing_email-00",
+    "sec_phishing_email-01",
+    "sec_phishing_email-03",
+    "sec_phishing_email-04",
+    "sw_db_query_timeout-00",
+    "sw_db_query_timeout-01",
+    "sw_db_query_timeout-03",
+    "sw_db_query_timeout-04",
+    "sw_install_request-01",
+    "sw_install_request-02",
+    "sw_install_request-03",
+    "sw_install_request-04"
+  ],
+  "examples_per_family": 4,
+  "experiment": "E2 coverage vs depth",
+  "families": [
+    "ab_cost_center_wrong",
+    "ab_subscription_renewal",
+    "am_ex_employee_active",
+    "am_offboarding_access",
+    "email_dl_update",
+    "email_mailbox_full",
+    "hw_battery_swelling",
+    "hw_docking_station",
+    "net_switch_outage",
+    "net_wifi_dead_zone",
+    "oth_desk_move",
+    "oth_onboarding_setup",
+    "sec_credential_leak",
+    "sec_phishing_email",
+    "sw_db_query_timeout",
+    "sw_install_request"
+  ],
+  "family_selection": [
+    {
+      "arm_a_priorities": {
+        "high": 2,
+        "low": 6
+      },
+      "category": "access_management",
+      "chosen_pair": [
+        "am_ex_employee_active",
+        "am_offboarding_access"
+      ],
+      "l1_priority_distance": 4
+    },
+    {
+      "arm_a_priorities": {
+        "low": 6,
+        "medium": 2
+      },
+      "category": "account_billing",
+      "chosen_pair": [
+        "ab_cost_center_wrong",
+        "ab_subscription_renewal"
+      ],
+      "l1_priority_distance": 2
+    },
+    {
+      "arm_a_priorities": {
+        "high": 2,
+        "low": 6
+      },
+      "category": "email",
+      "chosen_pair": [
+        "email_dl_update",
+        "email_mailbox_full"
+      ],
+      "l1_priority_distance": 4
+    },
+    {
+      "arm_a_priorities": {
+        "high": 2,
+        "low": 6
+      },
+      "category": "hardware",
+      "chosen_pair": [
+        "hw_battery_swelling",
+        "hw_docking_station"
+      ],
+      "l1_priority_distance": 4
+    },
+    {
+      "arm_a_priorities": {
+        "critical": 2,
+        "low": 3,
+        "medium": 3
+      },
+      "category": "network",
+      "chosen_pair": [
+        "net_switch_outage",
+        "net_wifi_dead_zone"
+      ],
+      "l1_priority_distance": 4
+    },
+    {
+      "arm_a_priorities": {
+        "critical": 2,
+        "low": 6
+      },
+      "category": "other",
+      "chosen_pair": [
+        "oth_desk_move",
+        "oth_onboarding_setup"
+      ],
+      "l1_priority_distance": 4
+    },
+    {
+      "arm_a_priorities": {
+        "critical": 4,
+        "high": 2,
+        "medium": 2
+      },
+      "category": "security",
+      "chosen_pair": [
+        "sec_credential_leak",
+        "sec_phishing_email"
+      ],
+      "l1_priority_distance": 4
+    },
+    {
+      "arm_a_priorities": {
+        "critical": 1,
+        "high": 1,
+        "low": 4,
+        "medium": 2
+      },
+      "category": "software",
+      "chosen_pair": [
+        "sw_db_query_timeout",
+        "sw_install_request"
+      ],
+      "l1_priority_distance": 2
+    }
+  ],
+  "n_examples": 64,
+  "stats": {
+    "by_category": {
+      "access_management": 8,
+      "account_billing": 8,
+      "email": 8,
+      "hardware": 8,
+      "network": 8,
+      "other": 8,
+      "security": 8,
+      "software": 8
+    },
+    "by_priority": {
+      "critical": 8,
+      "high": 14,
+      "low": 35,
+      "medium": 7
+    },
+    "by_service": {
+      "database": 4,
+      "email": 8,
+      "laptop": 8,
+      "none": 40,
+      "wifi": 4
+    },
+    "examples_per_family": 4.0,
+    "n": 64,
+    "n_families": 16,
+    "security_incidents": 12
+  }
+}
