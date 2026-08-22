@@ -1,0 +1,96 @@
+{
+  "adapter_verification": {
+    "active_adapters": [
+      "default"
+    ],
+    "adapter_dir": "D:\\projects\\forgelm\\artifacts\\lora_adapter",
+    "adapter_is_active": true,
+    "is_peft_model": true,
+    "liveness_criterion": "at least one lora_B tensor is non-zero; B is zero-initialised, so an all-zero B means the adapter is a mathematical no-op regardless of A",
+    "max_abs_lora_B_weight": 0.005929074715822935,
+    "max_abs_lora_weight": 0.03833334147930145,
+    "n_lora_B_tensors": 168,
+    "n_lora_tensors": 336,
+    "n_nonzero_lora_B_tensors": 168,
+    "n_nonzero_lora_tensors": 336
+  },
+  "all_passed": true,
+  "checks": [
+    {
+      "check": "Gradio binds to localhost only",
+      "evidence": "launch(server_name='127.0.0.1') in the call that actually runs",
+      "passed": true
+    },
+    {
+      "check": "no public tunnel is requested",
+      "evidence": "launch(share=False); a public tunnel would expose an unauthenticated model endpoint",
+      "passed": true
+    },
+    {
+      "check": "adapter loads and is genuinely live",
+      "evidence": "168/168 lora_B tensors non-zero, max|B|=0.005929",
+      "passed": true
+    },
+    {
+      "check": "provenance is available to the UI",
+      "evidence": "base revision 7ae557604adf",
+      "passed": true
+    },
+    {
+      "check": "all advertised examples produce schema-valid output",
+      "evidence": "3/3 examples valid",
+      "passed": true
+    },
+    {
+      "check": "blank input is refused, not crashed",
+      "evidence": "returned 'Enter a ticket first.'",
+      "passed": true
+    },
+    {
+      "check": "whitespace-only input is refused",
+      "evidence": "returned 'Enter a ticket first.'",
+      "passed": true
+    },
+    {
+      "check": "malformed input is handled without raising",
+      "evidence": "schema_valid=True, raw='{\"category\": \"other\", \"priority\": \"low\", \"affected_service\":'",
+      "passed": true
+    },
+    {
+      "check": "very long input is handled without raising",
+      "evidence": "9230 chars accepted in 10.6s, schema_valid=True",
+      "passed": true
+    },
+    {
+      "check": "schema status is shown to the user",
+      "evidence": "rendered block contains a schema line: 'schema: VALID'",
+      "passed": true
+    },
+    {
+      "check": "a broken adapter directory raises a clear error",
+      "evidence": "ValueError: Can't find 'adapter_config.json' at 'C:\\Users\\dopam\\AppData\\Local\\Temp\\tmpha51snks'",
+      "passed": true
+    }
+  ],
+  "examples": [
+    {
+      "index": 0,
+      "output": "{\"category\": \"network\", \"priority\": \"high\", \"affected_service\": \"vpn\", \"is_security_incident\": false, \"users_affected\": 14}",
+      "schema_valid": true,
+      "violations": []
+    },
+    {
+      "index": 1,
+      "output": "{\"category\": \"hardware\", \"priority\": \"critical\", \"affected_service\": \"laptop\", \"is_security_incident\": false, \"users_affected\": 1}",
+      "schema_valid": true,
+      "violations": []
+    },
+    {
+      "index": 2,
+      "output": "{\"category\": \"security\", \"priority\": \"critical\", \"affected_service\": \"none\", \"is_security_incident\": true, \"users_affected\": 62}",
+      "schema_valid": true,
+      "violations": []
+    }
+  ],
+  "note": "This is a local demonstration, not a deployment. It has no authentication, no rate limiting and no error budget, and binds to localhost deliberately."
+}

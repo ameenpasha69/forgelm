@@ -63,16 +63,39 @@ def main() -> int:
         source = DEMO_SOURCE.read_text(encoding="utf-8")
 
         # ---- 1. binding, checked in the source that actually runs ---------
+        #
+        # Parsed with AST rather than substring-matched. A plain
+        # `"share=True" in source` check fails here for a silly reason: the
+        # file contains a comment explaining *why* share=True is not used, and
+        # a substring scan cannot tell a call argument from prose about one.
         print("1. network binding")
-        binds_localhost = 'server_name="127.0.0.1"' in source
-        no_share = "share=False" in source
+        import ast
+
+        tree = ast.parse(source)
+        launch_kwargs: dict[str, object] = {}
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            func = node.func
+            if isinstance(func, ast.Attribute) and func.attr == "launch":
+                for kw in node.keywords:
+                    if kw.arg is None:
+                        continue
+                    try:
+                        launch_kwargs[kw.arg] = ast.literal_eval(kw.value)
+                    except (ValueError, SyntaxError):
+                        launch_kwargs[kw.arg] = "<non-literal>"
+
+        server_name = launch_kwargs.get("server_name")
+        share = launch_kwargs.get("share")
         checks.add("Gradio binds to localhost only",
-                   binds_localhost and no_share,
-                   f'server_name="127.0.0.1" present={binds_localhost}, '
-                   f"share=False present={no_share}")
+                   server_name == "127.0.0.1",
+                   f"launch(server_name={server_name!r}) in the call that "
+                   f"actually runs")
         checks.add("no public tunnel is requested",
-                   "share=True" not in source,
-                   "share=True does not appear anywhere in demo_app.py")
+                   share is False,
+                   f"launch(share={share!r}); a public tunnel would expose an "
+                   f"unauthenticated model endpoint")
 
         # ---- 2. adapter liveness ------------------------------------------
         print("\n2. adapter")

@@ -63,14 +63,14 @@
     },
     {
       "check": "test suite passes",
-      "detail": "........................................................................ [ 50%]\n......................................................................   [100%]\n142 passed in 271.30s (0:04:31)\n",
-      "evidence": "142 passed in 271.30s (0:04:31)",
+      "detail": "........................................................................ [ 33%]\n........................................................................ [ 66%]\n.......................................................................  [100%]\n215 passed in 223.96s (0:03:43)\n",
+      "evidence": "215 passed in 223.96s (0:03:43)",
       "passed": true
     },
     {
       "check": "no secrets or credentials in tracked files",
       "detail": "[]",
-      "evidence": "102 text files scanned against 6 patterns",
+      "evidence": "218 text files scanned against 6 patterns",
       "passed": true
     },
     {
@@ -88,13 +88,13 @@
     {
       "check": "every run recorded with hardware and package versions",
       "detail": "",
-      "evidence": "28 runs recorded: {'failed': 5, 'success': 23}",
+      "evidence": "67 runs recorded: {'failed': 6, 'success': 60, 'running': 1}",
       "passed": true
     },
     {
       "check": "failed runs are preserved, not deleted",
       "detail": "",
-      "evidence": "5 failed run(s) retained in runs/",
+      "evidence": "6 failed run(s) retained in runs/",
       "passed": true
     },
     {
@@ -119,6 +119,48 @@
       "check": "adapter reloads and is active",
       "detail": "",
       "evidence": "168/168 lora_B tensors non-zero (B is what makes the update non-trivial), max|B|=0.005929; 336/336 LoRA tensors non-zero overall",
+      "passed": true
+    },
+    {
+      "check": "v2 dataset checksum matches",
+      "detail": "",
+      "evidence": "b1001027089c4751...",
+      "passed": true
+    },
+    {
+      "check": "v2 dataset regenerates identically from the seed",
+      "detail": "",
+      "evidence": "192 examples compared field by field",
+      "passed": true
+    },
+    {
+      "check": "v2 split is unchanged",
+      "detail": "",
+      "evidence": "587018f5a81bf60c3c1f0756...",
+      "passed": true
+    },
+    {
+      "check": "v2 SEALED test membership is intact",
+      "detail": "",
+      "evidence": "0122062c5432ed0253fb34c45a4164c7... (96 sealed examples)",
+      "passed": true
+    },
+    {
+      "check": "v2 families are not paraphrases of v1",
+      "detail": "",
+      "evidence": "max similarity 0.3313 across 57,600 comparisons; family overlap none",
+      "passed": true
+    },
+    {
+      "check": "v2 metrics recompute from raw predictions",
+      "detail": "",
+      "evidence": "5 v2 prediction file(s) re-scored",
+      "passed": true
+    },
+    {
+      "check": "multi-seed verdict is derived, not asserted",
+      "detail": "",
+      "evidence": "verdict 'survives' from 3/3 seeds meeting the pre-registered criterion; per-seed exact match [0.1163, 0.0814, 0.2209]",
       "passed": true
     }
   ],

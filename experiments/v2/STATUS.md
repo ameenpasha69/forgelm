@@ -18,12 +18,14 @@ checksums matching.
 | Pre-registration | **verified** | `PREREGISTRATION.md` committed before any v2 run | -- |
 | **E1 multi-seed** | **verified** | 3 seeds; `reports/multiseed/MULTISEED.md` | 3 seeds is a coarse variance estimate |
 | **E5 sealed v2 dataset** | **verified** | 192 examples, 32 new families, seal checksum `0122062c...` | v2 train split has no `critical` examples (structural) |
-| **E3 constrained decoding** | **implemented, tests verified** | 35 tests; accepts all 300 legal outputs and every prefix, rejects all v1 failure modes | evaluation runs pending |
-| E2 coverage vs depth | **in progress** | 6 runs (2 arms x 3 seeds) executing | 64 examples/arm, underpowered for small effects |
-| E4 diagnostics | **implemented, not yet run** | 7 suites built from v2 train+validation | 3 suites have no ground truth by design |
+| **E3 constrained decoding** | **verified** | 5 conditions; `reports/constrained/CONSTRAINED.md`; 35 tests | v1 split underpowered for the like-for-like comparison -- resolved by E5 |
+| **E2 coverage vs depth** | **verified** | 6 runs; `reports/coverage_depth/COVERAGE.md` | 64 examples/arm, underpowered for small effects |
+| **E4 diagnostics** | **verified** | 588 examples, 7 suites; `reports/diagnostics/DIAGNOSTICS.md` | 3 suites have no ground truth by design |
 | Portability | **verified** | 5 requirements files; `PORTABILITY.md` | Linux/Colab paths written but not executed here |
-| CI workflow | **implemented but unverified** | `.github/workflows/ci.yml`, CPU-only, offline | not yet run on GitHub Actions |
-| Gradio demo checks | **implemented, not yet run** | `scripts/v2_03_demo_checks.py` | needs a GPU gap |
+| CI workflow | **implemented but unverified** | `.github/workflows/ci.yml`, CPU-only, offline | not yet run on GitHub Actions; blocked on an OAuth `workflow` scope |
+| Gradio demo checks | **verified** | **11/11** checks; `reports/demo_checks.json` | Gradio server not booted (optional dependency) |
+| Full test suite | **verified** | **215 passed** | -- |
+| Final evidence audit | **verified** | **27/27 checks passed**, `reports/EVIDENCE.md` | -- |
 | Colab verification | **blocked** | no Colab access from this environment | see below |
 
 ---
@@ -52,6 +54,55 @@ The finding v1 could not have made:
 - **Generalisation stays poor in every seed** (11/16, 12/16, 7/16 held-out
   families score zero). The v1 finding that the adapter learns the output
   contract far better than the task is not a seed artefact.
+
+---
+
+## E2, E3, E4, E5 results
+
+**E2 -- coverage vs depth: no detectable difference.** Mean **-0.0 pp**;
+direction flips across seeds (+1.2, +1.2, -2.3); pooled means identical at
+18.6%. Per the pre-registered rule this is *not* a claim of equivalence -- the
+design is underpowered by construction.
+
+**E3 -- constrained decoding.** A grammar requiring no training took schema
+validity to 100% for both systems and lifted the *base* model by **+7.0 pp
+(p = 0.031)**, more than it lifted the adapted one. So v1's headline was
+measuring, in substantial part, format compliance available for free.
+
+**E5 -- the sealed evaluation, which resolves E3.** 96 examples from 32 families
+that did not exist when any adapter was trained:
+
+| Condition | Schema valid | Exact match |
+|---|---|---|
+| zero-shot | 28.1% | 0.0% |
+| few-shot | 67.7% | 3.1% |
+| **LoRA** | 83.3% | **29.2%** |
+| few-shot + grammar | 100% | 9.4% |
+| **LoRA + grammar** | 100% | **40.6%** |
+
+| Comparison | Difference | 95% CI | p |
+|---|---|---|---|
+| few-shot -> LoRA | +26.0 pp | [+16.7, +35.4] | <0.0001 |
+| few-shot+grammar -> LoRA+grammar | **+31.2 pp** | [+20.8, +41.7] | **<0.0001** |
+
+**Correction to an intermediate v2 interpretation.** When E3's like-for-like
+comparison on the v1 split came back non-significant (+8.1 pp, p = 0.19), the
+tempting summary was "the adapter's advantage dissolves once the decoder is
+equalised". That was an over-generalisation from one underpowered test set. The
+identical comparison on the sealed split gives +31.2 pp at p < 0.0001.
+**Constraining the decoder does not eliminate the adapter's advantage.**
+
+LoRA also scores *higher* on genuinely-unseen families (29.2%) than on v1's own
+test split (11.6%), and zero-scoring families fall from 11/16 to 7/16 -- v1's
+test families were harder than the task in general.
+
+**E4 -- diagnostics.** Perturbation costs are small: typos, irrelevant detail
+and length each cost ~2-3 pp, and long tickets *raise* schema validity to 97.9%.
+The notable result is out-of-domain: **half of non-tickets still receive a
+well-formed triage object**, and `2 + 2 = ?` produced an invented category
+`"math"`. This is recorded as a **schema design limitation** -- there is no
+`not_a_ticket` value, so refusal is not representable -- and explicitly not as a
+robustness or safety claim.
 
 ---
 
