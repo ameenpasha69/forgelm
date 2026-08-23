@@ -52,10 +52,21 @@ EXAMPLES = [
 class Triager:
     """Loads the model once and answers one ticket at a time."""
 
-    def __init__(self, adapter_dir: str, compare: bool = False) -> None:
+    def __init__(self, adapter_dir: str, compare: bool = False,
+                 constrained: bool = False) -> None:
         self.tokenizer = load_tokenizer()
         self.model, self.verification = load_adapted_model(adapter_dir)
         self.base = load_base_model() if compare else None
+        self.constrained = constrained
+        # Built once and shared, so its prefix cache stays warm across tickets.
+        # Applied to BOTH models when comparing -- constraining only the adapted
+        # one would credit the adapter with what the grammar did.
+        self.constraint = None
+        if constrained:
+            from forgelm.constrained import SchemaConstraint
+
+            self.constraint = SchemaConstraint(self.tokenizer)
+
         self.provenance = {}
         provenance_path = Path(adapter_dir) / "forgelm_provenance.json"
         if provenance_path.exists():
@@ -64,7 +75,8 @@ class Triager:
     def _run(self, model, ticket: str) -> dict:
         prompt = render_prompt(self.tokenizer, ticket)
         out = generate_batch(model, self.tokenizer, [prompt],
-                             DECODING["max_new_tokens"])[0]
+                             DECODING["max_new_tokens"],
+                             constraint=self.constraint)[0]
         result = parse_response(out["text"], finish_reason=out["finish_reason"])
         violations = validate_output(result.parsed) if result.parsed is not None \
             else ["unparseable"]
@@ -104,8 +116,10 @@ def format_block(title: str, result: dict) -> str:
 
 def run_cli(triager: Triager, compare: bool) -> int:
     print(f"base model : {BASE_MODEL_ID} @ {BASE_MODEL_REVISION[:12]}")
-    print(f"adapter    : {triager.verification['n_nonzero_lora_tensors']}"
-          f"/{triager.verification['n_lora_tensors']} LoRA tensors active")
+    print(f"adapter    : {triager.verification['n_nonzero_lora_B_tensors']}"
+          f"/{triager.verification['n_lora_B_tensors']} lora_B tensors active")
+    print(f"decoding   : {'CONSTRAINED (illegal output unrepresentable)'
+                          if triager.constrained else 'unconstrained'}")
     print("\nThis is a LOCAL DEMONSTRATION, not a deployment.\n")
     print("Type a ticket and press Enter. Blank line + Enter to quit.")
     print("Type 'example' for a sample ticket.\n")
@@ -197,6 +211,9 @@ def main() -> int:
     ap.add_argument("--compare", action="store_true",
                     help="also load the unchanged base model for comparison "
                          "(roughly doubles memory use)")
+    ap.add_argument("--constrained", action="store_true",
+                    help="mask decoding so only schema-legal output can be "
+                         "produced. Applied to both models when comparing.")
     args = ap.parse_args()
 
     adapter_dir = Path(args.adapter)
@@ -208,7 +225,8 @@ def main() -> int:
 
     print(f"loading adapter from {adapter_dir}...")
     try:
-        triager = Triager(str(adapter_dir), compare=args.compare)
+        triager = Triager(str(adapter_dir), compare=args.compare,
+                          constrained=args.constrained)
     except Exception as exc:  # noqa: BLE001
         print(f"\nCould not load the model or adapter: {type(exc).__name__}: {exc}\n"
               f"Check that {adapter_dir} contains adapter_config.json and "

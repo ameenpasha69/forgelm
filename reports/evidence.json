@@ -62,9 +62,9 @@
       "passed": true
     },
     {
-      "check": "test suite",
-      "detail": "",
-      "evidence": "skipped via --skip-tests",
+      "check": "test suite passes",
+      "detail": "........................................................................ [ 33%]\n........................................................................ [ 66%]\n.......................................................................  [100%]\n215 passed in 300.33s (0:05:00)\n",
+      "evidence": "215 passed in 300.33s (0:05:00)",
       "passed": true
     },
     {
@@ -113,6 +113,12 @@
       "check": "no base-model weights redistributed",
       "detail": "unexpected: []",
       "evidence": "only adapter weights are stored",
+      "passed": true
+    },
+    {
+      "check": "adapter reloads and is active",
+      "detail": "",
+      "evidence": "168/168 lora_B tensors non-zero (B is what makes the update non-trivial), max|B|=0.005929; 336/336 LoRA tensors non-zero overall",
       "passed": true
     },
     {
