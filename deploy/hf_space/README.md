@@ -55,4 +55,4 @@ loaded once at startup and requests are queued one at a time — a single model
 instance on a shared CPU cannot serve two generations concurrently.
 
 The Space is generated from `deploy/hf_space/` in the GitHub repository; see
-`deploy/hf_space/build_space.py` there for how it is assembled.
+`deploy/build.py` there for how it is assembled.

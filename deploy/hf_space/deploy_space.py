@@ -8,7 +8,7 @@ and this script picks the stored credential up. It never reads a token from
 an argument or an environment variable you have to paste, so the token does
 not end up in shell history or in a process listing.
 
-    python deploy/hf_space/build_space.py  --out build/space
+    python deploy/build.py --target hfspace
     python deploy/hf_space/deploy_space.py --repo <user>/<space> [--private]
 
 `upload_folder` handles LFS for the adapter weights, and syncs deletions with
@@ -27,9 +27,9 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--repo", required=True,
-                    help="target Space id, e.g. ameenpasha69/forgelm")
-    ap.add_argument("--folder", default=str(REPO_ROOT / "build" / "space"),
-                    help="staged Space directory (see build_space.py)")
+                    help="target Space id, e.g. <hub-username>/forgelm -- note the Hub username need not match the GitHub one")
+    ap.add_argument("--folder", default=str(REPO_ROOT / "build" / "hfspace"),
+                    help="staged Space directory (see deploy/build.py)")
     ap.add_argument("--private", action="store_true",
                     help="create the Space private (ignored if it exists)")
     ap.add_argument("--message", default="Deploy ForgeLM demonstration Space")
@@ -37,7 +37,7 @@ def main() -> int:
 
     folder = Path(args.folder)
     if not (folder / "app.py").exists():
-        print(f"No app.py under {folder}. Run build_space.py first.",
+        print(f"No app.py under {folder}. Run deploy/build.py first.",
               file=sys.stderr)
         return 1
 

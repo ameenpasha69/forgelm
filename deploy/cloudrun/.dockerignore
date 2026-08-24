@@ -1,0 +1,11 @@
+# The build context is a staged tree (see deploy/build.py), so it is already
+# minimal. These are belt-and-braces against a stray local artefact inflating
+# the upload to Cloud Build.
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.git/
+.pytest_cache/
+*.log

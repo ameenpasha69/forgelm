@@ -227,7 +227,11 @@ if __name__ == "__main__":
     # unauthenticated inference API is not part of it. (In Gradio 6 this moved
     # onto queue(); `launch(show_api=...)` no longer exists.)
     ui.queue(default_concurrency_limit=1, max_size=16, api_open=False)
-    # Defaults match what Spaces expects; the env vars let the same file run
-    # unchanged under Docker or locally without editing it.
+    # PORT is what Cloud Run (and most container hosts) inject and it is not
+    # negotiable there; GRADIO_SERVER_PORT is what Spaces and a local run use.
+    # Checked in that order so one file serves every target unedited.
+    port = int(os.environ.get("PORT")
+               or os.environ.get("GRADIO_SERVER_PORT")
+               or 7860)
     ui.launch(server_name=os.environ.get("GRADIO_SERVER_NAME", "0.0.0.0"),
-              server_port=int(os.environ.get("GRADIO_SERVER_PORT", 7860)))
+              server_port=port)
