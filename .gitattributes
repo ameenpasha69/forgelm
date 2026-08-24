@@ -21,6 +21,10 @@
 *.cfg     text eol=lf
 *.yml     text eol=lf
 *.yaml    text eol=lf
+# Docker breaks on a backslash line-continuation followed by CR, so these
+# must stay LF even when checked out on Windows.
+Dockerfile      text eol=lf
+.dockerignore   text eol=lf
 .gitignore      text eol=lf
 .gitattributes  text eol=lf
 LICENSE   text eol=lf
