@@ -233,5 +233,17 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT")
                or os.environ.get("GRADIO_SERVER_PORT")
                or 7860)
+
+    # share=True opens a public tunnel to this process through Gradio's relay.
+    # That is the only way to reach a Colab runtime from outside, and it is how
+    # the demo notebook uses this file -- but it publishes an unauthenticated
+    # model endpoint, so it stays opt-in and off by default rather than
+    # something a stray environment could turn on by accident.
+    share = os.environ.get("FORGELM_SHARE", "").strip().lower() in {
+        "1", "true", "yes", "on"}
+    if share:
+        print("FORGELM_SHARE is set: publishing a public *.gradio.live URL. "
+              "It is unauthenticated and expires after 72 hours.", flush=True)
+
     ui.launch(server_name=os.environ.get("GRADIO_SERVER_NAME", "0.0.0.0"),
-              server_port=port)
+              server_port=port, share=share)

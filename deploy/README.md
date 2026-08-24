@@ -108,6 +108,35 @@ python deploy/hf_space/deploy_space.py --repo <your-username>/forgelm --private
 
 Note that the Hub username is not necessarily the GitHub one.
 
+## Google Colab (free, temporary)
+
+No account beyond a Google one, no card, no build. `notebooks/forgelm_demo_colab.ipynb`
+clones the repository, installs the inference dependencies, and serves this same
+app on a public `*.gradio.live` URL:
+
+[Open the demo notebook](https://colab.research.google.com/github/ameenpasha69/forgelm/blob/main/notebooks/forgelm_demo_colab.ipynb)
+
+Two cells, about two minutes. It does **not** train anything — it serves the
+committed adapter, unlike `forgelm_colab.ipynb`, which runs the whole
+experiment.
+
+The trade-off is that the URL is unauthenticated and dies with the runtime — 72
+hours at the outside, sooner if the cell stops or Colab recycles the VM. Good
+for showing someone; not a permanent home.
+
+Sharing is opt-in via `FORGELM_SHARE=1`. Without it `app.py` binds locally and
+never opens a tunnel, so no environment can publish an endpoint by accident:
+
+```bash
+FORGELM_SHARE=1 python app.py
+```
+
+Regenerate the notebook after changing the generator:
+
+```bash
+python scripts/make_demo_notebook.py
+```
+
 ## Verifying a build locally
 
 The staged tree runs as-is:
