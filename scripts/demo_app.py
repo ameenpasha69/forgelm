@@ -118,8 +118,9 @@ def run_cli(triager: Triager, compare: bool) -> int:
     print(f"base model : {BASE_MODEL_ID} @ {BASE_MODEL_REVISION[:12]}")
     print(f"adapter    : {triager.verification['n_nonzero_lora_B_tensors']}"
           f"/{triager.verification['n_lora_B_tensors']} lora_B tensors active")
-    print(f"decoding   : {'CONSTRAINED (illegal output unrepresentable)'
-                          if triager.constrained else 'unconstrained'}")
+    decoding = ("CONSTRAINED (illegal output unrepresentable)"
+                if triager.constrained else "unconstrained")
+    print(f"decoding   : {decoding}")
     print("\nThis is a LOCAL DEMONSTRATION, not a deployment.\n")
     print("Type a ticket and press Enter. Blank line + Enter to quit.")
     print("Type 'example' for a sample ticket.\n")

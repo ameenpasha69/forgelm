@@ -1,0 +1,13 @@
+# Hugging Face stores model weights in LFS. The adapter is ~45 MB, over the
+# Hub's 10 MB recommendation for plain git objects.
+*.safetensors filter=lfs diff=lfs merge=lfs -text
+
+# Same byte-exactness policy as the source repository: the provenance and
+# adapter-config JSON must not be newline-rewritten on checkout.
+*.json    -text
+*.jsonl   -text
+
+*.py      text eol=lf
+*.md      text eol=lf
+*.txt     text eol=lf
+*.jinja   text eol=lf

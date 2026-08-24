@@ -1,0 +1,27 @@
+# Hugging Face Space (CPU) -- inference only.
+#
+# This is deliberately NOT the repository's root requirements.txt. That file
+# pins `torch==2.13.0+cu126`, which cannot install on a CPU Space: the +cu126
+# local version only exists on the CUDA wheel index. The versions below are the
+# same releases, built for CPU.
+#
+# Training-and-reporting dependencies (datasets, scipy, matplotlib, pytest) are
+# omitted on purpose. Nothing on the inference path imports them, and a Space
+# that installs them just boots more slowly.
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# The +cpu local version exists only on the PyTorch index, so this resolves
+# there rather than pulling the multi-gigabyte CUDA wheel from PyPI.
+torch==2.13.0+cpu
+
+transformers==5.15.1
+tokenizers==0.22.2
+peft==0.20.0
+accelerate==1.14.0
+safetensors==0.8.0
+huggingface_hub==1.28.0
+numpy==2.5.2
+
+# gradio is installed by the Space runtime from `sdk_version` in README.md,
+# so pinning it here would only create a conflict.
