@@ -436,56 +436,7 @@ If you have two minutes and want to see whether this is real:
    Type a ticket; see the unchanged base model and the adapted model side by
    side.
 
-## Interview-ready explanation
 
-**"What did you build?"**
-A controlled experiment. I took a 0.5B Apache-2.0 instruction model, defined a
-narrow structured-output task with objectively checkable labels, measured the
-unchanged model two ways, trained a LoRA adapter on 171 examples, and measured
-it once on a frozen test set with confidence intervals and paired significance
-tests. The deliverable is the *evidence*, not the adapter.
-
-**"Why is the few-shot baseline the interesting part?"**
-Because it is the baseline that could have killed the project, and it nearly
-did. Zero-shot scored 0.0% exact match, largely because the model wrapped its
-JSON in markdown fences 94% of the time. Eight in-prompt examples fixed that
-completely -- strict JSON went 5.8% to 100% for free. If I had only compared
-against zero-shot, I would have credited LoRA with solving a problem that
-prompting already solved. The real question is whether training beats prompting,
-and that is the comparison I report.
-
-**"Was the improvement real?"**
-Exact match went 1.2% to 11.6% against few-shot: +10.5 pp, 95% CI [+3.5, +18.6],
-McNemar p = 0.012. The interval excludes zero, so on this test set the
-difference survives resampling. With n = 86 I would not defend a 3-point
-difference; I would defend a 10-point one with that interval.
-
-**"Where did it fail?"**
-Generalisation. 11 of 16 held-out scenario families produced zero fully correct
-outputs. The adapter learned the output contract -- valid JSON, legal enum
-values, no fences -- far better than it learned the underlying task. And
-`category` accuracy looks worse than few-shot, but the interval spans zero
-(p = 0.46), so I report that as "no detectable difference" rather than as a
-regression. Being disciplined in both directions is the point.
-
-**"What would you do next?"**
-Three things, in order of expected value: more scenario families rather than
-more examples per family, since the failure is coverage and not volume;
-multiple seeds, because one training run is a sample of size one; and
-constrained decoding, since 18 of the remaining failures are invented enum
-values that a grammar would make impossible.
-
-**"What was the hardest bug?"**
-The ones that would not have announced themselves. `torch.cuda.is_bf16_supported()`
-returns `True` on this GTX 1650, but Turing has no native bf16 -- selecting it
-would have been slow and unstable, so precision keys off compute capability
-instead. `transformers` 5.x silently dropped `warmup_ratio`, which my argument
-introspection caught and converted to `warmup_steps` rather than losing warm-up
-entirely. And git would have CRLF-converted the dataset on checkout, breaking
-every checksum for anyone who cloned the repo -- I only know the fix works
-because I cloned it back from GitHub and re-verified.
-
----
 
 ## Limitations
 
